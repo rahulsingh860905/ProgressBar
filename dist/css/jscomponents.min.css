@@ -1,0 +1,50 @@
+.textStyle {
+  font-family: 'Helvetica';
+  font-size: 20;
+  padding-left: 10px;
+  padding-bottom: 20px;
+}
+
+#baseDiv #bg {
+  position: relative;
+  background-color: #ffffff;
+  border: 2px solid #888888;
+  text-align: center;
+}
+#baseDiv #progressBar {
+  position: absolute;
+}
+.ProgressBarNormalStyle {
+  background-color: #00aaff;
+}
+.ProgressBarOverFlowStyle {
+  background-color: #ff1100;
+}
+#baseDiv #progressBarText {
+  font-family: 'Helvetica';
+  position: absolute  ;
+  align-content: center;
+  z-index: 10;
+}
+
+#compContainer {
+  padding-left: 10px;
+  padding-right: 10px;
+}
+#compContainer Button {
+  position: relative;
+  margin: 0px 0px 10px 10px;
+  font-family: 'Helvetica';
+  font-size: 15px;
+  color: #ffffff;
+  text-decoration: none;
+  background-color: #aaaaaa;
+}
+#compContainer select {
+  background: transparent;
+  width: 150px;
+  padding: 5px 25px 5px 5px;
+  font-size: 16px;
+  border: 1px solid #ccc;
+  height: 28px;
+}

@@ -1,0 +1,30 @@
+@backgroundColor: #ffffff;
+@barNormalColor: #00aaff;
+@barOverflowColor: #ff1100;
+@border: 2px solid #888888;
+
+#baseDiv #bg{
+    position: relative;
+    background-color: @backgroundColor;
+    border: @border;
+    text-align: center;
+}
+
+#baseDiv #progressBar{
+    position: absolute;
+}
+
+.ProgressBarNormalStyle {
+    background-color: @barNormalColor;
+}
+
+.ProgressBarOverFlowStyle {
+    background-color: @barOverflowColor;
+}
+
+#baseDiv #progressBarText {
+    font-family: 'Helvetica';
+    position: absolute  ;
+    align-content:center;
+    z-index: 10;
+}

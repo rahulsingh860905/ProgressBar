@@ -1,0 +1,15 @@
+<!doctype html><html lang="en-GB"><head><meta charset="utf-8"></head><link rel="stylesheet" href="../dist/css/jscomponents.min.css"><body><script src="../dist/bower_components/less/dist/less.js"></script><script src="../dist/bower_components/ractive/ractive.js"></script><script src="../dist/js/jscomponents.min.js"></script><span class="textStyle">Fixed Width</span><div id="container1"></div><br><br><span class="textStyle">Auto Resizable (Resize this window to test)</span><div id="container2"></div><script>var bars = [
+                    new BarVO(50),
+                    new BarVO(25),
+                    new BarVO(10),
+                   ];
+        
+        var pbd1 = new ProgressBarDemo({
+            el: "#container1",
+            data:function(){return new ProgressBarDemoVO("500",40,100,bars);} 
+        });
+        
+        var pbd2 = new ProgressBarDemo({
+            el: "#container2",
+            data:function(){return new ProgressBarDemoVO("100%",40,100,bars);} 
+        });</script></body></html>

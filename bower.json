@@ -1,0 +1,16 @@
+{
+  "name": "ProgressBarDemo",
+  "authors": [
+    "Rahul Singh <singh.rahul.mailbox@gmail.com>"
+  ],
+  "description": "ProgressBarDemo",
+  "main": "",
+  "moduleType": [],
+  "license": "MIT",
+  "homepage": "",
+  "private": true,
+  "dependencies": {
+    "ractive": "~0.7.3",
+    "less": "~2.5.3"
+  }
+}
