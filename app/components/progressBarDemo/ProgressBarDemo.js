@@ -2,6 +2,10 @@
 
     'use strict';
     
+    /**
+    * Progress Bar Demo.
+    * Dependencies Ractive.js,ProgressBar.js
+    */
     var template =  '<div id="compContainer">'+
                     '{{#each bars:i}}'+ 
                     '<progressBarComp width={{width}} height={{height}} max={{max}} bar="{{bars[i]}}"/>'+
@@ -28,12 +32,20 @@
             progressBarComp: ProgressBar
         },
         
+                
+        /**
+		 * called upon initialisation.
+         * set initial values to component properties
+		 */
         oninit: function (){
             
             this.selectedProgressBar = this.findAllComponents()[0];
             this.addEventListeners();
         },
         
+        /**
+		 * Add Event Listeners
+		 */
         addEventListeners:function(){
             
             this.on({
@@ -53,6 +65,11 @@
         }
     });
     
+    
+    /**
+    * ProgressBarDemo Value Object.
+    * Used for constructing data to ProgressBarDemo
+    */
     var ProgressBarDemoVO = function(width,height,max,bars) {
         return { width : width,
                  height : height,
