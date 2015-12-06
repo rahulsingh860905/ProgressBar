@@ -2,6 +2,11 @@
 
     'use strict';
     
+    		
+/**
+ * Progress Bar Component.
+ * Dependencies Ractive.js,
+ */
     var template =  '<div id="baseDiv" style="width:{{compWidth}};">'+
                     '<div id="bg" style="width:100%;height:{{height}}px">'+
                     '<div id="progressBar" style="width:{{bar.progress}}px;height:100%" class="{{progressBarStyle}}"/>'+
@@ -12,6 +17,10 @@
         
         template: template,
         
+        /**
+		 * called upon initialisation.
+         * set initial values to component properties
+		 */
         oninit: function(){
             
             this.normalProgressBarStyle = "ProgressBarNormalStyle";
@@ -23,6 +32,10 @@
             
         },
         
+        /**
+		 * called upon completion.
+         * set initial values to variables
+		 */
         oncomplete: function(){
             
             this.comp = this.find("#baseDiv");
@@ -34,6 +47,10 @@
             
         },
         
+        /**
+		 * Called while rendering.
+         * Add required event listener for resizing and teardown events
+		 */
         onrender: function () {
             
             var self = this, resizeHandler;
@@ -57,6 +74,10 @@
             }, false );
         },
         
+        /**
+		 * set width of the component
+         * Can be set in percentage or pixels
+		 */
         setWidth: function(){
             
             var str = this.get("width").toString();
@@ -71,6 +92,10 @@
             this.set("compWidth",w); 
         },
         
+        /**
+		 * increment progress to required percentage
+         * @param {integer} value - percentage value to be increased
+		 */
         increase:function(value){
             
             this.usage = this.usage + this.scale(value);
@@ -87,6 +112,10 @@
             this.set("label",this.getUsagePercentage(this.usage));
         },
         
+        /**
+		 * decrement progress to required percentage
+         * @param {integer} value - percentage value to be decreased
+		 */
         decrease:function(value){
             
             this.usage = this.usage != 0 ? this.usage - this.scale(value) : this.min;
@@ -103,11 +132,21 @@
             this.set("label",this.getUsagePercentage(this.usage));
         },
         
+        /**
+		 * Scaling function 
+         * @param {integer} value - percentage value to be scaled
+		 * @return {integer} desired value in pixels
+		 */
         scale:function(value){
             
             return this.comp.clientWidth/this.max*value;
         },
         
+        /**
+		 * Scaling function 
+         * @param {integer} value - usage value
+		 * @return {integer} corresponding percentage value
+		 */
         getUsagePercentage:function(value){
             
             this.usagePercentage = Math.round(value/this.comp.clientWidth*this.max);
@@ -115,6 +154,10 @@
             return this.usagePercentage;
         },
         
+        /**
+		 * Animate the progress
+		 * @return {integer} desired value in pixels
+		 */
         tween:function(value){
             
             this.animate( "bar.progress", value,{ 
@@ -122,6 +165,9 @@
             });
         },  
         
+        /**
+		 * Reset the component properties to initial values
+		 */
         reset:function(){
         
             this.progress = this.usage = 0;
@@ -132,11 +178,20 @@
         }
     });
     
+    
+    /**
+    * Bar Value Object.
+    * Used by ProgressBar Value Object
+    */
     var BarVO = function(progress) {
         return { progress : progress
                };
     }
     
+    /**
+    * ProgressBar Value Object.
+    * Used for constructing data to ProgressBar component
+    */
     var ProgressBarVO = function(width,height,max,progress) {
         return { width : width,
                  height : height,
@@ -156,6 +211,10 @@
 
     'use strict';
     
+    /**
+    * Progress Bar Demo.
+    * Dependencies Ractive.js,ProgressBar.js
+    */
     var template =  '<div id="compContainer">'+
                     '{{#each bars:i}}'+ 
                     '<progressBarComp width={{width}} height={{height}} max={{max}} bar="{{bars[i]}}"/>'+
@@ -182,12 +241,20 @@
             progressBarComp: ProgressBar
         },
         
+                
+        /**
+		 * called upon initialisation.
+         * set initial values to component properties
+		 */
         oninit: function (){
             
             this.selectedProgressBar = this.findAllComponents()[0];
             this.addEventListeners();
         },
         
+        /**
+		 * Add Event Listeners
+		 */
         addEventListeners:function(){
             
             this.on({
@@ -207,6 +274,11 @@
         }
     });
     
+    
+    /**
+    * ProgressBarDemo Value Object.
+    * Used for constructing data to ProgressBarDemo
+    */
     var ProgressBarDemoVO = function(width,height,max,bars) {
         return { width : width,
                  height : height,
