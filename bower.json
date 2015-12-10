@@ -10,7 +10,14 @@
   "homepage": "",
   "private": true,
   "dependencies": {
+    "less": "~2.5.3",
     "ractive": "~0.7.3",
-    "less": "~2.5.3"
+    "ractive-load": "~0.5.2"
+  },
+  "overrides": {
+    "ractive-load": {
+      "main": "dist/ractive-load.js"
+    }
   }
 }
+

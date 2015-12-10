@@ -1,22 +1,17 @@
-;(function(window){
 
-    'use strict';
+<!-- Progress Bar Component.
+     Dependencies Ractive.js-->
+ 
+    <div class="pb-baseDiv pb-col">
+        <div class="pb-bg"> 
+            <div style="width:{{bar.progress}}px;" class="pb-progressBar {{progressBarStyle}}"/>
+            <div class="pb-textDiv"><text class="pb-text pb-textSize">{{label}}%</text></div>
+        </div>
+    </div>
     
-    		
-/**
- * Progress Bar Component.
- * Dependencies Ractive.js,
- */
-    var template =  '<div class="pb-baseDiv pb-col">' +
-                    '<div class="pb-bg">' +
-                    '<div style="width:{{bar.progress}}px;" class="pb-progressBar {{progressBarStyle}}"/>' +
-                    '<div class="pb-textDiv"><text class="pb-text pb-textSize">{{label}}%</text></div>' +
-                    '</div></div>';
-    
-    var ProgressBar = Ractive.extend({
-        
-        template: template,
-        
+<script>
+    component.exports = {
+         
         /**
 		 * called upon initialisation.
          * set initial values to component properties
@@ -157,32 +152,7 @@
             this.tween(this.progress);
             this.set("label",this.getUsagePercentage(this.progress));
         }
-    });
-    
-    
-    /**
-    * Bar Value Object.
-    * Used by ProgressBar Value Object
-    */
-    var BarVO = function(progress) {
-        return { progress : progress
-               };
     };
     
-    /**
-    * ProgressBar Value Object.
-    * Used for constructing data to ProgressBar component
-    */
-    var ProgressBarVO = function(max,progress) {
-        return { max : max,
-                 bar : new BarVO(progress)
-               };
-    };
+</script>
     
-    Ractive.components.ProgressBar = ProgressBar;
-    
-    window.BarVO = BarVO;
-    window.ProgressBarVO = ProgressBarVO;
-    window.ProgressBar = ProgressBar;
-    
-})( window );

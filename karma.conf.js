@@ -4,8 +4,11 @@ module.exports = function(config){
     basePath : './',
 
     files : [
-      'app/bower_components/ractive/ractive.min.js',
+      'app/bower_components/ractive/ractive.js',
+      'app/bower_components/ractive-load/dist/ractive-load.js',
+      'app/bower_components/less/dist/less.js',    
       'app/components/**/*.js',
+      'app/components/**/*.html',
       'tests/*.js'
     ],
 

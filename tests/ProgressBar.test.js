@@ -6,14 +6,24 @@
     div1.setAttribute("id", "container1");
     document.body.appendChild(div1);
 
-    var width = "500";
-    var height = 40;
     var max = 100;
     var progress = 0;
     
-    var pb1 = new ProgressBar({
-        el: "#container1",
-        data:function(){return new ProgressBarVO(width,height,max,progress);}
+    var pb1;
+
+    Ractive.load({
+        ProgressBar: 'base/app/components/progressBar/ProgressBar.html',
+    }).then(function(components){
+
+        pb1 = new components.ProgressBar({
+            el: '#container1',
+            data:function(){return new ProgressBarVO(max,progress);}
+        });
+        
+        runTests();
+        
+        resizeTest();
+        
     });
     
     function increment(value){
@@ -34,13 +44,14 @@
         return pb1.getUsagePercentage(pb1.usage);
     }
 
-    
-
     function runTests(){
         describe('Progress Bar tests =>', function(){
     
             describe( "Scale test :", function () {
-                it("Converts percentage value to pixel value", function () {
+                beforeEach(function(done) {
+                 done();
+                });
+                it("Converts percentage value to pixel value", function (done) {
                     expect(scale(max)).toEqual(parseInt(width));
                 });
             }),
@@ -48,6 +59,9 @@
             describe( "Incrementer test :", function () {
                 var incValue = 40;
                 var finalValue = 0;
+                beforeEach(function(done) {
+                 done();
+                });
                 it("increments progress bar to specified percentage", function () {
                     pb1.reset();
 
@@ -61,6 +75,9 @@
             describe( "Decrementer test :", function () {
                 var decValue = 40;
                 var finalValue = 80;
+                beforeEach(function(done) {
+                 done();
+                });
                 it("decrements progress bar to specified percentage", function () {
                     pb1.reset();
 
@@ -76,6 +93,9 @@
             }),
 
             describe( "Progress Percentage Test :", function () {
+                beforeEach(function(done) {
+                 done();
+                });
                 it("display the progress in percentage", function () {
                     pb1.reset();
                     increment(40);
@@ -86,14 +106,9 @@
         });
     }
 
-    runTests();
-
     function resizeTest(){
         window.resizeTo(300, 600);
         describe('Progress Bar tests after resizing window =>', function(){
             runTests();
         });
     };
-    
-    resizeTest();
-    

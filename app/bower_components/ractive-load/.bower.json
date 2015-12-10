@@ -1,0 +1,36 @@
+{
+  "name": "ractive-load",
+  "version": "0.5.2",
+  "author": "Rich Harris",
+  "main": "ractive-load.js",
+  "dependencies": {
+    "ractive": "^0.7.1"
+  },
+  "ignore": [
+    ".git/",
+    ".*",
+    "*.json",
+    "demo/",
+    "grunt/",
+    "lib/",
+    "scripts/",
+    "src/",
+    "test/",
+    "wrapper/",
+    "vendor/",
+    "Gruntfile.js",
+    "index.html",
+    "README.md"
+  ],
+  "homepage": "https://github.com/ractivejs/ractive-load",
+  "_release": "0.5.2",
+  "_resolution": {
+    "type": "version",
+    "tag": "v0.5.2",
+    "commit": "032a243a0db62b9e17043e25bccc6d13d099f229"
+  },
+  "_source": "git://github.com/ractivejs/ractive-load.git",
+  "_target": "~0.5.2",
+  "_originalSource": "ractive-load",
+  "_direct": true
+}

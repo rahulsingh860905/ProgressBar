@@ -9,6 +9,7 @@ var del = require('del');
 var Q = require('q');
 var bowerFiles = require('main-bower-files');
 var plugins = require('gulp-load-plugins')();
+var rename = require('gulp-rename');
 
 // use shell for asdoc creation using gulp
 var shell = require('gulp-shell');
@@ -33,7 +34,8 @@ var paths = {
     mincss_source:['**/*.min.css'],
     less_source:['**/*.less'],
     validateAppScripts: ['app/components/**/*.js'],
-    index: './app/index.html',
+    index: './app/index.prod.html',
+    compSrc: './app/components/**/*.html',
     distProd: './dist',
     distScriptsProd: './dist/scripts'
 };
@@ -109,10 +111,15 @@ gulp.task('cleanDocs', function() {
  .pipe(clean());
 });
 
-gulp.task('bower-prod', function() {
+gulp.task('bower-prod', function() { 
     return gulp.src(bowerFiles(), {base: 'app/bower_components'})
         .pipe(g_uglify())
         .pipe(gulp.dest(paths.distProd + '/bower_components'));
+});
+
+gulp.task('comp-prod', function() {
+    return gulp.src(paths.compSrc)
+        .pipe(gulp.dest(paths.distProd + '/components'));
 });
    
 gulp.task('validate-app-scripts-prod', function(){
@@ -126,6 +133,7 @@ gulp.task('validate-index-prod', function() {
         .pipe(plugins.htmlhint())
         .pipe(plugins.htmlhint.reporter())
         .pipe(plugins.htmlmin({collapseWhitespace: true, removeComments: true}))
+        .pipe(rename('index.html'))
         .pipe(gulp.dest(paths.distProd));
 });
 
@@ -142,6 +150,7 @@ gulp.task('build-dist', function() {
     //cleanDocs,
     //jsdoc
     'bower-prod',
+    'comp-prod',
     'validate-app-scripts-prod',
     'validate-index-prod'
   );

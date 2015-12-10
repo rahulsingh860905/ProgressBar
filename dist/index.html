@@ -1,17 +1,22 @@
-<!doctype html><html lang="en-GB"><head><meta name="viewport" content="width=device-width,height=device-height,initial-scale=1"><title>Progress Bar Demo</title></head><link rel="stylesheet" href="../dist/css/jscomponents.min.css"><style>body, html {
+<!doctype html><html lang="en-GB"><head><meta name="viewport" content="width=device-width,height=device-height,initial-scale=1"><title>Progress Bar Demo</title></head><link rel="stylesheet" href="css/jscomponents.min.css"><style>body, html {
         height: 100%;
     }
     
     .baseStyle{
         width: 100%;
         height: 100%;
-    }</style><body><span class="textStyle">Responsive Design (Resize this window to test)</span><div id="container1" class="baseStyle"></div><script src="../dist/bower_components/less/dist/less.js"></script><script src="../dist/bower_components/ractive/ractive.js"></script><script src="../dist/js/jscomponents.min.js"></script><script>var bars = [
+    }</style><body><span class="textStyle">Responsive Design (Resize this window to test)</span><div id="container1" class="baseStyle"></div><script src="bower_components/less/dist/less.js"></script><script src="bower_components/ractive/ractive.js"></script><script src="bower_components/ractive-load/dist/ractive-load.js"></script><script src="js/jscomponents.min.js"></script><script>var ractive;
+
+        Ractive.load({
+            ProgressBarDemo: 'components/progressBarDemo/ProgressBarDemo.html',
+        }).then(function(components){
+            
+            ractive = new components.ProgressBarDemo({
+                el: '#container1',
+                data:function(){return new ProgressBarDemoVO(100,[
                     new BarVO(50),
                     new BarVO(25),
                     new BarVO(10),
-                   ];
-        
-        var pbd = new ProgressBarDemo({
-            el: "#container1",
-            data:function(){return new ProgressBarDemoVO(100,bars);} 
+                   ]);} 
+            });
         });</script></body></html>

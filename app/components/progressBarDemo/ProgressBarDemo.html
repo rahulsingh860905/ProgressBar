@@ -1,0 +1,65 @@
+    <!--Progress Bar Demo.
+        Dependencies Ractive.js,ProgressBar.html-->
+    <link rel="ractive" href="../progressBar/ProgressBar.html" name="ProgressBar">
+
+    <div class="pbd-compContainer">
+        {{#each bars:i}}
+            <ProgressBar max="{{max}}" bar="{{bars[i]}}"/>
+            <br>
+        {{/each}}
+        
+        <div class="controls">
+            <select class="selct" value="{{selectedIndex}}">
+                {{#each bars:i}}
+                    <option value="{{i}}">Progress Bar {{i+1}}</option>
+                {{/each}}
+            </select>
+
+            <button class="btn" type="button" on-click="callDecrease:25">-25</button>
+            <button class="btn" type="button" on-click="callDecrease:10">-10</button> 
+            <button class="btn" type="button" on-click="callIncrease:10">+10</button> 
+            <button class="btn" type="button" on-click="callIncrease:25">+25</button>
+        </div>
+    </div>
+    
+<script>
+    ;(function(window){
+    if(typeof component == "undefined"){
+        return;
+    }
+            
+    component.exports = {
+
+        /**
+         * called upon initialisation.
+         * set initial values to component properties
+         */
+        oninit: function (){
+
+            this.selectedProgressBar = this.findAllComponents()[0];
+            this.addEventListeners();
+        },
+
+        /**
+         * Add Event Listeners
+         */
+        addEventListeners:function(){
+
+            this.on({
+
+                callIncrease: function (event, value) { 
+                    this.selectedProgressBar.increase(value);
+                },
+
+                callDecrease: function (event, value) {
+                    this.selectedProgressBar.decrease(value);
+                }
+            });
+
+            this.observe( 'selectedIndex', function ( index ) {
+                this.selectedProgressBar = this.findAllComponents()[index];
+            });
+        }
+    };
+    })( window );
+</script>
