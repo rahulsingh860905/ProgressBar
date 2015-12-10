@@ -1,22 +1,31 @@
 <!doctype html>
-<html lang='en-GB'>
+<html lang="en-GB">
 <head>
-  <meta charset='utf-8'>
-  
+  <meta name="viewport" content="width=device-width,height=device-height, initial-scale=1.0">
+  <title>Progress Bar Demo</title>
 </head>
     
 <link rel="stylesheet" href="../dist/css/jscomponents.min.css">
     
+<style>
+    body, html {
+        height: 100%;
+    }
+    
+    .baseStyle{
+        width: 100%;
+        height: 100%;
+    }
+</style>
+    
 <body>
-    <script src='../dist/bower_components/less/dist/less.js'></script>
-    <script src='../dist/bower_components/ractive/ractive.js'></script>
-    <script src='../dist/js/jscomponents.min.js'></script>
-
-    <span class="textStyle">Fixed Width</span>
-    <div id='container1' ></div>
-    <br><br>
-    <span class="textStyle">Auto Resizable (Resize this window to test)</span>
-    <div id='container2'></div>
+ 
+    <span class="textStyle">Responsive Design (Resize this window to test)</span>
+    <div id="container1" class="baseStyle"></div>
+    
+    <script src="../dist/bower_components/less/dist/less.js"></script>
+    <script src="../dist/bower_components/ractive/ractive.js"></script>
+    <script src="../dist/js/jscomponents.min.js"></script>
 
     <script>
 
@@ -26,14 +35,9 @@
                     new BarVO(10),
                    ];
         
-        var pbd1 = new ProgressBarDemo({
+        var pbd = new ProgressBarDemo({
             el: "#container1",
-            data:function(){return new ProgressBarDemoVO("500",40,100,bars);} 
-        });
-        
-        var pbd2 = new ProgressBarDemo({
-            el: "#container2",
-            data:function(){return new ProgressBarDemoVO("100%",40,100,bars);} 
+            data:function(){return new ProgressBarDemoVO(100,bars);} 
         });
         
             

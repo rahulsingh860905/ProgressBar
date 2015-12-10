@@ -32,7 +32,7 @@ var paths = {
     css_source:['**/*.css'],
     mincss_source:['**/*.min.css'],
     less_source:['**/*.less'],
-    validateAppScripts: ['app/bower_components/**/*.js'],
+    validateAppScripts: ['app/components/**/*.js'],
     index: './app/index.html',
     distProd: './dist',
     distScriptsProd: './dist/scripts'

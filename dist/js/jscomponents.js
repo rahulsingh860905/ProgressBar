@@ -1,4 +1,4 @@
-;( function( window ) {
+;(function(window){
 
     'use strict';
     
@@ -7,10 +7,10 @@
  * Progress Bar Component.
  * Dependencies Ractive.js,
  */
-    var template =  '<div id="baseDiv" style="width:{{compWidth}};">'+
-                    '<div id="bg" style="width:100%;height:{{height}}px">'+
-                    '<div id="progressBar" style="width:{{bar.progress}}px;height:100%" class="{{progressBarStyle}}"/>'+
-                    '<div id="progressBarText" style="width:100%;height:100%;line-height:{{height}}px;" class="ProgressBarTextDivStyle">{{label}}%</div>'+
+    var template =  '<div class="pb-baseDiv pb-col">' +
+                    '<div class="pb-bg">' +
+                    '<div style="width:{{bar.progress}}px;" class="pb-progressBar {{progressBarStyle}}"/>' +
+                    '<div class="pb-textDiv"><text class="pb-text pb-textSize">{{label}}%</text></div>' +
                     '</div></div>';
     
     var ProgressBar = Ractive.extend({
@@ -23,12 +23,11 @@
 		 */
         oninit: function(){
             
-            this.normalProgressBarStyle = "ProgressBarNormalStyle";
-            this.overflowProgressBarStyle = "ProgressBarOverFlowStyle";
+            this.normalProgressBarStyle = "pb-progressBarNormal";
+            this.overflowProgressBarStyle = "pb-progressBarOverFlow";
             
             this.max = this.get("max");
             this.min = 0;
-            this.setWidth();
             
         },
         
@@ -38,12 +37,12 @@
 		 */
         oncomplete: function(){
             
-            this.comp = this.find("#baseDiv");
+            this.comp = this.find(".pb-baseDiv");
             this.progress = this.usage = this.scale(this.get("bar.progress"));
             
-            this.set("progressBarStyle",this.normalProgressBarStyle);
+            this.set("progressBarStyle", this.normalProgressBarStyle);
             this.tween(this.progress);
-            this.set("label",this.getUsagePercentage(this.progress));
+            this.set("label", this.getUsagePercentage(this.progress));
             
         },
         
@@ -51,7 +50,7 @@
 		 * Called while rendering.
          * Add required event listener for resizing and teardown events
 		 */
-        onrender: function () {
+        onrender: function(){
             
             var self = this, resizeHandler;
             
@@ -72,24 +71,6 @@
             this.on( 'teardown', function () {
                 window. removeEventListener( 'resize', resizeHandler );
             }, false );
-        },
-        
-        /**
-		 * set width of the component
-         * Can be set in percentage or pixels
-		 */
-        setWidth: function(){
-            
-            var str = this.get("width").toString();
-            var w;
-            
-            if("%" == str.substring(length-2,length-1)){
-                w = str;
-            }else{
-                w = str + "px";
-            }
-            
-            this.set("compWidth",w); 
         },
         
         /**
@@ -118,7 +99,7 @@
 		 */
         decrease:function(value){
             
-            this.usage = this.usage != 0 ? this.usage - this.scale(value) : this.min;
+            this.usage = this.usage !== 0 ? this.usage - this.scale(value) : this.min;
             
             if(this.usage < this.min && this.progress != this.min){
                 this.progress = this.usage = this.min;
@@ -186,19 +167,17 @@
     var BarVO = function(progress) {
         return { progress : progress
                };
-    }
+    };
     
     /**
     * ProgressBar Value Object.
     * Used for constructing data to ProgressBar component
     */
-    var ProgressBarVO = function(width,height,max,progress) {
-        return { width : width,
-                 height : height,
-                 max : max,
+    var ProgressBarVO = function(max,progress) {
+        return { max : max,
                  bar : new BarVO(progress)
                };
-    }
+    };
     
     Ractive.components.ProgressBar = ProgressBar;
     
@@ -215,13 +194,13 @@
     * Progress Bar Demo.
     * Dependencies Ractive.js,ProgressBar.js
     */
-    var template =  '<div id="compContainer">'+
+    var template =  '<div class="pbd-compContainer">'+
                     '{{#each bars:i}}'+ 
-                    '<progressBarComp width={{width}} height={{height}} max={{max}} bar="{{bars[i]}}"/>'+
+                    '<progressBarComp max={{max}} bar="{{bars[i]}}"/>'+
                     '<br>'+
                     '{{/each}}'+
-    
-                    '<select value="{{selectedIndex}}">'+
+                    '<div class="controls">'+
+                    '<select class="selct" value="{{selectedIndex}}">'+
                     '{{#each bars:i}}'+
                     '<option value="{{i}}">Progress Bar {{i+1}}</option>'+
                     '{{/each}}'+
@@ -230,6 +209,7 @@
                     '<button class="btn" type="button" on-click="callDecrease:10">-10</button>'+ 
                     '<button class="btn" type="button" on-click="callIncrease:10">+10</button>'+ 
                     '<button class="btn" type="button" on-click="callIncrease:25">+25</button>'+
+                    '</div>'+
                     '</div>';
     
     var ProgressBarDemo = Ractive.extend({
@@ -279,13 +259,11 @@
     * ProgressBarDemo Value Object.
     * Used for constructing data to ProgressBarDemo
     */
-    var ProgressBarDemoVO = function(width,height,max,bars) {
-        return { width : width,
-                 height : height,
-                 max : max,
+    var ProgressBarDemoVO = function(max,bars) {
+        return { max : max,
                  bars : bars
                };
-    }
+    };
     
     Ractive.components.ProgressBarDemo = ProgressBarDemo;
     

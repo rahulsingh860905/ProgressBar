@@ -6,13 +6,13 @@
     * Progress Bar Demo.
     * Dependencies Ractive.js,ProgressBar.js
     */
-    var template =  '<div id="compContainer">'+
+    var template =  '<div class="pbd-compContainer">'+
                     '{{#each bars:i}}'+ 
-                    '<progressBarComp width={{width}} height={{height}} max={{max}} bar="{{bars[i]}}"/>'+
+                    '<progressBarComp max={{max}} bar="{{bars[i]}}"/>'+
                     '<br>'+
                     '{{/each}}'+
-    
-                    '<select value="{{selectedIndex}}">'+
+                    '<div class="controls">'+
+                    '<select class="selct" value="{{selectedIndex}}">'+
                     '{{#each bars:i}}'+
                     '<option value="{{i}}">Progress Bar {{i+1}}</option>'+
                     '{{/each}}'+
@@ -21,6 +21,7 @@
                     '<button class="btn" type="button" on-click="callDecrease:10">-10</button>'+ 
                     '<button class="btn" type="button" on-click="callIncrease:10">+10</button>'+ 
                     '<button class="btn" type="button" on-click="callIncrease:25">+25</button>'+
+                    '</div>'+
                     '</div>';
     
     var ProgressBarDemo = Ractive.extend({
@@ -70,13 +71,11 @@
     * ProgressBarDemo Value Object.
     * Used for constructing data to ProgressBarDemo
     */
-    var ProgressBarDemoVO = function(width,height,max,bars) {
-        return { width : width,
-                 height : height,
-                 max : max,
+    var ProgressBarDemoVO = function(max,bars) {
+        return { max : max,
                  bars : bars
                };
-    }
+    };
     
     Ractive.components.ProgressBarDemo = ProgressBarDemo;
     

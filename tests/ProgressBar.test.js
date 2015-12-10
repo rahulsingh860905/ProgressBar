@@ -1,5 +1,6 @@
 'use strict';
 
+    Ractive.DEBUG = false;
 
     var div1 = document.createElement("div");
     div1.setAttribute("id", "container1");

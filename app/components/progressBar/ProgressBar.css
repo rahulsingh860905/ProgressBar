@@ -1,21 +1,60 @@
-#baseDiv #bg {
+.pb-baseDiv {
+  align-self: center;
+}
+.pb-baseDiv .pb-bg {
   position: relative;
+  width: 100%;
+  height: 100%;
   background-color: #ffffff;
   border: 2px solid #888888;
-  text-align: center;
 }
-#baseDiv #progressBar {
+.pb-baseDiv .pb-progressBar {
   position: absolute;
+  height: 100%;
 }
-.ProgressBarNormalStyle {
+.pb-progressBarNormal {
   background-color: #00aaff;
 }
-.ProgressBarOverFlowStyle {
+.pb-progressBarOverFlow {
   background-color: #ff1100;
 }
-#baseDiv #progressBarText {
-  font-family: 'Helvetica';
-  position: absolute  ;
-  align-content: center;
+.pb-baseDiv .pb-textDiv {
   z-index: 10;
+  width: 100%;
+  height: 100%;
+  display: flex;
+  justify-content: center;
+}
+.pb-baseDiv .pb-text {
+  font-family: 'Helvetica';
+  align-self: center;
+  z-index: 10;
+}
+/* For mobile phones: */
+.pb-col {
+  width: 100%;
+  height: 7%;
+}
+.pb-baseDiv .pb-textSize {
+  font-size: 17px;
+}
+/* For Tablet: */
+@media only screen and (min-width: 600px) {
+  .pb-col {
+    width: 80%;
+    height: 5%;
+  }
+  .pb-baseDiv .pb-textSize {
+    font-size: 19px;
+  }
+}
+/* For desktop: */
+@media only screen and (min-width: 768px) {
+  .pb-col {
+    width: 50%;
+    height: 40px;
+  }
+  .pb-baseDiv .pb-textSize {
+    font-size: 20px;
+  }
 }
