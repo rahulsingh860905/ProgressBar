@@ -23,7 +23,10 @@
     </div>
     
 <script>
-    
+    ;(function(window){
+    if(typeof component == "undefined"){
+        return;
+    }
             
     component.exports = {
 
@@ -58,5 +61,5 @@
             });
         }
     };
-    
+    })( window );
 </script>

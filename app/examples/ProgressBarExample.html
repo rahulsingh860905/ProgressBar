@@ -25,22 +25,18 @@
     
     <script src='../bower_components/ractive/ractive.js'></script>
     <script src='../bower_components/ractive-load/dist/ractive-load.js'></script>
-    <script src='../components/progressBar/ProgressBar.js'></script>
+    <script src='../components/progressBar/ProgressBarDataModel.js'></script>
     
     <script>
         var ractive;
 
         Ractive.load({
-            ProgressBarDemo: '../components/progressBarDemo/ProgressBarDemo.html',
+            ProgressBar: '../components/progressBar/ProgressBar.html',
         }).then(function(components){
             
-            ractive = new components.ProgressBarDemo({
+            ractive = new components.ProgressBar({
                 el: '#container1',
-                data:function(){return new ProgressBarDemoVO(100,[
-                    new BarVO(50),
-                    new BarVO(25),
-                    new BarVO(10),
-                   ]);} 
+                data:function(){return new ProgressBarVO(100,40);} 
             });
         });
                           
