@@ -1,7 +1,9 @@
 {
   "name": "ProgressBarDemo",
   "version": "1.0.0",
-  "dependencies": {},
+  "dependencies": {
+    "gulp-install": "^0.6.0"
+  },
   "scripts": {
     "postinstall": "bower install",
     "prestart": "npm install",
@@ -19,6 +21,7 @@
     "gulp-clean": "^0.3.1",
     "gulp-concat": "2.6.0",
     "gulp-concat-util": "~0.5.4",
+    "gulp-cssmin": "^0.1.7",
     "gulp-htmlhint": "^0.3.0",
     "gulp-htmlmin": "^1.2.0",
     "gulp-jshint": "^1.12.0",

@@ -1,83 +1,38 @@
-@buttonTextColor: #ffffff;
-@buttonBackgroundColor: #aaaaaa;
-@comboBorder: 1px solid #ccc;
-@fontFamily : 'Helvetica';
-
 .pbd-compContainer{
+    background-color: @bgColor;
+}
+
+.pbd-compContainer .btnSpacing {
     width: 100%;
-    height: 100%;
-    display: block;
-    align-content: center;
+    margin: 5px auto;
 }
 
-.pbd-compContainer .controls{
-    width: 100%;
-}
-
-.pbd-compContainer Button {
-    position: relative;
-    font-family: @fontFamily;
-    font-size: 15px;
-    color: @buttonTextColor;
-    text-decoration: none;  
-    background-color: @buttonBackgroundColor;
-    font-size: 14px;
-    font-weight: bold;
-    -webkit-border-radius: 5px; 
-    -moz-border-radius: 5px;
-    padding: 10px;
-    text-align: center;
-}
-
-.pbd-compContainer select {
-    background: transparent;
-    font-family: @fontFamily;
-    -webkit-border-radius: 5px; 
-    -moz-border-radius: 5px;
-    padding: 5px 25px 5px 5px;
-    font-size: 20px;
-    border: @comboBorder;
-    height: 40px;
-}
-
-/* For mobile phones: */
-
-.pbd-compContainer .btn{
-    width: 100%;
-    margin-top: 10px;
-    margin-right: 0px;
-}
-
-.pbd-compContainer .selct{
-    width: 100%;
-}
-
-
-/* For Tablets: */
-@media only screen and (min-width: 600px) {
-    .pbd-compContainer .btn{
-        width: 40%;
-        margin-top: 10px;
-        margin-right: 10px;
+/* For Tablet: */
+@media only screen and (min-width: @screen-sm-min) {
+    
+    .pbd-compContainer .btnSpacing {
+        width: 100%;
+        margin: 10px auto;
     }
 
-    .pbd-compContainer .selct{
-        width: 80%;
-    }
 }
 
 /* For desktop: */
-@media only screen and (min-width: 768px) {
+@media only screen and (min-width: @screen-md-min) {
     
-    .pbd-compContainer .btn{
-        width: 60px;
-        margin-top: 0px;
-        margin-left: 10px;
-    }
-
-    .pbd-compContainer .selct{
-        width: 200px;
+    .pbd-compContainer .btnSpacing {
+        width: 100%;
+        margin: auto;
     }
 
 }
 
+/* For Large desktop: */
+@media only screen and (min-width: @screen-lg-min) {
+    
+    .pbd-compContainer .btnSpacing {
+        width: 100%;
+        margin: auto;
+    }
+
+}

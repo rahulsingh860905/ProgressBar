@@ -1,32 +1,23 @@
 <!doctype html>
-<html lang="en-GB">
+<html lang='en-GB'>
 <head>
-  <meta name="viewport" content="width=device-width,height=device-height, initial-scale=1.0">
-  <title>Progress Bar Demo</title>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width,height=device-height, initial-scale=1.0">
+    <title>Progress Bar Demo</title>
+    
+    <link rel="stylesheet/less" href="styles/styles.less">
+    
+    <script src='bower_components/less/dist/less.min.js'></script>
 </head>
-    
-<link rel="stylesheet/less" href="components/progressBar/ProgressBar.less">
-<link rel="stylesheet/less" href="components/progressBarDemo/ProgressBarDemo.less">
-    
-<style>
-    body, html {
-        height: 100%;
-    }
-    
-    .baseStyle{
-        width: 100%;
-        height: 100%;
-    }
-</style>
     
 <body>
  
-    <span class="textStyle">Responsive Design (Resize this window to test)</span>
-    <div id="container1" class="baseStyle"></div>
+    <div class="container-fluid vertical-align">
+            <div id="container1" class="col-xs-12 col-sm-9 col-md-6 centered"></div>
+    </div>
     
-    <script src="bower_components/less/dist/less.js"></script>
-    <script src="bower_components/ractive/ractive.js"></script>
-    <script src="bower_components/ractive-load/dist/ractive-load.js"></script>
+    <script src='bower_components/ractive/ractive.min.js'></script>
+    <script src='bower_components/ractive-load/dist/ractive-load.js'></script>
     <script src='components/progressBar/ProgressBarDataModel.js'></script>
     <script src='components/progressBarDemo/ProgressBarDemoDataModel.js'></script>
 
@@ -39,14 +30,16 @@
             
             ractive = new components.ProgressBarDemo({
                 el: '#container1',
-                data:function(){return new ProgressBarDemoVO(100,[
-                    new BarVO(50),
-                    new BarVO(25),
-                    new BarVO(10),
-                   ]);} 
+                data:function(){return new ProgressBarDemoVO(
+                    [new BarVO(50),   // Progress 50 %
+                     new BarVO(25),   // Progress 25 %
+                     new BarVO(10)],  // Progress 10 %
+                    ["-25","-10","+10","+25"], // Buttons with values
+                    200);}             // Animation speed    
             });
         });
                           
     </script>
+    
 </body>
 </html>

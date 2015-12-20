@@ -1,8 +1,9 @@
 
 <!-- Progress Bar Component.
-     Dependencies Ractive.js-->
- 
-    <div class="pb-baseDiv pb-col">
+     Dependencies Ractive.js,Bootstrap.less-->
+    
+    
+    <div class="pb-baseDiv pb-col-width pb-col-height progress">
         <div class="pb-bg"> 
             <div style="width:{{bar.progress}}px;" class="pb-progressBar {{progressBarStyle}}"/>
             <div class="pb-textDiv"><text class="pb-text pb-textSize">{{label}}%</text></div>
@@ -11,6 +12,7 @@
     
 <script>
     ;(function(window){
+        
         if(typeof component == "undefined"){
             return;
         }
@@ -71,6 +73,19 @@
                 this.on( 'teardown', function () {
                     window. removeEventListener( 'resize', resizeHandler );
                 }, false );
+            },
+
+            /**
+             * Run progress to required percentage.. 
+             * @param {integer} value - percentage value to be increased/decreased. A negative value decrease percentage
+             * and a postive value will increase percentage
+             */
+            runProgress:function(value){
+                if(value>=0){
+                    this.increase(value);
+                }else{
+                    this.decrease(Math.abs(value))
+                }
             },
 
             /**
@@ -142,7 +157,7 @@
             tween:function(value){
 
                 this.animate( "bar.progress", value,{ 
-                    duration: 50
+                    duration: this.get("animateSpeed")
                 });
             },  
 
@@ -158,6 +173,7 @@
                 this.set("label",this.getUsagePercentage(this.progress));
             }
         };
+        
     })( window );
 </script>
     

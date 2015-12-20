@@ -1,5 +1,10255 @@
-!function(e){if("object"==typeof exports&&"undefined"!=typeof module)module.exports=e();else if("function"==typeof define&&define.amd)define([],e);else{var t;t="undefined"!=typeof window?window:"undefined"!=typeof global?global:"undefined"!=typeof self?self:this,t.less=e()}}(function(){return function e(t,n,r){function i(s,a){if(!n[s]){if(!t[s]){var u="function"==typeof require&&require;if(!a&&u)return u(s,!0);if(o)return o(s,!0);var l=new Error("Cannot find module '"+s+"'");throw l.code="MODULE_NOT_FOUND",l}var c=n[s]={exports:{}};t[s][0].call(c.exports,function(e){var n=t[s][1][e];return i(n?n:e)},c,c.exports,e,t,n,r)}return n[s].exports}for(var o="function"==typeof require&&require,s=0;s<r.length;s++)i(r[s]);return i}({1:[function(e,t,n){var r=e("./utils").addDataAttr,i=e("./browser");t.exports=function(e,t){r(t,i.currentScript(e)),void 0===t.isFileProtocol&&(t.isFileProtocol=/^(file|(chrome|safari)(-extension)?|resource|qrc|app):/.test(e.location.protocol)),t.async=t.async||!1,t.fileAsync=t.fileAsync||!1,t.poll=t.poll||(t.isFileProtocol?1e3:1500),t.env=t.env||("127.0.0.1"==e.location.hostname||"0.0.0.0"==e.location.hostname||"localhost"==e.location.hostname||e.location.port&&e.location.port.length>0||t.isFileProtocol?"development":"production");var n=/!dumpLineNumbers:(comments|mediaquery|all)/.exec(e.location.hash);n&&(t.dumpLineNumbers=n[1]),void 0===t.useFileCache&&(t.useFileCache=!0),void 0===t.onReady&&(t.onReady=!0)}},{"./browser":3,"./utils":9}],2:[function(e,t,n){e("promise/polyfill.js");var r=window.less||{};e("./add-default-options")(window,r);var i=t.exports=e("./index")(window,r);window.less=i,r.onReady&&(/!watch/.test(window.location.hash)&&i.watch(),i.registerStylesheetsImmediately(),i.pageLoadFinished=i.refresh("development"===i.env))},{"./add-default-options":1,"./index":7,"promise/polyfill.js":95}],3:[function(e,t,n){var r=e("./utils");t.exports={createCSS:function(e,t,n){var i=n.href||"",o="less:"+(n.title||r.extractId(i)),s=e.getElementById(o),a=!1,u=e.createElement("style");u.setAttribute("type","text/css"),n.media&&u.setAttribute("media",n.media),u.id=o,u.styleSheet||(u.appendChild(e.createTextNode(t)),a=null!==s&&s.childNodes.length>0&&u.childNodes.length>0&&s.firstChild.nodeValue===u.firstChild.nodeValue);var l=e.getElementsByTagName("head")[0];if(null===s||a===!1){var c=n&&n.nextSibling||null;c?c.parentNode.insertBefore(u,c):l.appendChild(u)}if(s&&a===!1&&s.parentNode.removeChild(s),u.styleSheet)try{u.styleSheet.cssText=t}catch(h){throw new Error("Couldn't reassign styleSheet.cssText.")}},currentScript:function(e){var t=e.document;return t.currentScript||function(){var e=t.getElementsByTagName("script");return e[e.length-1]}()}}},{"./utils":9}],4:[function(e,t,n){t.exports=function(e,t,n){var r=null;if("development"!==t.env)try{r="undefined"==typeof e.localStorage?null:e.localStorage}catch(i){}return{setCSS:function(e,t,i){if(r){n.info("saving "+e+" to cache.");try{r.setItem(e,i),r.setItem(e+":timestamp",t)}catch(o){n.error('failed to save "'+e+'" to local storage for caching.')}}},getCSS:function(e,t){var n=r&&r.getItem(e),i=r&&r.getItem(e+":timestamp");return i&&t.lastModified&&new Date(t.lastModified).valueOf()===new Date(i).valueOf()?n:void 0}}}},{}],5:[function(e,t,n){var r=e("./utils"),i=e("./browser");t.exports=function(e,t,n){function o(t,o){var s,a,u="less-error-message:"+r.extractId(o||""),l='<li><label>{line}</label><pre class="{class}">{content}</pre></li>',c=e.document.createElement("div"),h=[],f=t.filename||o,p=f.match(/([^\/]+(\?.*)?)$/)[1];c.id=u,c.className="less-error-message",a="<h3>"+(t.type||"Syntax")+"Error: "+(t.message||"There is an error in your .less file")+'</h3><p>in <a href="'+f+'">'+p+"</a> ";var d=function(e,t,n){void 0!==e.extract[t]&&h.push(l.replace(/\{line\}/,(parseInt(e.line,10)||0)+(t-1)).replace(/\{class\}/,n).replace(/\{content\}/,e.extract[t]))};t.extract&&(d(t,0,""),d(t,1,"line"),d(t,2,""),a+="on line "+t.line+", column "+(t.column+1)+":</p><ul>"+h.join("")+"</ul>"),t.stack&&(t.extract||n.logLevel>=4)&&(a+="<br/>Stack Trace</br />"+t.stack.split("\n").slice(1).join("<br/>")),c.innerHTML=a,i.createCSS(e.document,[".less-error-message ul, .less-error-message li {","list-style-type: none;","margin-right: 15px;","padding: 4px 0;","margin: 0;","}",".less-error-message label {","font-size: 12px;","margin-right: 15px;","padding: 4px 0;","color: #cc7777;","}",".less-error-message pre {","color: #dd6666;","padding: 4px 0;","margin: 0;","display: inline-block;","}",".less-error-message pre.line {","color: #ff0000;","}",".less-error-message h3 {","font-size: 20px;","font-weight: bold;","padding: 15px 0 5px 0;","margin: 0;","}",".less-error-message a {","color: #10a","}",".less-error-message .error {","color: red;","font-weight: bold;","padding-bottom: 2px;","border-bottom: 1px dashed red;","}"].join("\n"),{title:"error-message"}),c.style.cssText=["font-family: Arial, sans-serif","border: 1px solid #e00","background-color: #eee","border-radius: 5px","-webkit-border-radius: 5px","-moz-border-radius: 5px","color: #e00","padding: 15px","margin-bottom: 15px"].join(";"),"development"===n.env&&(s=setInterval(function(){var t=e.document,n=t.body;n&&(t.getElementById(u)?n.replaceChild(c,t.getElementById(u)):n.insertBefore(c,n.firstChild),clearInterval(s))},10))}function s(e,t){n.errorReporting&&"html"!==n.errorReporting?"console"===n.errorReporting?c(e,t):"function"==typeof n.errorReporting&&n.errorReporting("add",e,t):o(e,t)}function a(t){var n=e.document.getElementById("less-error-message:"+r.extractId(t));n&&n.parentNode.removeChild(n)}function u(e){}function l(e){n.errorReporting&&"html"!==n.errorReporting?"console"===n.errorReporting?u(e):"function"==typeof n.errorReporting&&n.errorReporting("remove",e):a(e)}function c(e,r){var i="{line} {content}",o=e.filename||r,s=[],a=(e.type||"Syntax")+"Error: "+(e.message||"There is an error in your .less file")+" in "+o+" ",u=function(e,t,n){void 0!==e.extract[t]&&s.push(i.replace(/\{line\}/,(parseInt(e.line,10)||0)+(t-1)).replace(/\{class\}/,n).replace(/\{content\}/,e.extract[t]))};e.extract&&(u(e,0,""),u(e,1,"line"),u(e,2,""),a+="on line "+e.line+", column "+(e.column+1)+":\n"+s.join("\n")),e.stack&&(e.extract||n.logLevel>=4)&&(a+="\nStack Trace\n"+e.stack),t.logger.error(a)}return{add:s,remove:l}}},{"./browser":3,"./utils":9}],6:[function(e,t,n){t.exports=function(t,n){function r(){if(window.XMLHttpRequest&&!("file:"===window.location.protocol&&"ActiveXObject"in window))return new XMLHttpRequest;try{return new ActiveXObject("Microsoft.XMLHTTP")}catch(e){return n.error("browser doesn't support AJAX."),null}}var i=e("../less/environment/abstract-file-manager.js"),o={},s=function(){};return s.prototype=new i,s.prototype.alwaysMakePathsAbsolute=function(){return!0},s.prototype.join=function(e,t){return e?this.extractUrlParts(t,e).path:t},s.prototype.doXHR=function(e,i,o,s){function a(t,n,r){t.status>=200&&t.status<300?n(t.responseText,t.getResponseHeader("Last-Modified")):"function"==typeof r&&r(t.status,e)}var u=r(),l=t.isFileProtocol?t.fileAsync:t.async;"function"==typeof u.overrideMimeType&&u.overrideMimeType("text/css"),n.debug("XHR: Getting '"+e+"'"),u.open("GET",e,l),u.setRequestHeader("Accept",i||"text/x-less, text/css; q=0.9, */*; q=0.5"),u.send(null),t.isFileProtocol&&!t.fileAsync?0===u.status||u.status>=200&&u.status<300?o(u.responseText):s(u.status,e):l?u.onreadystatechange=function(){4==u.readyState&&a(u,o,s)}:a(u,o,s)},s.prototype.supports=function(e,t,n,r){return!0},s.prototype.clearFileCache=function(){o={}},s.prototype.loadFile=function(e,t,n,r,i){t&&!this.isPathAbsolute(e)&&(e=t+e),n=n||{};var s=this.extractUrlParts(e,window.location.href),a=s.url;if(n.useFileCache&&o[a])try{var u=o[a];i(null,{contents:u,filename:a,webInfo:{lastModified:new Date}})}catch(l){i({filename:a,message:"Error loading file "+a+" error was "+l.message})}else this.doXHR(a,n.mime,function(e,t){o[a]=e,i(null,{contents:e,filename:a,webInfo:{lastModified:t}})},function(e,t){i({type:"File",message:"'"+t+"' wasn't found ("+e+")",href:a})})},s}},{"../less/environment/abstract-file-manager.js":14}],7:[function(e,t,n){var r=e("./utils").addDataAttr,i=e("./browser");t.exports=function(t,n){function o(e){return n.postProcessor&&"function"==typeof n.postProcessor&&(e=n.postProcessor.call(e,e)||e),e}function s(e){var t={};for(var n in e)e.hasOwnProperty(n)&&(t[n]=e[n]);return t}function a(e,t){var n=Array.prototype.slice.call(arguments,2);return function(){var r=n.concat(Array.prototype.slice.call(arguments,0));return e.apply(t,r)}}function u(e){for(var t,r=f.getElementsByTagName("style"),i=0;i<r.length;i++)if(t=r[i],t.type.match(w)){var o=s(n);o.modifyVars=e;var u=t.innerHTML||"";o.filename=f.location.href.replace(/#.*$/,""),p.render(u,o,a(function(e,t,n){t?g.add(t,"inline"):(e.type="text/css",e.styleSheet?e.styleSheet.cssText=n.css:e.innerHTML=n.css)},null,t))}}function l(e,t,i,a,u){function l(n){var r=n.contents,s=n.filename,u=n.webInfo,l={currentDirectory:m.getPath(s),filename:s,rootFilename:s,relativeUrls:c.relativeUrls};if(l.entryPath=l.currentDirectory,l.rootpath=c.rootpath||l.currentDirectory,u&&(u.remaining=a,!c.modifyVars)){var h=y.getCSS(s,u);if(!i&&h)return u.local=!0,void t(null,h,r,e,u,s)}g.remove(s),c.rootFileInfo=l,p.render(r,c,function(n,i){n?(n.href=s,t(n)):(i.css=o(i.css),c.modifyVars||y.setCSS(e.href,u.lastModified,i.css),t(null,i.css,r,e,u,s))})}var c=s(n);r(c,e),c.mime=e.type,u&&(c.modifyVars=u),m.loadFile(e.href,null,c,d,function(e,n){return e?void t(e):void l(n)})}function c(e,t,n){for(var r=0;r<p.sheets.length;r++)l(p.sheets[r],e,t,p.sheets.length-(r+1),n)}function h(){"development"===p.env&&(p.watchTimer=setInterval(function(){p.watchMode&&(m.clearFileCache(),c(function(e,n,r,o,s){e?g.add(e,e.href||o.href):n&&i.createCSS(t.document,n,o)}))},n.poll))}var f=t.document,p=e("../less")();p.options=n;var d=p.environment,v=e("./file-manager")(n,p.logger),m=new v;d.addFileManager(m),p.FileManager=v,e("./log-listener")(p,n);var g=e("./error-reporting")(t,p,n),y=p.cache=n.cache||e("./cache")(t,n,p.logger);n.functions&&p.functions.functionRegistry.addMultiple(n.functions);var w=/^text\/(x-)?less$/;return p.watch=function(){return p.watchMode||(p.env="development",h()),this.watchMode=!0,!0},p.unwatch=function(){return clearInterval(p.watchTimer),this.watchMode=!1,!1},p.registerStylesheetsImmediately=function(){var e=f.getElementsByTagName("link");p.sheets=[];for(var t=0;t<e.length;t++)("stylesheet/less"===e[t].rel||e[t].rel.match(/stylesheet/)&&e[t].type.match(w))&&p.sheets.push(e[t])},p.registerStylesheets=function(){return new Promise(function(e,t){p.registerStylesheetsImmediately(),e()})},p.modifyVars=function(e){return p.refresh(!0,e,!1)},p.refresh=function(e,n,r){return(e||r)&&r!==!1&&m.clearFileCache(),new Promise(function(r,o){var s,a,l;s=a=new Date,c(function(e,n,u,c,h){return e?(g.add(e,e.href||c.href),void o(e)):(h.local?p.logger.info("loading "+c.href+" from cache."):p.logger.info("rendered "+c.href+" successfully."),i.createCSS(t.document,n,c),p.logger.info("css for "+c.href+" generated in "+(new Date-a)+"ms"),0===h.remaining&&(l=new Date-s,p.logger.info("less has finished. css generated in "+l+"ms"),r({startTime:s,endTime:a,totalMilliseconds:l,sheets:p.sheets.length})),void(a=new Date))},e,n),u(n)})},p.refreshStyles=u,p}},{"../less":30,"./browser":3,"./cache":4,"./error-reporting":5,"./file-manager":6,"./log-listener":8,"./utils":9}],8:[function(e,t,n){t.exports=function(e,t){var n=4,r=3,i=2,o=1;t.logLevel="undefined"!=typeof t.logLevel?t.logLevel:"development"===t.env?r:o,t.loggers||(t.loggers=[{debug:function(e){t.logLevel>=n&&console.log(e)},info:function(e){t.logLevel>=r&&console.log(e)},warn:function(e){t.logLevel>=i&&console.warn(e)},error:function(e){t.logLevel>=o&&console.error(e)}}]);for(var s=0;s<t.loggers.length;s++)e.logger.addListener(t.loggers[s])}},{}],9:[function(e,t,n){t.exports={extractId:function(e){return e.replace(/^[a-z-]+:\/+?[^\/]+/,"").replace(/[\?\&]livereload=\w+/,"").replace(/^\//,"").replace(/\.[a-zA-Z]+$/,"").replace(/[^\.\w-]+/g,"-").replace(/\./g,":")},addDataAttr:function(e,t){for(var n in t.dataset)if(t.dataset.hasOwnProperty(n))if("env"===n||"dumpLineNumbers"===n||"rootpath"===n||"errorReporting"===n)e[n]=t.dataset[n];else try{e[n]=JSON.parse(t.dataset[n])}catch(r){}}}},{}],10:[function(e,t,n){var r={};t.exports=r;var i=function(e,t,n){if(e)for(var r=0;r<n.length;r++)e.hasOwnProperty(n[r])&&(t[n[r]]=e[n[r]])},o=["paths","relativeUrls","rootpath","strictImports","insecure","dumpLineNumbers","compress","syncImport","chunkInput","mime","useFileCache","processImports","reference","pluginManager"];r.Parse=function(e){i(e,this,o),"string"==typeof this.paths&&(this.paths=[this.paths])};var s=["paths","compress","ieCompat","strictMath","strictUnits","sourceMap","importMultiple","urlArgs","javascriptEnabled","pluginManager","importantScope"];r.Eval=function(e,t){i(e,this,s),"string"==typeof this.paths&&(this.paths=[this.paths]),this.frames=t||[],this.importantScope=this.importantScope||[]},r.Eval.prototype.inParenthesis=function(){this.parensStack||(this.parensStack=[]),this.parensStack.push(!0)},r.Eval.prototype.outOfParenthesis=function(){this.parensStack.pop()},r.Eval.prototype.isMathOn=function(){return this.strictMath?this.parensStack&&this.parensStack.length:!0},r.Eval.prototype.isPathRelative=function(e){return!/^(?:[a-z-]+:|\/|#)/i.test(e)},r.Eval.prototype.normalizePath=function(e){var t,n=e.split("/").reverse();for(e=[];0!==n.length;)switch(t=n.pop()){case".":break;case"..":0===e.length||".."===e[e.length-1]?e.push(t):e.pop();break;default:e.push(t)}return e.join("/")}},{}],11:[function(e,t,n){t.exports={aliceblue:"#f0f8ff",antiquewhite:"#faebd7",aqua:"#00ffff",aquamarine:"#7fffd4",azure:"#f0ffff",beige:"#f5f5dc",bisque:"#ffe4c4",black:"#000000",blanchedalmond:"#ffebcd",blue:"#0000ff",blueviolet:"#8a2be2",brown:"#a52a2a",burlywood:"#deb887",cadetblue:"#5f9ea0",chartreuse:"#7fff00",chocolate:"#d2691e",coral:"#ff7f50",cornflowerblue:"#6495ed",cornsilk:"#fff8dc",crimson:"#dc143c",cyan:"#00ffff",darkblue:"#00008b",darkcyan:"#008b8b",darkgoldenrod:"#b8860b",darkgray:"#a9a9a9",darkgrey:"#a9a9a9",darkgreen:"#006400",darkkhaki:"#bdb76b",darkmagenta:"#8b008b",darkolivegreen:"#556b2f",darkorange:"#ff8c00",darkorchid:"#9932cc",darkred:"#8b0000",darksalmon:"#e9967a",darkseagreen:"#8fbc8f",darkslateblue:"#483d8b",darkslategray:"#2f4f4f",darkslategrey:"#2f4f4f",darkturquoise:"#00ced1",darkviolet:"#9400d3",deeppink:"#ff1493",deepskyblue:"#00bfff",dimgray:"#696969",dimgrey:"#696969",dodgerblue:"#1e90ff",firebrick:"#b22222",floralwhite:"#fffaf0",forestgreen:"#228b22",fuchsia:"#ff00ff",gainsboro:"#dcdcdc",ghostwhite:"#f8f8ff",gold:"#ffd700",goldenrod:"#daa520",gray:"#808080",grey:"#808080",green:"#008000",greenyellow:"#adff2f",honeydew:"#f0fff0",hotpink:"#ff69b4",indianred:"#cd5c5c",indigo:"#4b0082",ivory:"#fffff0",khaki:"#f0e68c",lavender:"#e6e6fa",lavenderblush:"#fff0f5",lawngreen:"#7cfc00",lemonchiffon:"#fffacd",lightblue:"#add8e6",lightcoral:"#f08080",lightcyan:"#e0ffff",lightgoldenrodyellow:"#fafad2",lightgray:"#d3d3d3",lightgrey:"#d3d3d3",lightgreen:"#90ee90",lightpink:"#ffb6c1",lightsalmon:"#ffa07a",lightseagreen:"#20b2aa",lightskyblue:"#87cefa",lightslategray:"#778899",lightslategrey:"#778899",lightsteelblue:"#b0c4de",lightyellow:"#ffffe0",lime:"#00ff00",limegreen:"#32cd32",linen:"#faf0e6",magenta:"#ff00ff",maroon:"#800000",mediumaquamarine:"#66cdaa",mediumblue:"#0000cd",mediumorchid:"#ba55d3",mediumpurple:"#9370d8",mediumseagreen:"#3cb371",mediumslateblue:"#7b68ee",mediumspringgreen:"#00fa9a",mediumturquoise:"#48d1cc",mediumvioletred:"#c71585",midnightblue:"#191970",mintcream:"#f5fffa",mistyrose:"#ffe4e1",moccasin:"#ffe4b5",navajowhite:"#ffdead",navy:"#000080",oldlace:"#fdf5e6",olive:"#808000",olivedrab:"#6b8e23",orange:"#ffa500",orangered:"#ff4500",orchid:"#da70d6",palegoldenrod:"#eee8aa",palegreen:"#98fb98",paleturquoise:"#afeeee",palevioletred:"#d87093",papayawhip:"#ffefd5",peachpuff:"#ffdab9",peru:"#cd853f",pink:"#ffc0cb",plum:"#dda0dd",powderblue:"#b0e0e6",purple:"#800080",rebeccapurple:"#663399",red:"#ff0000",rosybrown:"#bc8f8f",royalblue:"#4169e1",saddlebrown:"#8b4513",salmon:"#fa8072",sandybrown:"#f4a460",seagreen:"#2e8b57",seashell:"#fff5ee",sienna:"#a0522d",silver:"#c0c0c0",skyblue:"#87ceeb",slateblue:"#6a5acd",slategray:"#708090",slategrey:"#708090",snow:"#fffafa",springgreen:"#00ff7f",steelblue:"#4682b4",tan:"#d2b48c",teal:"#008080",thistle:"#d8bfd8",tomato:"#ff6347",turquoise:"#40e0d0",violet:"#ee82ee",wheat:"#f5deb3",white:"#ffffff",whitesmoke:"#f5f5f5",yellow:"#ffff00",yellowgreen:"#9acd32"}},{}],12:[function(e,t,n){t.exports={colors:e("./colors"),unitConversions:e("./unit-conversions")}},{"./colors":11,"./unit-conversions":13}],13:[function(e,t,n){t.exports={length:{m:1,cm:.01,mm:.001,"in":.0254,px:.0254/96,pt:.0254/72,pc:.0254/72*12},duration:{s:1,ms:.001},angle:{rad:1/(2*Math.PI),deg:1/360,grad:.0025,turn:1}}},{}],14:[function(e,t,n){var r=function(){};r.prototype.getPath=function(e){var t=e.lastIndexOf("?");return t>0&&(e=e.slice(0,t)),t=e.lastIndexOf("/"),0>t&&(t=e.lastIndexOf("\\")),0>t?"":e.slice(0,t+1)},r.prototype.tryAppendExtension=function(e,t){return/(\.[a-z]*$)|([\?;].*)$/.test(e)?e:e+t},r.prototype.tryAppendLessExtension=function(e){return this.tryAppendExtension(e,".less")},r.prototype.supportsSync=function(){return!1},r.prototype.alwaysMakePathsAbsolute=function(){return!1},r.prototype.isPathAbsolute=function(e){return/^(?:[a-z-]+:|\/|\\|#)/i.test(e)},r.prototype.join=function(e,t){return e?e+t:t},r.prototype.pathDiff=function(e,t){var n,r,i,o,s=this.extractUrlParts(e),a=this.extractUrlParts(t),u="";if(s.hostPart!==a.hostPart)return"";for(r=Math.max(a.directories.length,s.directories.length),n=0;r>n&&a.directories[n]===s.directories[n];n++);for(o=a.directories.slice(n),i=s.directories.slice(n),n=0;n<o.length-1;n++)u+="../";for(n=0;n<i.length-1;n++)u+=i[n]+"/";return u},r.prototype.extractUrlParts=function(e,t){var n,r,i=/^((?:[a-z-]+:)?\/+?(?:[^\/\?#]*\/)|([\/\\]))?((?:[^\/\\\?#]*[\/\\])*)([^\/\\\?#]*)([#\?].*)?$/i,o=e.match(i),s={},a=[];if(!o)throw new Error("Could not parse sheet href - '"+e+"'");if(t&&(!o[1]||o[2])){if(r=t.match(i),!r)throw new Error("Could not parse page url - '"+t+"'");o[1]=o[1]||r[1]||"",o[2]||(o[3]=r[3]+o[3])}if(o[3]){for(a=o[3].replace(/\\/g,"/").split("/"),n=0;n<a.length;n++)"."===a[n]&&(a.splice(n,1),n-=1);for(n=0;n<a.length;n++)".."===a[n]&&n>0&&(a.splice(n-1,2),n-=2)}return s.hostPart=o[1],s.directories=a,s.path=(o[1]||"")+a.join("/"),s.fileUrl=s.path+(o[4]||""),s.url=s.fileUrl+(o[5]||""),s},t.exports=r},{}],15:[function(e,t,n){var r=e("../logger"),i=function(e,t){this.fileManagers=t||[],e=e||{};for(var n=["encodeBase64","mimeLookup","charsetLookup","getSourceMapGenerator"],r=[],i=r.concat(n),o=0;o<i.length;o++){var s=i[o],a=e[s];a?this[s]=a.bind(e):o<r.length&&this.warn("missing required function in environment - "+s)}};i.prototype.getFileManager=function(e,t,n,i,o){e||r.warn("getFileManager called with no filename.. Please report this issue. continuing."),null==t&&r.warn("getFileManager called with null directory.. Please report this issue. continuing.");var s=this.fileManagers;n.pluginManager&&(s=[].concat(s).concat(n.pluginManager.getFileManagers()));for(var a=s.length-1;a>=0;a--){var u=s[a];if(u[o?"supportsSync":"supports"](e,t,n,i))return u}return null},i.prototype.addFileManager=function(e){this.fileManagers.push(e)},i.prototype.clearFileManagers=function(){this.fileManagers=[]},t.exports=i},{"../logger":32}],16:[function(e,t,n){function r(e,t,n){var r,o,s,a,u=t.alpha,l=n.alpha,c=[];s=l+u*(1-l);for(var h=0;3>h;h++)r=t.rgb[h]/255,o=n.rgb[h]/255,a=e(r,o),s&&(a=(l*o+u*(r-l*(r+o-a)))/s),c[h]=255*a;return new i(c,s)}var i=e("../tree/color"),o=e("./function-registry"),s={multiply:function(e,t){return e*t},screen:function(e,t){return e+t-e*t},overlay:function(e,t){return e*=2,1>=e?s.multiply(e,t):s.screen(e-1,t)},softlight:function(e,t){var n=1,r=e;return t>.5&&(r=1,n=e>.25?Math.sqrt(e):((16*e-12)*e+4)*e),e-(1-2*t)*r*(n-e)},hardlight:function(e,t){return s.overlay(t,e)},difference:function(e,t){return Math.abs(e-t)},exclusion:function(e,t){return e+t-2*e*t},average:function(e,t){return(e+t)/2},negation:function(e,t){return 1-Math.abs(e+t-1)}};for(var a in s)s.hasOwnProperty(a)&&(r[a]=r.bind(null,s[a]));o.addMultiple(r)},{"../tree/color":49,"./function-registry":21}],17:[function(e,t,n){function r(e){return Math.min(1,Math.max(0,e))}function i(e){return a.hsla(e.h,e.s,e.l,e.a)}function o(e){if(e instanceof u)return parseFloat(e.unit.is("%")?e.value/100:e.value);if("number"==typeof e)return e;throw{type:"Argument",message:"color functions take numbers as parameters"}}function s(e,t){return e instanceof u&&e.unit.is("%")?parseFloat(e.value*t/100):o(e)}var a,u=e("../tree/dimension"),l=e("../tree/color"),c=e("../tree/quoted"),h=e("../tree/anonymous"),f=e("./function-registry");a={rgb:function(e,t,n){return a.rgba(e,t,n,1)},rgba:function(e,t,n,r){var i=[e,t,n].map(function(e){return s(e,255)});return r=o(r),new l(i,r)},hsl:function(e,t,n){return a.hsla(e,t,n,1)},hsla:function(e,t,n,i){function s(e){return e=0>e?e+1:e>1?e-1:e,1>6*e?l+(u-l)*e*6:1>2*e?u:2>3*e?l+(u-l)*(2/3-e)*6:l}e=o(e)%360/360,t=r(o(t)),n=r(o(n)),i=r(o(i));var u=.5>=n?n*(t+1):n+t-n*t,l=2*n-u;return a.rgba(255*s(e+1/3),255*s(e),255*s(e-1/3),i)},hsv:function(e,t,n){return a.hsva(e,t,n,1)},hsva:function(e,t,n,r){e=o(e)%360/360*360,t=o(t),n=o(n),r=o(r);var i,s;i=Math.floor(e/60%6),s=e/60-i;var u=[n,n*(1-t),n*(1-s*t),n*(1-(1-s)*t)],l=[[0,3,1],[2,0,1],[1,0,3],[1,2,0],[3,1,0],[0,1,2]];return a.rgba(255*u[l[i][0]],255*u[l[i][1]],255*u[l[i][2]],r)},hue:function(e){return new u(e.toHSL().h)},saturation:function(e){return new u(100*e.toHSL().s,"%")},lightness:function(e){return new u(100*e.toHSL().l,"%")},hsvhue:function(e){return new u(e.toHSV().h)},hsvsaturation:function(e){return new u(100*e.toHSV().s,"%")},hsvvalue:function(e){return new u(100*e.toHSV().v,"%")},red:function(e){return new u(e.rgb[0])},green:function(e){return new u(e.rgb[1])},blue:function(e){return new u(e.rgb[2])},alpha:function(e){return new u(e.toHSL().a)},luma:function(e){return new u(e.luma()*e.alpha*100,"%")},luminance:function(e){var t=.2126*e.rgb[0]/255+.7152*e.rgb[1]/255+.0722*e.rgb[2]/255;return new u(t*e.alpha*100,"%")},saturate:function(e,t,n){if(!e.rgb)return null;var o=e.toHSL();return"undefined"!=typeof n&&"relative"===n.value?o.s+=o.s*t.value/100:o.s+=t.value/100,o.s=r(o.s),i(o)},desaturate:function(e,t,n){var o=e.toHSL();return"undefined"!=typeof n&&"relative"===n.value?o.s-=o.s*t.value/100:o.s-=t.value/100,o.s=r(o.s),i(o)},lighten:function(e,t,n){var o=e.toHSL();return"undefined"!=typeof n&&"relative"===n.value?o.l+=o.l*t.value/100:o.l+=t.value/100,o.l=r(o.l),i(o)},darken:function(e,t,n){var o=e.toHSL();return"undefined"!=typeof n&&"relative"===n.value?o.l-=o.l*t.value/100:o.l-=t.value/100,o.l=r(o.l),i(o)},fadein:function(e,t,n){var o=e.toHSL();return"undefined"!=typeof n&&"relative"===n.value?o.a+=o.a*t.value/100:o.a+=t.value/100,o.a=r(o.a),i(o)},fadeout:function(e,t,n){var o=e.toHSL();return"undefined"!=typeof n&&"relative"===n.value?o.a-=o.a*t.value/100:o.a-=t.value/100,o.a=r(o.a),i(o)},fade:function(e,t){var n=e.toHSL();return n.a=t.value/100,n.a=r(n.a),i(n)},spin:function(e,t){var n=e.toHSL(),r=(n.h+t.value)%360;return n.h=0>r?360+r:r,i(n)},mix:function(e,t,n){e.toHSL&&t.toHSL||(console.log(t.type),console.dir(t)),n||(n=new u(50));var r=n.value/100,i=2*r-1,o=e.toHSL().a-t.toHSL().a,s=((i*o==-1?i:(i+o)/(1+i*o))+1)/2,a=1-s,c=[e.rgb[0]*s+t.rgb[0]*a,e.rgb[1]*s+t.rgb[1]*a,e.rgb[2]*s+t.rgb[2]*a],h=e.alpha*r+t.alpha*(1-r);return new l(c,h)},greyscale:function(e){return a.desaturate(e,new u(100))},contrast:function(e,t,n,r){if(!e.rgb)return null;if("undefined"==typeof n&&(n=a.rgba(255,255,255,1)),"undefined"==typeof t&&(t=a.rgba(0,0,0,1)),t.luma()>n.luma()){var i=n;n=t,t=i}return r="undefined"==typeof r?.43:o(r),e.luma()<r?n:t},argb:function(e){return new h(e.toARGB())},color:function(e){if(e instanceof c&&/^#([a-f0-9]{6}|[a-f0-9]{3})$/i.test(e.value))return new l(e.value.slice(1));if(e instanceof l||(e=l.fromKeyword(e.value)))return e.value=void 0,e;throw{type:"Argument",message:"argument must be a color keyword or 3/6 digit hex e.g. #FFF"}},tint:function(e,t){return a.mix(a.rgb(255,255,255),e,t)},shade:function(e,t){return a.mix(a.rgb(0,0,0),e,t)}},f.addMultiple(a)},{"../tree/anonymous":45,"../tree/color":49,"../tree/dimension":55,"../tree/quoted":72,"./function-registry":21}],18:[function(e,t,n){t.exports=function(t){var n=e("../tree/quoted"),r=e("../tree/url"),i=e("./function-registry"),o=function(e,t){return new r(t,e.index,e.currentFileInfo).eval(e.context)},s=e("../logger");i.add("data-uri",function(e,i){i||(i=e,e=null);var a=e&&e.value,u=i.value,l=this.currentFileInfo,c=l.relativeUrls?l.currentDirectory:l.entryPath,h=u.indexOf("#"),f="";-1!==h&&(f=u.slice(h),u=u.slice(0,h));var p=t.getFileManager(u,c,this.context,t,!0);if(!p)return o(this,i);var d=!1;if(e)d=/;base64$/.test(a);else{if(a=t.mimeLookup(u),"image/svg+xml"===a)d=!1;else{var v=t.charsetLookup(a);d=["US-ASCII","UTF-8"].indexOf(v)<0}d&&(a+=";base64")}var m=p.loadFileSync(u,c,this.context,t);if(!m.contents)return s.warn("Skipped data-uri embedding of "+u+" because file not found"),o(this,i||e);var g=m.contents;if(d&&!t.encodeBase64)return o(this,i);g=d?t.encodeBase64(g):encodeURIComponent(g);var y="data:"+a+","+g+f,w=32768;return y.length>=w&&this.context.ieCompat!==!1?(s.warn("Skipped data-uri embedding of "+u+" because its size ("+y.length+" characters) exceeds IE8-safe "+w+" characters!"),o(this,i||e)):new r(new n('"'+y+'"',y,!1,this.index,this.currentFileInfo),this.index,this.currentFileInfo)})}},{"../logger":32,"../tree/quoted":72,"../tree/url":79,"./function-registry":21}],19:[function(e,t,n){var r=e("../tree/keyword"),i=e("./function-registry"),o={eval:function(){var e=this.value_,t=this.error_;if(t)throw t;return null!=e?e?r.True:r.False:void 0},value:function(e){this.value_=e},error:function(e){this.error_=e},reset:function(){this.value_=this.error_=null}};i.add("default",o.eval.bind(o)),t.exports=o},{"../tree/keyword":64,"./function-registry":21}],20:[function(e,t,n){var r=e("../tree/expression"),i=function(e,t,n,r){this.name=e.toLowerCase(),this.index=n,this.context=t,this.currentFileInfo=r,this.func=t.frames[0].functionRegistry.get(this.name)};i.prototype.isValid=function(){return Boolean(this.func)},i.prototype.call=function(e){return Array.isArray(e)&&(e=e.filter(function(e){return"Comment"===e.type?!1:!0}).map(function(e){if("Expression"===e.type){var t=e.value.filter(function(e){return"Comment"===e.type?!1:!0});return 1===t.length?t[0]:new r(t)}return e})),this.func.apply(this,e)},t.exports=i},{"../tree/expression":58}],21:[function(e,t,n){function r(e){return{_data:{},add:function(e,t){e=e.toLowerCase(),this._data.hasOwnProperty(e),this._data[e]=t},addMultiple:function(e){Object.keys(e).forEach(function(t){this.add(t,e[t])}.bind(this))},get:function(t){return this._data[t]||e&&e.get(t)},inherit:function(){return r(this)}}}t.exports=r(null)},{}],22:[function(e,t,n){t.exports=function(t){var n={functionRegistry:e("./function-registry"),functionCaller:e("./function-caller")};return e("./default"),e("./color"),e("./color-blending"),e("./data-uri")(t),e("./math"),e("./number"),e("./string"),e("./svg")(t),e("./types"),n}},{"./color":17,"./color-blending":16,"./data-uri":18,"./default":19,"./function-caller":20,"./function-registry":21,"./math":24,"./number":25,"./string":26,"./svg":27,"./types":28}],23:[function(e,t,n){var r=e("../tree/dimension"),i=function(){};i._math=function(e,t,n){if(!(n instanceof r))throw{type:"Argument",message:"argument must be a number"};return null==t?t=n.unit:n=n.unify(),new r(e(parseFloat(n.value)),t)},t.exports=i},{"../tree/dimension":55}],24:[function(e,t,n){var r=e("./function-registry"),i=e("./math-helper.js"),o={ceil:null,floor:null,sqrt:null,abs:null,tan:"",sin:"",cos:"",atan:"rad",asin:"rad",acos:"rad"};for(var s in o)o.hasOwnProperty(s)&&(o[s]=i._math.bind(null,Math[s],o[s]));o.round=function(e,t){var n="undefined"==typeof t?0:t.value;return i._math(function(e){return e.toFixed(n)},null,e)},r.addMultiple(o)},{"./function-registry":21,"./math-helper.js":23}],25:[function(e,t,n){var r=e("../tree/dimension"),i=e("../tree/anonymous"),o=e("./function-registry"),s=e("./math-helper.js"),a=function(e,t){switch(t=Array.prototype.slice.call(t),t.length){case 0:throw{type:"Argument",message:"one or more arguments required"}}var n,o,s,a,u,l,c,h,f=[],p={};for(n=0;n<t.length;n++)if(s=t[n],s instanceof r)if(a=""===s.unit.toString()&&void 0!==h?new r(s.value,h).unify():s.unify(),l=""===a.unit.toString()&&void 0!==c?c:a.unit.toString(),c=""!==l&&void 0===c||""!==l&&""===f[0].unify().unit.toString()?l:c,h=""!==l&&void 0===h?s.unit.toString():h,o=void 0!==p[""]&&""!==l&&l===c?p[""]:p[l],void 0!==o)u=""===f[o].unit.toString()&&void 0!==h?new r(f[o].value,h).unify():f[o].unify(),(e&&a.value<u.value||!e&&a.value>u.value)&&(f[o]=s);else{if(void 0!==c&&l!==c)throw{type:"Argument",message:"incompatible types"};p[l]=f.length,f.push(s)}else Array.isArray(t[n].value)&&Array.prototype.push.apply(t,Array.prototype.slice.call(t[n].value));return 1==f.length?f[0]:(t=f.map(function(e){return e.toCSS(this.context)}).join(this.context.compress?",":", "),new i((e?"min":"max")+"("+t+")"))};o.addMultiple({min:function(){return a(!0,arguments)},max:function(){return a(!1,arguments)},convert:function(e,t){return e.convertTo(t.value)},pi:function(){return new r(Math.PI)},mod:function(e,t){return new r(e.value%t.value,e.unit)},pow:function(e,t){if("number"==typeof e&&"number"==typeof t)e=new r(e),t=new r(t);else if(!(e instanceof r&&t instanceof r))throw{type:"Argument",message:"arguments must be numbers"};return new r(Math.pow(e.value,t.value),e.unit)},percentage:function(e){var t=s._math(function(e){return 100*e},"%",e);return t}})},{"../tree/anonymous":45,"../tree/dimension":55,"./function-registry":21,"./math-helper.js":23}],26:[function(e,t,n){var r=e("../tree/quoted"),i=e("../tree/anonymous"),o=e("../tree/javascript"),s=e("./function-registry");s.addMultiple({e:function(e){return new i(e instanceof o?e.evaluated:e.value)},escape:function(e){return new i(encodeURI(e.value).replace(/=/g,"%3D").replace(/:/g,"%3A").replace(/#/g,"%23").replace(/;/g,"%3B").replace(/\(/g,"%28").replace(/\)/g,"%29"))},replace:function(e,t,n,i){var o=e.value;return n="Quoted"===n.type?n.value:n.toCSS(),o=o.replace(new RegExp(t.value,i?i.value:""),n),new r(e.quote||"",o,e.escaped)},"%":function(e){for(var t=Array.prototype.slice.call(arguments,1),n=e.value,i=0;i<t.length;i++)n=n.replace(/%[sda]/i,function(e){var n="Quoted"===t[i].type&&e.match(/s/i)?t[i].value:t[i].toCSS();return e.match(/[A-Z]$/)?encodeURIComponent(n):n});return n=n.replace(/%%/g,"%"),new r(e.quote||"",n,e.escaped)}})},{"../tree/anonymous":45,"../tree/javascript":62,"../tree/quoted":72,"./function-registry":21}],27:[function(e,t,n){t.exports=function(t){var n=e("../tree/dimension"),r=e("../tree/color"),i=e("../tree/expression"),o=e("../tree/quoted"),s=e("../tree/url"),a=e("./function-registry");a.add("svg-gradient",function(e){function t(){throw{type:"Argument",message:"svg-gradient expects direction, start_color [start_position], [color position,]..., end_color [end_position] or direction, color list"}}var a,u,l,c,h,f,p,d,v="linear",m='x="0" y="0" width="1" height="1"',g={compress:!1},y=e.toCSS(g);switch(2==arguments.length?(arguments[1].value.length<2&&t(),a=arguments[1].value):arguments.length<3?t():a=Array.prototype.slice.call(arguments,1),y){case"to bottom":u='x1="0%" y1="0%" x2="0%" y2="100%"';break;case"to right":u='x1="0%" y1="0%" x2="100%" y2="0%"';break;case"to bottom right":u='x1="0%" y1="0%" x2="100%" y2="100%"';break;case"to top right":u='x1="0%" y1="100%" x2="100%" y2="0%"';break;case"ellipse":case"ellipse at center":v="radial",u='cx="50%" cy="50%" r="75%"',
-m='x="-50" y="-50" width="101" height="101"';break;default:throw{type:"Argument",message:"svg-gradient direction must be 'to bottom', 'to right', 'to bottom right', 'to top right' or 'ellipse at center'"}}for(l='<?xml version="1.0" ?><svg xmlns="http://www.w3.org/2000/svg" version="1.1" width="100%" height="100%" viewBox="0 0 1 1" preserveAspectRatio="none"><'+v+'Gradient id="gradient" gradientUnits="userSpaceOnUse" '+u+">",c=0;c<a.length;c+=1)a[c]instanceof i?(h=a[c].value[0],f=a[c].value[1]):(h=a[c],f=void 0),h instanceof r&&((0===c||c+1===a.length)&&void 0===f||f instanceof n)||t(),p=f?f.toCSS(g):0===c?"0%":"100%",d=h.alpha,l+='<stop offset="'+p+'" stop-color="'+h.toRGB()+'"'+(1>d?' stop-opacity="'+d+'"':"")+"/>";return l+="</"+v+"Gradient><rect "+m+' fill="url(#gradient)" /></svg>',l=encodeURIComponent(l),l="data:image/svg+xml,"+l,new s(new o("'"+l+"'",l,!1,this.index,this.currentFileInfo),this.index,this.currentFileInfo)})}},{"../tree/color":49,"../tree/dimension":55,"../tree/expression":58,"../tree/quoted":72,"../tree/url":79,"./function-registry":21}],28:[function(e,t,n){var r=e("../tree/keyword"),i=e("../tree/detached-ruleset"),o=e("../tree/dimension"),s=e("../tree/color"),a=e("../tree/quoted"),u=e("../tree/anonymous"),l=e("../tree/url"),c=e("../tree/operation"),h=e("./function-registry"),f=function(e,t){return e instanceof t?r.True:r.False},p=function(e,t){if(void 0===t)throw{type:"Argument",message:"missing the required second argument to isunit."};if(t="string"==typeof t.value?t.value:t,"string"!=typeof t)throw{type:"Argument",message:"Second argument to isunit should be a unit or a string."};return e instanceof o&&e.unit.is(t)?r.True:r.False},d=function(e){var t=Array.isArray(e.value)?e.value:Array(e);return t};h.addMultiple({isruleset:function(e){return f(e,i)},iscolor:function(e){return f(e,s)},isnumber:function(e){return f(e,o)},isstring:function(e){return f(e,a)},iskeyword:function(e){return f(e,r)},isurl:function(e){return f(e,l)},ispixel:function(e){return p(e,"px")},ispercentage:function(e){return p(e,"%")},isem:function(e){return p(e,"em")},isunit:p,unit:function(e,t){if(!(e instanceof o))throw{type:"Argument",message:"the first argument to unit must be a number"+(e instanceof c?". Have you forgotten parenthesis?":"")};return t=t?t instanceof r?t.value:t.toCSS():"",new o(e.value,t)},"get-unit":function(e){return new u(e.unit)},extract:function(e,t){return t=t.value-1,d(e)[t]},length:function(e){return new o(d(e).length)}})},{"../tree/anonymous":45,"../tree/color":49,"../tree/detached-ruleset":54,"../tree/dimension":55,"../tree/keyword":64,"../tree/operation":70,"../tree/quoted":72,"../tree/url":79,"./function-registry":21}],29:[function(e,t,n){var r=e("./contexts"),i=e("./parser/parser"),o=e("./plugins/function-importer");t.exports=function(e){var t=function(e,t){this.rootFilename=t.filename,this.paths=e.paths||[],this.contents={},this.contentsIgnoredChars={},this.mime=e.mime,this.error=null,this.context=e,this.queue=[],this.files={}};return t.prototype.push=function(t,n,s,a,u){var l=this;this.queue.push(t);var c=function(e,n,r){l.queue.splice(l.queue.indexOf(t),1);var i=r===l.rootFilename;a.optional&&e?u(null,{rules:[]},!1,null):(l.files[r]=n,e&&!l.error&&(l.error=e),u(e,n,i,r))},h={relativeUrls:this.context.relativeUrls,entryPath:s.entryPath,rootpath:s.rootpath,rootFilename:s.rootFilename},f=e.getFileManager(t,s.currentDirectory,this.context,e);if(!f)return void c({message:"Could not find a file-manager for "+t});n&&(t=f.tryAppendExtension(t,a.plugin?".js":".less"));var p=function(e){var t=e.filename,n=e.contents.replace(/^\uFEFF/,"");h.currentDirectory=f.getPath(t),h.relativeUrls&&(h.rootpath=f.join(l.context.rootpath||"",f.pathDiff(h.currentDirectory,h.entryPath)),!f.isPathAbsolute(h.rootpath)&&f.alwaysMakePathsAbsolute()&&(h.rootpath=f.join(h.entryPath,h.rootpath))),h.filename=t;var u=new r.Parse(l.context);u.processImports=!1,l.contents[t]=n,(s.reference||a.reference)&&(h.reference=!0),a.plugin?new o(u,h).eval(n,function(e,n){c(e,n,t)}):a.inline?c(null,n,t):new i(u,l,h).parse(n,function(e,n){c(e,n,t)})},d=f.loadFile(t,s.currentDirectory,this.context,e,function(e,t){e?c(e):p(t)});d&&d.then(p,c)},t}},{"./contexts":10,"./parser/parser":37,"./plugins/function-importer":39}],30:[function(e,t,n){t.exports=function(t,n){var r,i,o,s,a,u={version:[2,5,3],data:e("./data"),tree:e("./tree"),Environment:a=e("./environment/environment"),AbstractFileManager:e("./environment/abstract-file-manager"),environment:t=new a(t,n),visitors:e("./visitors"),Parser:e("./parser/parser"),functions:e("./functions")(t),contexts:e("./contexts"),SourceMapOutput:r=e("./source-map-output")(t),SourceMapBuilder:i=e("./source-map-builder")(r,t),ParseTree:o=e("./parse-tree")(i),ImportManager:s=e("./import-manager")(t),render:e("./render")(t,o,s),parse:e("./parse")(t,o,s),LessError:e("./less-error"),transformTree:e("./transform-tree"),utils:e("./utils"),PluginManager:e("./plugin-manager"),logger:e("./logger")};return u}},{"./contexts":10,"./data":12,"./environment/abstract-file-manager":14,"./environment/environment":15,"./functions":22,"./import-manager":29,"./less-error":31,"./logger":32,"./parse":34,"./parse-tree":33,"./parser/parser":37,"./plugin-manager":38,"./render":40,"./source-map-builder":41,"./source-map-output":42,"./transform-tree":43,"./tree":61,"./utils":82,"./visitors":86}],31:[function(e,t,n){var r=e("./utils"),i=t.exports=function(e,t,n){Error.call(this);var i=e.filename||n;if(t&&i){var o=t.contents[i],s=r.getLocation(e.index,o),a=s.line,u=s.column,l=e.call&&r.getLocation(e.call,o).line,c=o.split("\n");this.type=e.type||"Syntax",this.filename=i,this.index=e.index,this.line="number"==typeof a?a+1:null,this.callLine=l+1,this.callExtract=c[l],this.column=u,this.extract=[c[a-1],c[a],c[a+1]]}this.message=e.message,this.stack=e.stack};if("undefined"==typeof Object.create){var o=function(){};o.prototype=Error.prototype,i.prototype=new o}else i.prototype=Object.create(Error.prototype);i.prototype.constructor=i},{"./utils":82}],32:[function(e,t,n){t.exports={error:function(e){this._fireEvent("error",e)},warn:function(e){this._fireEvent("warn",e)},info:function(e){this._fireEvent("info",e)},debug:function(e){this._fireEvent("debug",e)},addListener:function(e){this._listeners.push(e)},removeListener:function(e){for(var t=0;t<this._listeners.length;t++)if(this._listeners[t]===e)return void this._listeners.splice(t,1)},_fireEvent:function(e,t){for(var n=0;n<this._listeners.length;n++){var r=this._listeners[n][e];r&&r(t)}},_listeners:[]}},{}],33:[function(e,t,n){var r=e("./less-error"),i=e("./transform-tree"),o=e("./logger");t.exports=function(e){var t=function(e,t){this.root=e,this.imports=t};return t.prototype.toCSS=function(t){var n,s,a={};try{n=i(this.root,t)}catch(u){throw new r(u,this.imports)}try{var l=Boolean(t.compress);l&&o.warn("The compress option has been deprecated. We recommend you use a dedicated css minifier, for instance see less-plugin-clean-css.");var c={compress:l,dumpLineNumbers:t.dumpLineNumbers,strictUnits:Boolean(t.strictUnits),numPrecision:8};t.sourceMap?(s=new e(t.sourceMap),a.css=s.toCSS(n,c,this.imports)):a.css=n.toCSS(c)}catch(u){throw new r(u,this.imports)}if(t.pluginManager)for(var h=t.pluginManager.getPostProcessors(),f=0;f<h.length;f++)a.css=h[f].process(a.css,{sourceMap:s,options:t,imports:this.imports});t.sourceMap&&(a.map=s.getExternalSourceMap()),a.imports=[];for(var p in this.imports.files)this.imports.files.hasOwnProperty(p)&&p!==this.imports.rootFilename&&a.imports.push(p);return a},t}},{"./less-error":31,"./logger":32,"./transform-tree":43}],34:[function(e,t,n){var r,i=e("./contexts"),o=e("./parser/parser"),s=e("./plugin-manager");t.exports=function(t,n,a){var u=function(t,n,l){if(n=n||{},"function"==typeof n&&(l=n,n={}),!l){r||(r="undefined"==typeof Promise?e("promise"):Promise);var c=this;return new r(function(e,r){u.call(c,t,n,function(t,n){t?r(t):e(n)})})}var h,f,p=new s(this);if(p.addPlugins(n.plugins),n.pluginManager=p,h=new i.Parse(n),n.rootFileInfo)f=n.rootFileInfo;else{var d=n.filename||"input",v=d.replace(/[^\/\\]*$/,"");f={filename:d,relativeUrls:h.relativeUrls,rootpath:h.rootpath||"",currentDirectory:v,entryPath:v,rootFilename:d},f.rootpath&&"/"!==f.rootpath.slice(-1)&&(f.rootpath+="/")}var m=new a(h,f);new o(h,m,f).parse(t,function(e,t){return e?l(e):void l(null,t,m,n)},n)};return u}},{"./contexts":10,"./parser/parser":37,"./plugin-manager":38,promise:void 0}],35:[function(e,t,n){t.exports=function(e,t){function n(t){var n=a-m;512>n&&!t||!n||(v.push(e.slice(m,a+1)),m=a+1)}var r,i,o,s,a,u,l,c,h,f=e.length,p=0,d=0,v=[],m=0;for(a=0;f>a;a++)if(l=e.charCodeAt(a),!(l>=97&&122>=l||34>l))switch(l){case 40:d++,i=a;continue;case 41:if(--d<0)return t("missing opening `(`",a);continue;case 59:d||n();continue;case 123:p++,r=a;continue;case 125:if(--p<0)return t("missing opening `{`",a);p||d||n();continue;case 92:if(f-1>a){a++;continue}return t("unescaped `\\`",a);case 34:case 39:case 96:for(h=0,u=a,a+=1;f>a;a++)if(c=e.charCodeAt(a),!(c>96)){if(c==l){h=1;break}if(92==c){if(a==f-1)return t("unescaped `\\`",a);a++}}if(h)continue;return t("unmatched `"+String.fromCharCode(l)+"`",u);case 47:if(d||a==f-1)continue;if(c=e.charCodeAt(a+1),47==c)for(a+=2;f>a&&(c=e.charCodeAt(a),!(13>=c)||10!=c&&13!=c);a++);else if(42==c){for(o=u=a,a+=2;f-1>a&&(c=e.charCodeAt(a),125==c&&(s=a),42!=c||47!=e.charCodeAt(a+1));a++);if(a==f-1)return t("missing closing `*/`",u);a++}continue;case 42:if(f-1>a&&47==e.charCodeAt(a+1))return t("unmatched `/*`",a);continue}return 0!==p?o>r&&s>o?t("missing closing `}` or `*/`",r):t("missing closing `}`",r):0!==d?t("missing closing `)`",i):(n(!0),v)}},{}],36:[function(e,t,n){var r=e("./chunker");t.exports=function(){var e,t,n,i,o,s,a,u=[],l={};l.save=function(){a=l.i,u.push({current:s,i:l.i,j:t})},l.restore=function(e){(l.i>n||l.i===n&&e&&!i)&&(n=l.i,i=e);var r=u.pop();s=r.current,a=l.i=r.i,t=r.j},l.forget=function(){u.pop()},l.isWhitespace=function(t){var n=l.i+(t||0),r=e.charCodeAt(n);return r===c||r===p||r===h||r===f},l.$re=function(e){l.i>a&&(s=s.slice(l.i-a),a=l.i);var t=e.exec(s);return t?(y(t[0].length),"string"==typeof t?t:1===t.length?t[0]:t):null},l.$char=function(t){return e.charAt(l.i)!==t?null:(y(1),t)},l.$str=function(t){for(var n=t.length,r=0;n>r;r++)if(e.charAt(l.i+r)!==t.charAt(r))return null;return y(n),t},l.$quoted=function(){var t=e.charAt(l.i);if("'"===t||'"'===t){for(var n=e.length,r=l.i,i=1;n>i+r;i++){var o=e.charAt(i+r);switch(o){case"\\":i++;continue;case"\r":case"\n":break;case t:var s=e.substr(r,i+1);return y(i+1),s}}return null}};var c=32,h=9,f=10,p=13,d=43,v=44,m=47,g=57;l.autoCommentAbsorb=!0,l.commentStore=[],l.finished=!1;var y=function(n){for(var r,i,u,d=l.i,v=t,g=l.i-a,w=l.i+s.length-g,x=l.i+=n,b=e;l.i<w;l.i++){if(r=b.charCodeAt(l.i),l.autoCommentAbsorb&&r===m){if(i=b.charAt(l.i+1),"/"===i){u={index:l.i,isLineComment:!0};var S=b.indexOf("\n",l.i+2);0>S&&(S=w),l.i=S,u.text=b.substr(u.i,l.i-u.i),l.commentStore.push(u);continue}if("*"===i){var C=b.indexOf("*/",l.i+2);if(C>=0){u={index:l.i,text:b.substr(l.i,C+2-l.i),isLineComment:!1},l.i+=u.text.length-1,l.commentStore.push(u);continue}}break}if(r!==c&&r!==f&&r!==h&&r!==p)break}if(s=s.slice(n+l.i-x+g),a=l.i,!s.length){if(t<o.length-1)return s=o[++t],y(0),!0;l.finished=!0}return d!==l.i||v!==t};return l.peek=function(t){if("string"==typeof t){for(var n=0;n<t.length;n++)if(e.charAt(l.i+n)!==t.charAt(n))return!1;return!0}return t.test(s)},l.peekChar=function(t){return e.charAt(l.i)===t},l.currentChar=function(){return e.charAt(l.i)},l.getInput=function(){return e},l.peekNotNumeric=function(){var t=e.charCodeAt(l.i);return t>g||d>t||t===m||t===v},l.start=function(i,u,c){e=i,l.i=t=a=n=0,o=u?r(i,c):[i],s=o[0],y(0)},l.end=function(){var t,r=l.i>=e.length;return l.i<n&&(t=i,l.i=n),{isFinished:r,furthest:l.i,furthestPossibleErrorMessage:t,furthestReachedEnd:l.i>=e.length-1,furthestChar:e[l.i]}},l}},{"./chunker":35}],37:[function(e,t,n){var r=e("../less-error"),i=e("../tree"),o=e("../visitors"),s=e("./parser-input"),a=e("../utils"),u=function l(e,t,n){function u(e,t,n){var r="[object Function]"===Object.prototype.toString.call(e)?e.call(p):d.$re(e);return r?r:void h(t||("string"==typeof e?"expected '"+e+"' got '"+d.currentChar()+"'":"unexpected token"))}function c(e,t){return d.$char(e)?e:void h(t||"expected '"+e+"' got '"+d.currentChar()+"'")}function h(e,i){throw new r({index:d.i,filename:n.filename,type:i||"Syntax",message:e},t)}function f(e){var t=n.filename;return{lineNumber:a.getLocation(e,d.getInput()).line+1,fileName:t}}var p,d=s();return{parse:function(s,a,u){var c,h,f,p,v=null,m="";if(h=u&&u.globalVars?l.serializeVars(u.globalVars)+"\n":"",f=u&&u.modifyVars?"\n"+l.serializeVars(u.modifyVars):"",e.pluginManager)for(var g=e.pluginManager.getPreProcessors(),y=0;y<g.length;y++)s=g[y].process(s,{context:e,imports:t,fileInfo:n});(h||u&&u.banner)&&(m=(u&&u.banner?u.banner:"")+h,p=t.contentsIgnoredChars,p[n.filename]=p[n.filename]||0,p[n.filename]+=m.length),s=s.replace(/\r\n?/g,"\n"),s=m+s.replace(/^\uFEFF/,"")+f,t.contents[n.filename]=s;try{d.start(s,e.chunkInput,function(e,i){throw new r({index:i,type:"Parse",message:e,filename:n.filename},t)}),c=new i.Ruleset(null,this.parsers.primary()),c.root=!0,c.firstRoot=!0}catch(w){return a(new r(w,t,n.filename))}var x=d.end();if(!x.isFinished){var b=x.furthestPossibleErrorMessage;b||(b="Unrecognised input","}"===x.furthestChar?b+=". Possibly missing opening '{'":")"===x.furthestChar?b+=". Possibly missing opening '('":x.furthestReachedEnd&&(b+=". Possibly missing something")),v=new r({type:"Parse",message:b,index:x.furthest,filename:n.filename},t)}var S=function(e){return e=v||e||t.error,e?(e instanceof r||(e=new r(e,t,n.filename)),a(e)):a(null,c)};return e.processImports===!1?S():void new o.ImportVisitor(t,S).run(c)},parsers:p={primary:function(){for(var e,t=this.mixin,n=[];;){for(;;){if(e=this.comment(),!e)break;n.push(e)}if(d.finished)break;if(d.peek("}"))break;if(e=this.extendRule())n=n.concat(e);else if(e=t.definition()||this.rule()||this.ruleset()||t.call()||this.rulesetCall()||this.directive())n.push(e);else{for(var r=!1;d.$char(";");)r=!0;if(!r)break}}return n},comment:function(){if(d.commentStore.length){var e=d.commentStore.shift();return new i.Comment(e.text,e.isLineComment,e.index,n)}},entities:{quoted:function(){var e,t=d.i,r=!1;return d.save(),d.$char("~")&&(r=!0),(e=d.$quoted())?(d.forget(),new i.Quoted(e.charAt(0),e.substr(1,e.length-2),r,t,n)):void d.restore()},keyword:function(){var e=d.$char("%")||d.$re(/^[_A-Za-z-][_A-Za-z0-9-]*/);return e?i.Color.fromKeyword(e)||new i.Keyword(e):void 0},call:function(){var e,t,r,o,s=d.i;if(!d.peek(/^url\(/i))return d.save(),(e=d.$re(/^([\w-]+|%|progid:[\w\.]+)\(/))?(e=e[1],t=e.toLowerCase(),"alpha"===t&&(o=p.alpha())?(d.forget(),o):(r=this.arguments(),d.$char(")")?(d.forget(),new i.Call(e,r,s,n)):void d.restore("Could not parse call arguments or missing ')'"))):void d.forget()},arguments:function(){for(var e,t=[];;){if(e=this.assignment()||p.expression(),!e)break;if(t.push(e),!d.$char(","))break}return t},literal:function(){return this.dimension()||this.color()||this.quoted()||this.unicodeDescriptor()},assignment:function(){var e,t;return d.save(),(e=d.$re(/^\w+(?=\s?=)/i))&&d.$char("=")&&(t=p.entity())?(d.forget(),new i.Assignment(e,t)):void d.restore()},url:function(){var e,t=d.i;return d.autoCommentAbsorb=!1,d.$str("url(")?(e=this.quoted()||this.variable()||d.$re(/^(?:(?:\\[\(\)'"])|[^\(\)'"])+/)||"",d.autoCommentAbsorb=!0,c(")"),new i.URL(null!=e.value||e instanceof i.Variable?e:new i.Anonymous(e),t,n)):void(d.autoCommentAbsorb=!0)},variable:function(){var e,t=d.i;return"@"===d.currentChar()&&(e=d.$re(/^@@?[\w-]+/))?new i.Variable(e,t,n):void 0},variableCurly:function(){var e,t=d.i;return"@"===d.currentChar()&&(e=d.$re(/^@\{([\w-]+)\}/))?new i.Variable("@"+e[1],t,n):void 0},color:function(){var e;if("#"===d.currentChar()&&(e=d.$re(/^#([A-Fa-f0-9]{6}|[A-Fa-f0-9]{3})/))){var t=e.input.match(/^#([\w]+).*/);return t=t[1],t.match(/^[A-Fa-f0-9]+$/)||h("Invalid HEX color code"),new i.Color(e[1],void 0,"#"+t)}},dimension:function(){if(!d.peekNotNumeric()){var e=d.$re(/^([+-]?\d*\.?\d+)(%|[a-z]+)?/i);return e?new i.Dimension(e[1],e[2]):void 0}},unicodeDescriptor:function(){var e;return e=d.$re(/^U\+[0-9a-fA-F?]+(\-[0-9a-fA-F?]+)?/),e?new i.UnicodeDescriptor(e[0]):void 0},javascript:function(){var e,t=d.i;d.save();var r=d.$char("~"),o=d.$char("`");return o?(e=d.$re(/^[^`]*`/))?(d.forget(),new i.JavaScript(e.substr(0,e.length-1),Boolean(r),t,n)):void d.restore("invalid javascript definition"):void d.restore()}},variable:function(){var e;return"@"===d.currentChar()&&(e=d.$re(/^(@[\w-]+)\s*:/))?e[1]:void 0},rulesetCall:function(){var e;return"@"===d.currentChar()&&(e=d.$re(/^(@[\w-]+)\s*\(\s*\)\s*;/))?new i.RulesetCall(e[1]):void 0},extend:function(e){var t,n,r,o,s,a=d.i;if(d.$str(e?"&:extend(":":extend(")){do{for(r=null,t=null;!(r=d.$re(/^(all)(?=\s*(\)|,))/))&&(n=this.element());)t?t.push(n):t=[n];r=r&&r[1],t||h("Missing target selector for :extend()."),s=new i.Extend(new i.Selector(t),r,a),o?o.push(s):o=[s]}while(d.$char(","));return u(/^\)/),e&&u(/^;/),o}},extendRule:function(){return this.extend(!0)},mixin:{call:function(){var e,t,r,o,s,a,u=d.currentChar(),l=!1,h=d.i;if("."===u||"#"===u){for(d.save();;){if(e=d.i,o=d.$re(/^[#.](?:[\w-]|\\(?:[A-Fa-f0-9]{1,6} ?|[^A-Fa-f0-9]))+/),!o)break;r=new i.Element(s,o,e,n),t?t.push(r):t=[r],s=d.$char(">")}return t&&(d.$char("(")&&(a=this.args(!0).args,c(")")),p.important()&&(l=!0),p.end())?(d.forget(),new i.mixin.Call(t,a,h,n,l)):void d.restore()}},args:function(e){var t,n,r,o,s,a,u,l=p.entities,c={args:null,variadic:!1},f=[],v=[],m=[];for(d.save();;){if(e)a=p.detachedRuleset()||p.expression();else{if(d.commentStore.length=0,d.$str("...")){c.variadic=!0,d.$char(";")&&!t&&(t=!0),(t?v:m).push({variadic:!0});break}a=l.variable()||l.literal()||l.keyword()}if(!a)break;o=null,a.throwAwayComments&&a.throwAwayComments(),s=a;var g=null;if(e?a.value&&1==a.value.length&&(g=a.value[0]):g=a,g&&g instanceof i.Variable)if(d.$char(":")){if(f.length>0&&(t&&h("Cannot mix ; and , as delimiter types"),n=!0),s=p.detachedRuleset()||p.expression(),!s){if(!e)return d.restore(),c.args=[],c;h("could not understand value for named argument")}o=r=g.name}else if(d.$str("...")){if(!e){c.variadic=!0,d.$char(";")&&!t&&(t=!0),(t?v:m).push({name:a.name,variadic:!0});break}u=!0}else e||(r=o=g.name,s=null);s&&f.push(s),m.push({name:o,value:s,expand:u}),d.$char(",")||(d.$char(";")||t)&&(n&&h("Cannot mix ; and , as delimiter types"),t=!0,f.length>1&&(s=new i.Value(f)),v.push({name:r,value:s,expand:u}),r=null,f=[],n=!1)}return d.forget(),c.args=t?v:m,c},definition:function(){var e,t,n,r,o=[],s=!1;if(!("."!==d.currentChar()&&"#"!==d.currentChar()||d.peek(/^[^{]*\}/)))if(d.save(),t=d.$re(/^([#.](?:[\w-]|\\(?:[A-Fa-f0-9]{1,6} ?|[^A-Fa-f0-9]))+)\s*\(/)){e=t[1];var a=this.args(!1);if(o=a.args,s=a.variadic,!d.$char(")"))return void d.restore("Missing closing ')'");if(d.commentStore.length=0,d.$str("when")&&(r=u(p.conditions,"expected condition")),n=p.block())return d.forget(),new i.mixin.Definition(e,o,n,r,s);d.restore()}else d.forget()}},entity:function(){var e=this.entities;return this.comment()||e.literal()||e.variable()||e.url()||e.call()||e.keyword()||e.javascript()},end:function(){return d.$char(";")||d.peek("}")},alpha:function(){var e;if(d.$re(/^opacity=/i))return e=d.$re(/^\d+/),e||(e=u(this.entities.variable,"Could not parse alpha")),c(")"),new i.Alpha(e)},element:function(){var e,t,r,o=d.i;return t=this.combinator(),e=d.$re(/^(?:\d+\.\d+|\d+)%/)||d.$re(/^(?:[.#]?|:*)(?:[\w-]|[^\x00-\x9f]|\\(?:[A-Fa-f0-9]{1,6} ?|[^A-Fa-f0-9]))+/)||d.$char("*")||d.$char("&")||this.attribute()||d.$re(/^\([^&()@]+\)/)||d.$re(/^[\.#:](?=@)/)||this.entities.variableCurly(),e||(d.save(),d.$char("(")?(r=this.selector())&&d.$char(")")?(e=new i.Paren(r),d.forget()):d.restore("Missing closing ')'"):d.forget()),e?new i.Element(t,e,o,n):void 0},combinator:function(){var e=d.currentChar();if("/"===e){d.save();var t=d.$re(/^\/[a-z]+\//i);if(t)return d.forget(),new i.Combinator(t);d.restore()}if(">"===e||"+"===e||"~"===e||"|"===e||"^"===e){for(d.i++,"^"===e&&"^"===d.currentChar()&&(e="^^",d.i++);d.isWhitespace();)d.i++;return new i.Combinator(e)}return d.isWhitespace(-1)?new i.Combinator(" "):new i.Combinator(null)},lessSelector:function(){return this.selector(!0)},selector:function(e){for(var t,r,o,s,a,l,c,f=d.i;(e&&(r=this.extend())||e&&(l=d.$str("when"))||(s=this.element()))&&(l?c=u(this.conditions,"expected condition"):c?h("CSS guard can only be used at the end of selector"):r?a=a?a.concat(r):r:(a&&h("Extend can only be used at the end of selector"),o=d.currentChar(),t?t.push(s):t=[s],s=null),"{"!==o&&"}"!==o&&";"!==o&&","!==o&&")"!==o););return t?new i.Selector(t,a,c,f,n):void(a&&h("Extend must be used to extend a selector, it cannot be used on its own"))},attribute:function(){if(d.$char("[")){var e,t,n,r=this.entities;return(e=r.variableCurly())||(e=u(/^(?:[_A-Za-z0-9-\*]*\|)?(?:[_A-Za-z0-9-]|\\.)+/)),n=d.$re(/^[|~*$^]?=/),n&&(t=r.quoted()||d.$re(/^[0-9]+%/)||d.$re(/^[\w-]+/)||r.variableCurly()),c("]"),new i.Attribute(e,n,t)}},block:function(){var e;return d.$char("{")&&(e=this.primary())&&d.$char("}")?e:void 0},blockRuleset:function(){var e=this.block();return e&&(e=new i.Ruleset(null,e)),e},detachedRuleset:function(){var e=this.blockRuleset();return e?new i.DetachedRuleset(e):void 0},ruleset:function(){var t,n,r,o;for(d.save(),e.dumpLineNumbers&&(o=f(d.i));;){if(n=this.lessSelector(),!n)break;if(t?t.push(n):t=[n],d.commentStore.length=0,n.condition&&t.length>1&&h("Guards are only currently allowed on a single selector."),!d.$char(","))break;n.condition&&h("Guards are only currently allowed on a single selector."),d.commentStore.length=0}if(t&&(r=this.block())){d.forget();var s=new i.Ruleset(t,r,e.strictImports);return e.dumpLineNumbers&&(s.debugInfo=o),s}d.restore()},rule:function(t){var r,o,s,a,u,l=d.i,c=d.currentChar();if("."!==c&&"#"!==c&&"&"!==c&&":"!==c)if(d.save(),r=this.variable()||this.ruleProperty()){if(u="string"==typeof r,u&&(o=this.detachedRuleset()),d.commentStore.length=0,!o){a=!u&&r.length>1&&r.pop().value;var h=!t&&(e.compress||u);if(h&&(o=this.value()),!o&&(o=this.anonymousValue()))return d.forget(),new i.Rule(r,o,!1,a,l,n);h||o||(o=this.value()),s=this.important()}if(o&&this.end())return d.forget(),new i.Rule(r,o,s,a,l,n);if(d.restore(),o&&!t)return this.rule(!0)}else d.forget()},anonymousValue:function(){var e=d.$re(/^([^@+\/'"*`(;{}-]*);/);return e?new i.Anonymous(e[1]):void 0},"import":function(){var e,t,r=d.i,o=d.$re(/^@import?\s+/);if(o){var s=(o?this.importOptions():null)||{};if(e=this.entities.quoted()||this.entities.url())return t=this.mediaFeatures(),d.$char(";")||(d.i=r,h("missing semi-colon or unrecognised media features on import")),t=t&&new i.Value(t),new i.Import(e,t,s,r,n);d.i=r,h("malformed import statement")}},importOptions:function(){var e,t,n,r={};if(!d.$char("("))return null;do if(e=this.importOption()){switch(t=e,n=!0,t){case"css":t="less",n=!1;break;case"once":t="multiple",n=!1}if(r[t]=n,!d.$char(","))break}while(e);return c(")"),r},importOption:function(){var e=d.$re(/^(less|css|multiple|once|inline|reference|optional)/);return e?e[1]:void 0},mediaFeature:function(){var e,t,r=this.entities,o=[];d.save();do if(e=r.keyword()||r.variable())o.push(e);else if(d.$char("(")){if(t=this.property(),e=this.value(),!d.$char(")"))return d.restore("Missing closing ')'"),null;if(t&&e)o.push(new i.Paren(new i.Rule(t,e,null,null,d.i,n,!0)));else{if(!e)return d.restore("badly formed media feature definition"),null;o.push(new i.Paren(e))}}while(e);return d.forget(),o.length>0?new i.Expression(o):void 0},mediaFeatures:function(){var e,t=this.entities,n=[];do if(e=this.mediaFeature()){if(n.push(e),!d.$char(","))break}else if(e=t.variable(),e&&(n.push(e),!d.$char(",")))break;while(e);return n.length>0?n:null},media:function(){var t,r,o,s;return e.dumpLineNumbers&&(s=f(d.i)),d.save(),d.$str("@media")?(t=this.mediaFeatures(),(r=this.block())?(d.forget(),o=new i.Media(r,t,d.i,n),e.dumpLineNumbers&&(o.debugInfo=s),o):void d.restore("media definitions require block statements after any features")):void d.restore()},plugin:function(){var e,t=d.i,r=d.$re(/^@plugin?\s+/);if(r){var o={plugin:!0};if(e=this.entities.quoted()||this.entities.url())return d.$char(";")||(d.i=t,h("missing semi-colon on plugin")),new i.Import(e,null,o,t,n);d.i=t,h("malformed plugin statement")}},directive:function(){var t,r,o,s,a,u,l,c=d.i,p=!0,v=!0;if("@"===d.currentChar()){if(r=this["import"]()||this.plugin()||this.media())return r;if(d.save(),t=d.$re(/^@[a-z-]+/)){switch(s=t,"-"==t.charAt(1)&&t.indexOf("-",2)>0&&(s="@"+t.slice(t.indexOf("-",2)+1)),s){case"@counter-style":a=!0,p=!0;break;case"@charset":a=!0,p=!1;break;case"@namespace":u=!0,p=!1;break;case"@keyframes":a=!0;break;case"@host":case"@page":l=!0;break;case"@document":case"@supports":l=!0,v=!1}return d.commentStore.length=0,a?(r=this.entity(),r||h("expected "+t+" identifier")):u?(r=this.expression(),r||h("expected "+t+" expression")):l&&(r=(d.$re(/^[^{;]+/)||"").trim(),r&&(r=new i.Anonymous(r))),p&&(o=this.blockRuleset()),o||!p&&r&&d.$char(";")?(d.forget(),new i.Directive(t,r,o,c,n,e.dumpLineNumbers?f(c):null,!1,v)):void d.restore("directive options not recognised")}}},value:function(){var e,t=[];do if(e=this.expression(),e&&(t.push(e),!d.$char(",")))break;while(e);return t.length>0?new i.Value(t):void 0},important:function(){return"!"===d.currentChar()?d.$re(/^! *important/):void 0},sub:function(){var e,t;return d.save(),d.$char("(")?(e=this.addition(),e&&d.$char(")")?(d.forget(),t=new i.Expression([e]),t.parens=!0,t):void d.restore("Expected ')'")):void d.restore()},multiplication:function(){var e,t,n,r,o;if(e=this.operand()){for(o=d.isWhitespace(-1);;){if(d.peek(/^\/[*\/]/))break;if(d.save(),n=d.$char("/")||d.$char("*"),!n){d.forget();break}if(t=this.operand(),!t){d.restore();break}d.forget(),e.parensInOp=!0,t.parensInOp=!0,r=new i.Operation(n,[r||e,t],o),o=d.isWhitespace(-1)}return r||e}},addition:function(){var e,t,n,r,o;if(e=this.multiplication()){for(o=d.isWhitespace(-1);;){if(n=d.$re(/^[-+]\s+/)||!o&&(d.$char("+")||d.$char("-")),!n)break;if(t=this.multiplication(),!t)break;e.parensInOp=!0,t.parensInOp=!0,r=new i.Operation(n,[r||e,t],o),o=d.isWhitespace(-1)}return r||e}},conditions:function(){var e,t,n,r=d.i;if(e=this.condition()){for(;;){if(!d.peek(/^,\s*(not\s*)?\(/)||!d.$char(","))break;if(t=this.condition(),!t)break;n=new i.Condition("or",n||e,t,r)}return n||e}},condition:function(){var e,t,n,r,o=this.entities,s=d.i,a=!1;return d.$str("not")&&(a=!0),c("("),e=this.addition()||o.keyword()||o.quoted(),e?(d.$char(">")?r=d.$char("=")?">=":">":d.$char("<")?r=d.$char("=")?"<=":"<":d.$char("=")&&(r=d.$char(">")?"=>":d.$char("<")?"=<":"="),r?(t=this.addition()||o.keyword()||o.quoted(),t?n=new i.Condition(r,e,t,s,a):h("expected expression")):n=new i.Condition("=",e,new i.Keyword("true"),s,a),c(")"),d.$str("and")?new i.Condition("and",n,this.condition()):n):void 0},operand:function(){var e,t=this.entities;d.peek(/^-[@\(]/)&&(e=d.$char("-"));var n=this.sub()||t.dimension()||t.color()||t.variable()||t.call();return e&&(n.parensInOp=!0,n=new i.Negative(n)),n},expression:function(){var e,t,n=[];do e=this.comment(),e?n.push(e):(e=this.addition()||this.entity(),e&&(n.push(e),d.peek(/^\/[\/*]/)||(t=d.$char("/"),t&&n.push(new i.Anonymous(t)))));while(e);return n.length>0?new i.Expression(n):void 0},property:function(){var e=d.$re(/^(\*?-?[_a-zA-Z0-9-]+)\s*:/);return e?e[1]:void 0},ruleProperty:function(){function e(e){var t=d.i,n=d.$re(e);return n?(s.push(t),o.push(n[1])):void 0}var t,r,o=[],s=[];d.save();var a=d.$re(/^([_a-zA-Z0-9-]+)\s*:/);if(a)return o=[new i.Keyword(a[1])],d.forget(),o;for(e(/^(\*?)/);;)if(!e(/^((?:[\w-]+)|(?:@\{[\w-]+\}))/))break;if(o.length>1&&e(/^((?:\+_|\+)?)\s*:/)){for(d.forget(),""===o[0]&&(o.shift(),s.shift()),r=0;r<o.length;r++)t=o[r],o[r]="@"!==t.charAt(0)?new i.Keyword(t):new i.Variable("@"+t.slice(2,-1),s[r],n);return o}d.restore()}}}};u.serializeVars=function(e){var t="";for(var n in e)if(Object.hasOwnProperty.call(e,n)){var r=e[n];t+=("@"===n[0]?"":"@")+n+": "+r+(";"===String(r).slice(-1)?"":";")}return t},t.exports=u},{"../less-error":31,"../tree":61,"../utils":82,"../visitors":86,"./parser-input":36}],38:[function(e,t,n){var r=function(e){this.less=e,this.visitors=[],this.preProcessors=[],this.postProcessors=[],this.installedPlugins=[],this.fileManagers=[]};r.prototype.addPlugins=function(e){if(e)for(var t=0;t<e.length;t++)this.addPlugin(e[t])},r.prototype.addPlugin=function(e){this.installedPlugins.push(e),e.install(this.less,this)},r.prototype.addVisitor=function(e){this.visitors.push(e)},r.prototype.addPreProcessor=function(e,t){var n;for(n=0;n<this.preProcessors.length&&!(this.preProcessors[n].priority>=t);n++);this.preProcessors.splice(n,0,{preProcessor:e,priority:t})},r.prototype.addPostProcessor=function(e,t){var n;for(n=0;n<this.postProcessors.length&&!(this.postProcessors[n].priority>=t);n++);this.postProcessors.splice(n,0,{postProcessor:e,priority:t})},r.prototype.addFileManager=function(e){this.fileManagers.push(e)},r.prototype.getPreProcessors=function(){for(var e=[],t=0;t<this.preProcessors.length;t++)e.push(this.preProcessors[t].preProcessor);return e},r.prototype.getPostProcessors=function(){for(var e=[],t=0;t<this.postProcessors.length;t++)e.push(this.postProcessors[t].postProcessor);return e},r.prototype.getVisitors=function(){return this.visitors},r.prototype.getFileManagers=function(){return this.fileManagers},t.exports=r},{}],39:[function(e,t,n){var r=e("../less-error"),i=e("../tree"),o=t.exports=function(e,t){this.fileInfo=t};o.prototype.eval=function(e,t){var n,o,s={};o={add:function(e,t){s[e]=t},addMultiple:function(e){Object.keys(e).forEach(function(t){s[t]=e[t]})}};try{n=new Function("functions","tree","fileInfo",e),n(o,i,this.fileInfo)}catch(a){t(new r({message:"Plugin evaluation error: '"+a.name+": "+a.message.replace(/["]/g,"'")+"'",filename:this.fileInfo.filename}),null)}t(null,{functions:s})}},{"../less-error":31,"../tree":61}],40:[function(e,t,n){var r;t.exports=function(t,n,i){var o=function(t,i,s){if("function"==typeof i&&(s=i,i={}),!s){r||(r="undefined"==typeof Promise?e("promise"):Promise);var a=this;return new r(function(e,n){o.call(a,t,i,function(t,r){t?n(t):e(r)})})}this.parse(t,i,function(e,t,r,i){if(e)return s(e);var o;try{var a=new n(t,r);o=a.toCSS(i)}catch(e){return s(e)}s(null,o)})};return o}},{promise:void 0}],41:[function(e,t,n){t.exports=function(e,t){var n=function(e){this.options=e};return n.prototype.toCSS=function(t,n,r){var i=new e({contentsIgnoredCharsMap:r.contentsIgnoredChars,rootNode:t,contentsMap:r.contents,sourceMapFilename:this.options.sourceMapFilename,sourceMapURL:this.options.sourceMapURL,outputFilename:this.options.sourceMapOutputFilename,sourceMapBasepath:this.options.sourceMapBasepath,sourceMapRootpath:this.options.sourceMapRootpath,outputSourceFiles:this.options.outputSourceFiles,sourceMapGenerator:this.options.sourceMapGenerator,sourceMapFileInline:this.options.sourceMapFileInline}),o=i.toCSS(n);return this.sourceMap=i.sourceMap,this.sourceMapURL=i.sourceMapURL,this.options.sourceMapInputFilename&&(this.sourceMapInputFilename=i.normalizeFilename(this.options.sourceMapInputFilename)),o+this.getCSSAppendage()},n.prototype.getCSSAppendage=function(){var e=this.sourceMapURL;if(this.options.sourceMapFileInline){if(void 0===this.sourceMap)return"";e="data:application/json;base64,"+t.encodeBase64(this.sourceMap)}return e?"/*# sourceMappingURL="+e+" */":""},n.prototype.getExternalSourceMap=function(){return this.sourceMap},n.prototype.setExternalSourceMap=function(e){this.sourceMap=e},n.prototype.isInline=function(){return this.options.sourceMapFileInline},n.prototype.getSourceMapURL=function(){return this.sourceMapURL},n.prototype.getOutputFilename=function(){return this.options.sourceMapOutputFilename;
-},n.prototype.getInputFilename=function(){return this.sourceMapInputFilename},n}},{}],42:[function(e,t,n){t.exports=function(e){var t=function(t){this._css=[],this._rootNode=t.rootNode,this._contentsMap=t.contentsMap,this._contentsIgnoredCharsMap=t.contentsIgnoredCharsMap,t.sourceMapFilename&&(this._sourceMapFilename=t.sourceMapFilename.replace(/\\/g,"/")),this._outputFilename=t.outputFilename,this.sourceMapURL=t.sourceMapURL,t.sourceMapBasepath&&(this._sourceMapBasepath=t.sourceMapBasepath.replace(/\\/g,"/")),t.sourceMapRootpath?(this._sourceMapRootpath=t.sourceMapRootpath.replace(/\\/g,"/"),"/"!==this._sourceMapRootpath.charAt(this._sourceMapRootpath.length-1)&&(this._sourceMapRootpath+="/")):this._sourceMapRootpath="",this._outputSourceFiles=t.outputSourceFiles,this._sourceMapGeneratorConstructor=e.getSourceMapGenerator(),this._lineNumber=0,this._column=0};return t.prototype.normalizeFilename=function(e){return e=e.replace(/\\/g,"/"),this._sourceMapBasepath&&0===e.indexOf(this._sourceMapBasepath)&&(e=e.substring(this._sourceMapBasepath.length),("\\"===e.charAt(0)||"/"===e.charAt(0))&&(e=e.substring(1))),(this._sourceMapRootpath||"")+e},t.prototype.add=function(e,t,n,r){if(e){var i,o,s,a,u;if(t){var l=this._contentsMap[t.filename];this._contentsIgnoredCharsMap[t.filename]&&(n-=this._contentsIgnoredCharsMap[t.filename],0>n&&(n=0),l=l.slice(this._contentsIgnoredCharsMap[t.filename])),l=l.substring(0,n),o=l.split("\n"),a=o[o.length-1]}if(i=e.split("\n"),s=i[i.length-1],t)if(r)for(u=0;u<i.length;u++)this._sourceMapGenerator.addMapping({generated:{line:this._lineNumber+u+1,column:0===u?this._column:0},original:{line:o.length+u,column:0===u?a.length:0},source:this.normalizeFilename(t.filename)});else this._sourceMapGenerator.addMapping({generated:{line:this._lineNumber+1,column:this._column},original:{line:o.length,column:a.length},source:this.normalizeFilename(t.filename)});1===i.length?this._column+=s.length:(this._lineNumber+=i.length-1,this._column=s.length),this._css.push(e)}},t.prototype.isEmpty=function(){return 0===this._css.length},t.prototype.toCSS=function(e){if(this._sourceMapGenerator=new this._sourceMapGeneratorConstructor({file:this._outputFilename,sourceRoot:null}),this._outputSourceFiles)for(var t in this._contentsMap)if(this._contentsMap.hasOwnProperty(t)){var n=this._contentsMap[t];this._contentsIgnoredCharsMap[t]&&(n=n.slice(this._contentsIgnoredCharsMap[t])),this._sourceMapGenerator.setSourceContent(this.normalizeFilename(t),n)}if(this._rootNode.genCSS(e,this),this._css.length>0){var r,i=JSON.stringify(this._sourceMapGenerator.toJSON());this.sourceMapURL?r=this.sourceMapURL:this._sourceMapFilename&&(r=this._sourceMapFilename),this.sourceMapURL=r,this.sourceMap=i}return this._css.join("")},t}},{}],43:[function(e,t,n){var r=e("./contexts"),i=e("./visitors"),o=e("./tree");t.exports=function(e,t){t=t||{};var n,s=t.variables,a=new r.Eval(t);"object"!=typeof s||Array.isArray(s)||(s=Object.keys(s).map(function(e){var t=s[e];return t instanceof o.Value||(t instanceof o.Expression||(t=new o.Expression([t])),t=new o.Value([t])),new o.Rule("@"+e,t,!1,null,0)}),a.frames=[new o.Ruleset(null,s)]);var u,l=[],c=[new i.JoinSelectorVisitor,new i.ExtendVisitor,new i.ToCSSVisitor({compress:Boolean(t.compress)})];if(t.pluginManager){var h=t.pluginManager.getVisitors();for(u=0;u<h.length;u++){var f=h[u];f.isPreEvalVisitor?l.push(f):f.isPreVisitor?c.splice(0,0,f):c.push(f)}}for(u=0;u<l.length;u++)l[u].run(e);for(n=e.eval(a),u=0;u<c.length;u++)c[u].run(n);return n}},{"./contexts":10,"./tree":61,"./visitors":86}],44:[function(e,t,n){var r=e("./node"),i=function(e){this.value=e};i.prototype=new r,i.prototype.type="Alpha",i.prototype.accept=function(e){this.value=e.visit(this.value)},i.prototype.eval=function(e){return this.value.eval?new i(this.value.eval(e)):this},i.prototype.genCSS=function(e,t){t.add("alpha(opacity="),this.value.genCSS?this.value.genCSS(e,t):t.add(this.value),t.add(")")},t.exports=i},{"./node":69}],45:[function(e,t,n){var r=e("./node"),i=function(e,t,n,r,i,o){this.value=e,this.index=t,this.mapLines=r,this.currentFileInfo=n,this.rulesetLike="undefined"==typeof i?!1:i,this.isReferenced=o||!1};i.prototype=new r,i.prototype.type="Anonymous",i.prototype.eval=function(){return new i(this.value,this.index,this.currentFileInfo,this.mapLines,this.rulesetLike,this.isReferenced)},i.prototype.compare=function(e){return e.toCSS&&this.toCSS()===e.toCSS()?0:void 0},i.prototype.isRulesetLike=function(){return this.rulesetLike},i.prototype.genCSS=function(e,t){t.add(this.value,this.currentFileInfo,this.index,this.mapLines)},i.prototype.markReferenced=function(){this.isReferenced=!0},i.prototype.getIsReferenced=function(){return!this.currentFileInfo||!this.currentFileInfo.reference||this.isReferenced},t.exports=i},{"./node":69}],46:[function(e,t,n){var r=e("./node"),i=function(e,t){this.key=e,this.value=t};i.prototype=new r,i.prototype.type="Assignment",i.prototype.accept=function(e){this.value=e.visit(this.value)},i.prototype.eval=function(e){return this.value.eval?new i(this.key,this.value.eval(e)):this},i.prototype.genCSS=function(e,t){t.add(this.key+"="),this.value.genCSS?this.value.genCSS(e,t):t.add(this.value)},t.exports=i},{"./node":69}],47:[function(e,t,n){var r=e("./node"),i=function(e,t,n){this.key=e,this.op=t,this.value=n};i.prototype=new r,i.prototype.type="Attribute",i.prototype.eval=function(e){return new i(this.key.eval?this.key.eval(e):this.key,this.op,this.value&&this.value.eval?this.value.eval(e):this.value)},i.prototype.genCSS=function(e,t){t.add(this.toCSS(e))},i.prototype.toCSS=function(e){var t=this.key.toCSS?this.key.toCSS(e):this.key;return this.op&&(t+=this.op,t+=this.value.toCSS?this.value.toCSS(e):this.value),"["+t+"]"},t.exports=i},{"./node":69}],48:[function(e,t,n){var r=e("./node"),i=e("../functions/function-caller"),o=function(e,t,n,r){this.name=e,this.args=t,this.index=n,this.currentFileInfo=r};o.prototype=new r,o.prototype.type="Call",o.prototype.accept=function(e){this.args&&(this.args=e.visitArray(this.args))},o.prototype.eval=function(e){var t,n=this.args.map(function(t){return t.eval(e)}),r=new i(this.name,e,this.index,this.currentFileInfo);if(r.isValid())try{if(t=r.call(n),null!=t)return t}catch(s){throw{type:s.type||"Runtime",message:"error evaluating function `"+this.name+"`"+(s.message?": "+s.message:""),index:this.index,filename:this.currentFileInfo.filename}}return new o(this.name,n,this.index,this.currentFileInfo)},o.prototype.genCSS=function(e,t){t.add(this.name+"(",this.currentFileInfo,this.index);for(var n=0;n<this.args.length;n++)this.args[n].genCSS(e,t),n+1<this.args.length&&t.add(", ");t.add(")")},t.exports=o},{"../functions/function-caller":20,"./node":69}],49:[function(e,t,n){function r(e,t){return Math.min(Math.max(e,0),t)}function i(e){return"#"+e.map(function(e){return e=r(Math.round(e),255),(16>e?"0":"")+e.toString(16)}).join("")}var o=e("./node"),s=e("../data/colors"),a=function(e,t,n){Array.isArray(e)?this.rgb=e:6==e.length?this.rgb=e.match(/.{2}/g).map(function(e){return parseInt(e,16)}):this.rgb=e.split("").map(function(e){return parseInt(e+e,16)}),this.alpha="number"==typeof t?t:1,"undefined"!=typeof n&&(this.value=n)};a.prototype=new o,a.prototype.type="Color",a.prototype.luma=function(){var e=this.rgb[0]/255,t=this.rgb[1]/255,n=this.rgb[2]/255;return e=.03928>=e?e/12.92:Math.pow((e+.055)/1.055,2.4),t=.03928>=t?t/12.92:Math.pow((t+.055)/1.055,2.4),n=.03928>=n?n/12.92:Math.pow((n+.055)/1.055,2.4),.2126*e+.7152*t+.0722*n},a.prototype.genCSS=function(e,t){t.add(this.toCSS(e))},a.prototype.toCSS=function(e,t){var n,i,o=e&&e.compress&&!t;if(this.value)return this.value;if(i=this.fround(e,this.alpha),1>i)return"rgba("+this.rgb.map(function(e){return r(Math.round(e),255)}).concat(r(i,1)).join(","+(o?"":" "))+")";if(n=this.toRGB(),o){var s=n.split("");s[1]===s[2]&&s[3]===s[4]&&s[5]===s[6]&&(n="#"+s[1]+s[3]+s[5])}return n},a.prototype.operate=function(e,t,n){for(var r=[],i=this.alpha*(1-n.alpha)+n.alpha,o=0;3>o;o++)r[o]=this._operate(e,t,this.rgb[o],n.rgb[o]);return new a(r,i)},a.prototype.toRGB=function(){return i(this.rgb)},a.prototype.toHSL=function(){var e,t,n=this.rgb[0]/255,r=this.rgb[1]/255,i=this.rgb[2]/255,o=this.alpha,s=Math.max(n,r,i),a=Math.min(n,r,i),u=(s+a)/2,l=s-a;if(s===a)e=t=0;else{switch(t=u>.5?l/(2-s-a):l/(s+a),s){case n:e=(r-i)/l+(i>r?6:0);break;case r:e=(i-n)/l+2;break;case i:e=(n-r)/l+4}e/=6}return{h:360*e,s:t,l:u,a:o}},a.prototype.toHSV=function(){var e,t,n=this.rgb[0]/255,r=this.rgb[1]/255,i=this.rgb[2]/255,o=this.alpha,s=Math.max(n,r,i),a=Math.min(n,r,i),u=s,l=s-a;if(t=0===s?0:l/s,s===a)e=0;else{switch(s){case n:e=(r-i)/l+(i>r?6:0);break;case r:e=(i-n)/l+2;break;case i:e=(n-r)/l+4}e/=6}return{h:360*e,s:t,v:u,a:o}},a.prototype.toARGB=function(){return i([255*this.alpha].concat(this.rgb))},a.prototype.compare=function(e){return e.rgb&&e.rgb[0]===this.rgb[0]&&e.rgb[1]===this.rgb[1]&&e.rgb[2]===this.rgb[2]&&e.alpha===this.alpha?0:void 0},a.fromKeyword=function(e){var t,n=e.toLowerCase();return s.hasOwnProperty(n)?t=new a(s[n].slice(1)):"transparent"===n&&(t=new a([0,0,0],0)),t?(t.value=e,t):void 0},t.exports=a},{"../data/colors":11,"./node":69}],50:[function(e,t,n){var r=e("./node"),i=function(e){" "===e?(this.value=" ",this.emptyOrWhitespace=!0):(this.value=e?e.trim():"",this.emptyOrWhitespace=""===this.value)};i.prototype=new r,i.prototype.type="Combinator";var o={"":!0," ":!0,"|":!0};i.prototype.genCSS=function(e,t){var n=e.compress||o[this.value]?"":" ";t.add(n+this.value+n)},t.exports=i},{"./node":69}],51:[function(e,t,n){var r=e("./node"),i=e("./debug-info"),o=function(e,t,n,r){this.value=e,this.isLineComment=t,this.currentFileInfo=r};o.prototype=new r,o.prototype.type="Comment",o.prototype.genCSS=function(e,t){this.debugInfo&&t.add(i(e,this),this.currentFileInfo,this.index),t.add(this.value)},o.prototype.isSilent=function(e){var t=this.currentFileInfo&&this.currentFileInfo.reference&&!this.isReferenced,n=e.compress&&"!"!==this.value[2];return this.isLineComment||t||n},o.prototype.markReferenced=function(){this.isReferenced=!0},t.exports=o},{"./debug-info":53,"./node":69}],52:[function(e,t,n){var r=e("./node"),i=function(e,t,n,r,i){this.op=e.trim(),this.lvalue=t,this.rvalue=n,this.index=r,this.negate=i};i.prototype=new r,i.prototype.type="Condition",i.prototype.accept=function(e){this.lvalue=e.visit(this.lvalue),this.rvalue=e.visit(this.rvalue)},i.prototype.eval=function(e){var t=function(e,t,n){switch(e){case"and":return t&&n;case"or":return t||n;default:switch(r.compare(t,n)){case-1:return"<"===e||"=<"===e||"<="===e;case 0:return"="===e||">="===e||"=<"===e||"<="===e;case 1:return">"===e||">="===e;default:return!1}}}(this.op,this.lvalue.eval(e),this.rvalue.eval(e));return this.negate?!t:t},t.exports=i},{"./node":69}],53:[function(e,t,n){var r=function(e,t,n){var i="";if(e.dumpLineNumbers&&!e.compress)switch(e.dumpLineNumbers){case"comments":i=r.asComment(t);break;case"mediaquery":i=r.asMediaQuery(t);break;case"all":i=r.asComment(t)+(n||"")+r.asMediaQuery(t)}return i};r.asComment=function(e){return"/* line "+e.debugInfo.lineNumber+", "+e.debugInfo.fileName+" */\n"},r.asMediaQuery=function(e){var t=e.debugInfo.fileName;return/^[a-z]+:\/\//i.test(t)||(t="file://"+t),"@media -sass-debug-info{filename{font-family:"+t.replace(/([.:\/\\])/g,function(e){return"\\"==e&&(e="/"),"\\"+e})+"}line{font-family:\\00003"+e.debugInfo.lineNumber+"}}\n"},t.exports=r},{}],54:[function(e,t,n){var r=e("./node"),i=e("../contexts"),o=function(e,t){this.ruleset=e,this.frames=t};o.prototype=new r,o.prototype.type="DetachedRuleset",o.prototype.evalFirst=!0,o.prototype.accept=function(e){this.ruleset=e.visit(this.ruleset)},o.prototype.eval=function(e){var t=this.frames||e.frames.slice(0);return new o(this.ruleset,t)},o.prototype.callEval=function(e){return this.ruleset.eval(this.frames?new i.Eval(e,this.frames.concat(e.frames)):e)},t.exports=o},{"../contexts":10,"./node":69}],55:[function(e,t,n){var r=e("./node"),i=e("../data/unit-conversions"),o=e("./unit"),s=e("./color"),a=function(e,t){this.value=parseFloat(e),this.unit=t&&t instanceof o?t:new o(t?[t]:void 0)};a.prototype=new r,a.prototype.type="Dimension",a.prototype.accept=function(e){this.unit=e.visit(this.unit)},a.prototype.eval=function(e){return this},a.prototype.toColor=function(){return new s([this.value,this.value,this.value])},a.prototype.genCSS=function(e,t){if(e&&e.strictUnits&&!this.unit.isSingular())throw new Error("Multiple units in dimension. Correct the units or use the unit function. Bad unit: "+this.unit.toString());var n=this.fround(e,this.value),r=String(n);if(0!==n&&1e-6>n&&n>-1e-6&&(r=n.toFixed(20).replace(/0+$/,"")),e&&e.compress){if(0===n&&this.unit.isLength())return void t.add(r);n>0&&1>n&&(r=r.substr(1))}t.add(r),this.unit.genCSS(e,t)},a.prototype.operate=function(e,t,n){var r=this._operate(e,t,this.value,n.value),i=this.unit.clone();if("+"===t||"-"===t)if(0===i.numerator.length&&0===i.denominator.length)i=n.unit.clone(),this.unit.backupUnit&&(i.backupUnit=this.unit.backupUnit);else if(0===n.unit.numerator.length&&0===i.denominator.length);else{if(n=n.convertTo(this.unit.usedUnits()),e.strictUnits&&n.unit.toString()!==i.toString())throw new Error("Incompatible units. Change the units or use the unit function. Bad units: '"+i.toString()+"' and '"+n.unit.toString()+"'.");r=this._operate(e,t,this.value,n.value)}else"*"===t?(i.numerator=i.numerator.concat(n.unit.numerator).sort(),i.denominator=i.denominator.concat(n.unit.denominator).sort(),i.cancel()):"/"===t&&(i.numerator=i.numerator.concat(n.unit.denominator).sort(),i.denominator=i.denominator.concat(n.unit.numerator).sort(),i.cancel());return new a(r,i)},a.prototype.compare=function(e){var t,n;if(!(e instanceof a))return void 0;if(this.unit.isEmpty()||e.unit.isEmpty())t=this,n=e;else if(t=this.unify(),n=e.unify(),0!==t.unit.compare(n.unit))return void 0;return r.numericCompare(t.value,n.value)},a.prototype.unify=function(){return this.convertTo({length:"px",duration:"s",angle:"rad"})},a.prototype.convertTo=function(e){var t,n,r,o,s,u=this.value,l=this.unit.clone(),c={};if("string"==typeof e){for(t in i)i[t].hasOwnProperty(e)&&(c={},c[t]=e);e=c}s=function(e,t){return r.hasOwnProperty(e)?(t?u/=r[e]/r[o]:u*=r[e]/r[o],o):e};for(n in e)e.hasOwnProperty(n)&&(o=e[n],r=i[n],l.map(s));return l.cancel(),new a(u,l)},t.exports=a},{"../data/unit-conversions":13,"./color":49,"./node":69,"./unit":78}],56:[function(e,t,n){var r=e("./node"),i=e("./selector"),o=e("./ruleset"),s=function(e,t,n,r,o,s,a,u){var l;if(this.name=e,this.value=t,n)for(Array.isArray(n)?this.rules=n:(this.rules=[n],this.rules[0].selectors=new i([],null,null,this.index,o).createEmptySelectors()),l=0;l<this.rules.length;l++)this.rules[l].allowImports=!0;this.index=r,this.currentFileInfo=o,this.debugInfo=s,this.isReferenced=a,this.isRooted=u||!1};s.prototype=new r,s.prototype.type="Directive",s.prototype.accept=function(e){var t=this.value,n=this.rules;n&&(this.rules=e.visitArray(n)),t&&(this.value=e.visit(t))},s.prototype.isRulesetLike=function(){return this.rules||!this.isCharset()},s.prototype.isCharset=function(){return"@charset"===this.name},s.prototype.genCSS=function(e,t){var n=this.value,r=this.rules;t.add(this.name,this.currentFileInfo,this.index),n&&(t.add(" "),n.genCSS(e,t)),r?this.outputRuleset(e,t,r):t.add(";")},s.prototype.eval=function(e){var t,n,r=this.value,i=this.rules;return t=e.mediaPath,n=e.mediaBlocks,e.mediaPath=[],e.mediaBlocks=[],r&&(r=r.eval(e)),i&&(i=[i[0].eval(e)],i[0].root=!0),e.mediaPath=t,e.mediaBlocks=n,new s(this.name,r,i,this.index,this.currentFileInfo,this.debugInfo,this.isReferenced,this.isRooted)},s.prototype.variable=function(e){return this.rules?o.prototype.variable.call(this.rules[0],e):void 0},s.prototype.find=function(){return this.rules?o.prototype.find.apply(this.rules[0],arguments):void 0},s.prototype.rulesets=function(){return this.rules?o.prototype.rulesets.apply(this.rules[0]):void 0},s.prototype.markReferenced=function(){var e,t;if(this.isReferenced=!0,this.rules)for(t=this.rules,e=0;e<t.length;e++)t[e].markReferenced&&t[e].markReferenced()},s.prototype.getIsReferenced=function(){return!this.currentFileInfo||!this.currentFileInfo.reference||this.isReferenced},s.prototype.outputRuleset=function(e,t,n){var r,i=n.length;if(e.tabLevel=(0|e.tabLevel)+1,e.compress){for(t.add("{"),r=0;i>r;r++)n[r].genCSS(e,t);return t.add("}"),void e.tabLevel--}var o="\n"+Array(e.tabLevel).join("  "),s=o+"  ";if(i){for(t.add(" {"+s),n[0].genCSS(e,t),r=1;i>r;r++)t.add(s),n[r].genCSS(e,t);t.add(o+"}")}else t.add(" {"+o+"}");e.tabLevel--},t.exports=s},{"./node":69,"./ruleset":75,"./selector":76}],57:[function(e,t,n){var r=e("./node"),i=e("./paren"),o=e("./combinator"),s=function(e,t,n,r){this.combinator=e instanceof o?e:new o(e),"string"==typeof t?this.value=t.trim():t?this.value=t:this.value="",this.index=n,this.currentFileInfo=r};s.prototype=new r,s.prototype.type="Element",s.prototype.accept=function(e){var t=this.value;this.combinator=e.visit(this.combinator),"object"==typeof t&&(this.value=e.visit(t))},s.prototype.eval=function(e){return new s(this.combinator,this.value.eval?this.value.eval(e):this.value,this.index,this.currentFileInfo)},s.prototype.genCSS=function(e,t){t.add(this.toCSS(e),this.currentFileInfo,this.index)},s.prototype.toCSS=function(e){e=e||{};var t=this.value,n=e.firstSelector;return t instanceof i&&(e.firstSelector=!0),t=t.toCSS?t.toCSS(e):t,e.firstSelector=n,""===t&&"&"===this.combinator.value.charAt(0)?"":this.combinator.toCSS(e)+t},t.exports=s},{"./combinator":50,"./node":69,"./paren":71}],58:[function(e,t,n){var r=e("./node"),i=e("./paren"),o=e("./comment"),s=function(e){if(this.value=e,!e)throw new Error("Expression requires an array parameter")};s.prototype=new r,s.prototype.type="Expression",s.prototype.accept=function(e){this.value=e.visitArray(this.value)},s.prototype.eval=function(e){var t,n=this.parens&&!this.parensInOp,r=!1;return n&&e.inParenthesis(),this.value.length>1?t=new s(this.value.map(function(t){return t.eval(e)})):1===this.value.length?(this.value[0].parens&&!this.value[0].parensInOp&&(r=!0),t=this.value[0].eval(e)):t=this,n&&e.outOfParenthesis(),this.parens&&this.parensInOp&&!e.isMathOn()&&!r&&(t=new i(t)),t},s.prototype.genCSS=function(e,t){for(var n=0;n<this.value.length;n++)this.value[n].genCSS(e,t),n+1<this.value.length&&t.add(" ")},s.prototype.throwAwayComments=function(){this.value=this.value.filter(function(e){return!(e instanceof o)})},s.prototype.markReferenced=function(){this.value.forEach(function(e){e.markReferenced&&e.markReferenced()})},t.exports=s},{"./comment":51,"./node":69,"./paren":71}],59:[function(e,t,n){var r=e("./node"),i=function o(e,t,n){switch(this.selector=e,this.option=t,this.index=n,this.object_id=o.next_id++,this.parent_ids=[this.object_id],t){case"all":this.allowBefore=!0,this.allowAfter=!0;break;default:this.allowBefore=!1,this.allowAfter=!1}};i.next_id=0,i.prototype=new r,i.prototype.type="Extend",i.prototype.accept=function(e){this.selector=e.visit(this.selector)},i.prototype.eval=function(e){return new i(this.selector.eval(e),this.option,this.index)},i.prototype.clone=function(e){return new i(this.selector,this.option,this.index)},i.prototype.findSelfSelectors=function(e){var t,n,r=[];for(t=0;t<e.length;t++)n=e[t].elements,t>0&&n.length&&""===n[0].combinator.value&&(n[0].combinator.value=" "),r=r.concat(e[t].elements);this.selfSelectors=[{elements:r}]},t.exports=i},{"./node":69}],60:[function(e,t,n){var r=e("./node"),i=e("./media"),o=e("./url"),s=e("./quoted"),a=e("./ruleset"),u=e("./anonymous"),l=function(e,t,n,r,i){if(this.options=n,this.index=r,this.path=e,this.features=t,this.currentFileInfo=i,void 0!==this.options.less||this.options.inline)this.css=!this.options.less||this.options.inline;else{var o=this.getPath();o&&/[#\.\&\?\/]css([\?;].*)?$/.test(o)&&(this.css=!0)}};l.prototype=new r,l.prototype.type="Import",l.prototype.accept=function(e){this.features&&(this.features=e.visit(this.features)),this.path=e.visit(this.path),this.options.plugin||this.options.inline||!this.root||(this.root=e.visit(this.root))},l.prototype.genCSS=function(e,t){this.css&&void 0===this.path.currentFileInfo.reference&&(t.add("@import ",this.currentFileInfo,this.index),this.path.genCSS(e,t),this.features&&(t.add(" "),this.features.genCSS(e,t)),t.add(";"))},l.prototype.getPath=function(){return this.path instanceof o?this.path.value.value:this.path.value},l.prototype.isVariableImport=function(){var e=this.path;return e instanceof o&&(e=e.value),e instanceof s?e.containsVariables():!0},l.prototype.evalForImport=function(e){var t=this.path;return t instanceof o&&(t=t.value),new l(t.eval(e),this.features,this.options,this.index,this.currentFileInfo)},l.prototype.evalPath=function(e){var t=this.path.eval(e),n=this.currentFileInfo&&this.currentFileInfo.rootpath;if(!(t instanceof o)){if(n){var r=t.value;r&&e.isPathRelative(r)&&(t.value=n+r)}t.value=e.normalizePath(t.value)}return t},l.prototype.eval=function(e){var t,n,r=this.features&&this.features.eval(e);if(this.options.plugin)return n=e.frames[0]&&e.frames[0].functionRegistry,n&&this.root&&this.root.functions&&n.addMultiple(this.root.functions),[];if(this.skip&&("function"==typeof this.skip&&(this.skip=this.skip()),this.skip))return[];if(this.options.inline){var o=new u(this.root,0,{filename:this.importedFilename,reference:this.path.currentFileInfo&&this.path.currentFileInfo.reference},!0,!0,!1);return this.features?new i([o],this.features.value):[o]}if(this.css){var s=new l(this.evalPath(e),r,this.options,this.index);if(!s.css&&this.error)throw this.error;return s}return t=new a(null,this.root.rules.slice(0)),t.evalImports(e),this.features?new i(t.rules,this.features.value):t.rules},t.exports=l},{"./anonymous":45,"./media":65,"./node":69,"./quoted":72,"./ruleset":75,"./url":79}],61:[function(e,t,n){var r={};r.Node=e("./node"),r.Alpha=e("./alpha"),r.Color=e("./color"),r.Directive=e("./directive"),r.DetachedRuleset=e("./detached-ruleset"),r.Operation=e("./operation"),r.Dimension=e("./dimension"),r.Unit=e("./unit"),r.Keyword=e("./keyword"),r.Variable=e("./variable"),r.Ruleset=e("./ruleset"),r.Element=e("./element"),r.Attribute=e("./attribute"),r.Combinator=e("./combinator"),r.Selector=e("./selector"),r.Quoted=e("./quoted"),r.Expression=e("./expression"),r.Rule=e("./rule"),r.Call=e("./call"),r.URL=e("./url"),r.Import=e("./import"),r.mixin={Call:e("./mixin-call"),Definition:e("./mixin-definition")},r.Comment=e("./comment"),r.Anonymous=e("./anonymous"),r.Value=e("./value"),r.JavaScript=e("./javascript"),r.Assignment=e("./assignment"),r.Condition=e("./condition"),r.Paren=e("./paren"),r.Media=e("./media"),r.UnicodeDescriptor=e("./unicode-descriptor"),r.Negative=e("./negative"),r.Extend=e("./extend"),r.RulesetCall=e("./ruleset-call"),t.exports=r},{"./alpha":44,"./anonymous":45,"./assignment":46,"./attribute":47,"./call":48,"./color":49,"./combinator":50,"./comment":51,"./condition":52,"./detached-ruleset":54,"./dimension":55,"./directive":56,"./element":57,"./expression":58,"./extend":59,"./import":60,"./javascript":62,"./keyword":64,"./media":65,"./mixin-call":66,"./mixin-definition":67,"./negative":68,"./node":69,"./operation":70,"./paren":71,"./quoted":72,"./rule":73,"./ruleset":75,"./ruleset-call":74,"./selector":76,"./unicode-descriptor":77,"./unit":78,"./url":79,"./value":80,"./variable":81}],62:[function(e,t,n){var r=e("./js-eval-node"),i=e("./dimension"),o=e("./quoted"),s=e("./anonymous"),a=function(e,t,n,r){this.escaped=t,this.expression=e,this.index=n,this.currentFileInfo=r};a.prototype=new r,a.prototype.type="JavaScript",a.prototype.eval=function(e){var t=this.evaluateJavaScript(this.expression,e);return"number"==typeof t?new i(t):"string"==typeof t?new o('"'+t+'"',t,this.escaped,this.index):new s(Array.isArray(t)?t.join(", "):t)},t.exports=a},{"./anonymous":45,"./dimension":55,"./js-eval-node":63,"./quoted":72}],63:[function(e,t,n){var r=e("./node"),i=e("./variable"),o=function(){};o.prototype=new r,o.prototype.evaluateJavaScript=function(e,t){var n,r=this,o={};if(void 0!==t.javascriptEnabled&&!t.javascriptEnabled)throw{message:"You are using JavaScript, which has been disabled.",filename:this.currentFileInfo.filename,index:this.index};e=e.replace(/@\{([\w-]+)\}/g,function(e,n){return r.jsify(new i("@"+n,r.index,r.currentFileInfo).eval(t))});try{e=new Function("return ("+e+")")}catch(s){throw{message:"JavaScript evaluation error: "+s.message+" from `"+e+"`",filename:this.currentFileInfo.filename,index:this.index}}var a=t.frames[0].variables();for(var u in a)a.hasOwnProperty(u)&&(o[u.slice(1)]={value:a[u].value,toJS:function(){return this.value.eval(t).toCSS()}});try{n=e.call(o)}catch(s){throw{message:"JavaScript evaluation error: '"+s.name+": "+s.message.replace(/["]/g,"'")+"'",filename:this.currentFileInfo.filename,index:this.index}}return n},o.prototype.jsify=function(e){return Array.isArray(e.value)&&e.value.length>1?"["+e.value.map(function(e){return e.toCSS()}).join(", ")+"]":e.toCSS()},t.exports=o},{"./node":69,"./variable":81}],64:[function(e,t,n){var r=e("./node"),i=function(e){this.value=e};i.prototype=new r,i.prototype.type="Keyword",i.prototype.genCSS=function(e,t){if("%"===this.value)throw{type:"Syntax",message:"Invalid % without number"};t.add(this.value)},i.True=new i("true"),i.False=new i("false"),t.exports=i},{"./node":69}],65:[function(e,t,n){var r=e("./ruleset"),i=e("./value"),o=e("./selector"),s=e("./anonymous"),a=e("./expression"),u=e("./directive"),l=function(e,t,n,s){this.index=n,this.currentFileInfo=s;var a=new o([],null,null,this.index,this.currentFileInfo).createEmptySelectors();this.features=new i(t),this.rules=[new r(a,e)],this.rules[0].allowImports=!0};l.prototype=new u,l.prototype.type="Media",l.prototype.isRulesetLike=!0,l.prototype.accept=function(e){this.features&&(this.features=e.visit(this.features)),this.rules&&(this.rules=e.visitArray(this.rules))},l.prototype.genCSS=function(e,t){t.add("@media ",this.currentFileInfo,this.index),this.features.genCSS(e,t),this.outputRuleset(e,t,this.rules)},l.prototype.eval=function(e){e.mediaBlocks||(e.mediaBlocks=[],e.mediaPath=[]);var t=new l(null,[],this.index,this.currentFileInfo);this.debugInfo&&(this.rules[0].debugInfo=this.debugInfo,t.debugInfo=this.debugInfo);var n=!1;e.strictMath||(n=!0,e.strictMath=!0);try{t.features=this.features.eval(e)}finally{n&&(e.strictMath=!1)}return e.mediaPath.push(t),e.mediaBlocks.push(t),this.rules[0].functionRegistry=e.frames[0].functionRegistry.inherit(),e.frames.unshift(this.rules[0]),t.rules=[this.rules[0].eval(e)],e.frames.shift(),e.mediaPath.pop(),0===e.mediaPath.length?t.evalTop(e):t.evalNested(e)},l.prototype.evalTop=function(e){var t=this;if(e.mediaBlocks.length>1){var n=new o([],null,null,this.index,this.currentFileInfo).createEmptySelectors();t=new r(n,e.mediaBlocks),t.multiMedia=!0}return delete e.mediaBlocks,delete e.mediaPath,t},l.prototype.evalNested=function(e){var t,n,o=e.mediaPath.concat([this]);for(t=0;t<o.length;t++)n=o[t].features instanceof i?o[t].features.value:o[t].features,o[t]=Array.isArray(n)?n:[n];return this.features=new i(this.permute(o).map(function(e){for(e=e.map(function(e){return e.toCSS?e:new s(e)}),t=e.length-1;t>0;t--)e.splice(t,0,new s("and"));return new a(e)})),new r([],[])},l.prototype.permute=function(e){if(0===e.length)return[];if(1===e.length)return e[0];for(var t=[],n=this.permute(e.slice(1)),r=0;r<n.length;r++)for(var i=0;i<e[0].length;i++)t.push([e[0][i]].concat(n[r]));return t},l.prototype.bubbleSelectors=function(e){e&&(this.rules=[new r(e.slice(0),[this.rules[0]])])},t.exports=l},{"./anonymous":45,"./directive":56,"./expression":58,"./ruleset":75,"./selector":76,"./value":80}],66:[function(e,t,n){var r=e("./node"),i=e("./selector"),o=e("./mixin-definition"),s=e("../functions/default"),a=function(e,t,n,r,o){this.selector=new i(e),this.arguments=t||[],this.index=n,this.currentFileInfo=r,this.important=o};a.prototype=new r,a.prototype.type="MixinCall",a.prototype.accept=function(e){this.selector&&(this.selector=e.visit(this.selector)),this.arguments.length&&(this.arguments=e.visitArray(this.arguments))},a.prototype.eval=function(e){function t(t,n){var r,i,o;for(r=0;2>r;r++){for(k[r]=!0,s.value(r),i=0;i<n.length&&k[r];i++)o=n[i],o.matchCondition&&(k[r]=k[r]&&o.matchCondition(null,e));t.matchCondition&&(k[r]=k[r]&&t.matchCondition(x,e))}return k[0]||k[1]?k[0]!=k[1]?k[1]?R:F:M:I}var n,r,i,a,u,l,c,h,f,p,d,v,m,g,y,w,x=[],b=[],S=!1,C=[],k=[],I=-1,M=0,R=1,F=2;for(c=0;c<this.arguments.length;c++)if(a=this.arguments[c],u=a.value.eval(e),a.expand&&Array.isArray(u.value))for(u=u.value,h=0;h<u.length;h++)x.push({value:u[h]});else x.push({name:a.name,value:u});for(w=function(t){return t.matchArgs(null,e)},c=0;c<e.frames.length;c++)if((n=e.frames[c].find(this.selector,null,w)).length>0){for(d=!0,h=0;h<n.length;h++){for(r=n[h].rule,i=n[h].path,p=!1,f=0;f<e.frames.length;f++)if(!(r instanceof o)&&r===(e.frames[f].originalRuleset||e.frames[f])){p=!0;break}p||r.matchArgs(x,e)&&(v={mixin:r,group:t(r,i)},v.group!==I&&C.push(v),S=!0)}for(s.reset(),g=[0,0,0],h=0;h<C.length;h++)g[C[h].group]++;if(g[M]>0)m=F;else if(m=R,g[R]+g[F]>1)throw{type:"Runtime",message:"Ambiguous use of `default()` found when matching for `"+this.format(x)+"`",index:this.index,filename:this.currentFileInfo.filename};for(h=0;h<C.length;h++)if(v=C[h].group,v===M||v===m)try{r=C[h].mixin,r instanceof o||(y=r.originalRuleset||r,r=new o("",[],r.rules,null,!1),r.originalRuleset=y),Array.prototype.push.apply(b,r.evalCall(e,x,this.important).rules)}catch(E){throw{message:E.message,index:this.index,filename:this.currentFileInfo.filename,stack:E.stack}}if(S){if(!this.currentFileInfo||!this.currentFileInfo.reference)for(c=0;c<b.length;c++)l=b[c],l.markReferenced&&l.markReferenced();return b}}throw d?{type:"Runtime",message:"No matching definition was found for `"+this.format(x)+"`",index:this.index,filename:this.currentFileInfo.filename}:{type:"Name",message:this.selector.toCSS().trim()+" is undefined",index:this.index,filename:this.currentFileInfo.filename}},a.prototype.format=function(e){return this.selector.toCSS().trim()+"("+(e?e.map(function(e){var t="";return e.name&&(t+=e.name+":"),t+=e.value.toCSS?e.value.toCSS():"???"}).join(", "):"")+")"},t.exports=a},{"../functions/default":19,"./mixin-definition":67,"./node":69,"./selector":76}],67:[function(e,t,n){var r=e("./selector"),i=e("./element"),o=e("./ruleset"),s=e("./rule"),a=e("./expression"),u=e("../contexts"),l=function(e,t,n,o,s,a){this.name=e,this.selectors=[new r([new i(null,e,this.index,this.currentFileInfo)])],this.params=t,this.condition=o,this.variadic=s,this.arity=t.length,this.rules=n,this._lookups={};var u=[];this.required=t.reduce(function(e,t){return!t.name||t.name&&!t.value?e+1:(u.push(t.name),e)},0),this.optionalParameters=u,this.frames=a};l.prototype=new o,l.prototype.type="MixinDefinition",l.prototype.evalFirst=!0,l.prototype.accept=function(e){this.params&&this.params.length&&(this.params=e.visitArray(this.params)),this.rules=e.visitArray(this.rules),this.condition&&(this.condition=e.visit(this.condition))},l.prototype.evalParams=function(e,t,n,r){var i,l,c,h,f,p,d,v,m=new o(null,null),g=this.params.slice(0),y=0;if(t.frames&&t.frames[0]&&t.frames[0].functionRegistry&&(m.functionRegistry=t.frames[0].functionRegistry.inherit()),t=new u.Eval(t,[m].concat(t.frames)),n)for(n=n.slice(0),y=n.length,c=0;y>c;c++)if(l=n[c],p=l&&l.name){for(d=!1,h=0;h<g.length;h++)if(!r[h]&&p===g[h].name){r[h]=l.value.eval(e),m.prependRule(new s(p,l.value.eval(e))),d=!0;break}if(d){n.splice(c,1),c--;continue}throw{type:"Runtime",message:"Named argument for "+this.name+" "+n[c].name+" not found"}}for(v=0,c=0;c<g.length;c++)if(!r[c]){if(l=n&&n[v],p=g[c].name)if(g[c].variadic){for(i=[],h=v;y>h;h++)i.push(n[h].value.eval(e));m.prependRule(new s(p,new a(i).eval(e)))}else{if(f=l&&l.value)f=f.eval(e);else{if(!g[c].value)throw{type:"Runtime",message:"wrong number of arguments for "+this.name+" ("+y+" for "+this.arity+")"
-};f=g[c].value.eval(t),m.resetCache()}m.prependRule(new s(p,f)),r[c]=f}if(g[c].variadic&&n)for(h=v;y>h;h++)r[h]=n[h].value.eval(e);v++}return m},l.prototype.makeImportant=function(){var e=this.rules?this.rules.map(function(e){return e.makeImportant?e.makeImportant(!0):e}):this.rules,t=new l(this.name,this.params,e,this.condition,this.variadic,this.frames);return t},l.prototype.eval=function(e){return new l(this.name,this.params,this.rules,this.condition,this.variadic,this.frames||e.frames.slice(0))},l.prototype.evalCall=function(e,t,n){var r,i,l=[],c=this.frames?this.frames.concat(e.frames):e.frames,h=this.evalParams(e,new u.Eval(e,c),t,l);return h.prependRule(new s("@arguments",new a(l).eval(e))),r=this.rules.slice(0),i=new o(null,r),i.originalRuleset=this,i=i.eval(new u.Eval(e,[this,h].concat(c))),n&&(i=i.makeImportant()),i},l.prototype.matchCondition=function(e,t){return this.condition&&!this.condition.eval(new u.Eval(t,[this.evalParams(t,new u.Eval(t,this.frames?this.frames.concat(t.frames):t.frames),e,[])].concat(this.frames||[]).concat(t.frames)))?!1:!0},l.prototype.matchArgs=function(e,t){var n,r=e&&e.length||0,i=this.optionalParameters,o=e?e.reduce(function(e,t){return i.indexOf(t.name)<0?e+1:e},0):0;if(this.variadic){if(o<this.required-1)return!1}else{if(o<this.required)return!1;if(r>this.params.length)return!1}n=Math.min(o,this.arity);for(var s=0;n>s;s++)if(!this.params[s].name&&!this.params[s].variadic&&e[s].value.eval(t).toCSS()!=this.params[s].value.eval(t).toCSS())return!1;return!0},t.exports=l},{"../contexts":10,"./element":57,"./expression":58,"./rule":73,"./ruleset":75,"./selector":76}],68:[function(e,t,n){var r=e("./node"),i=e("./operation"),o=e("./dimension"),s=function(e){this.value=e};s.prototype=new r,s.prototype.type="Negative",s.prototype.genCSS=function(e,t){t.add("-"),this.value.genCSS(e,t)},s.prototype.eval=function(e){return e.isMathOn()?new i("*",[new o(-1),this.value]).eval(e):new s(this.value.eval(e))},t.exports=s},{"./dimension":55,"./node":69,"./operation":70}],69:[function(e,t,n){var r=function(){};r.prototype.toCSS=function(e){var t=[];return this.genCSS(e,{add:function(e,n,r){t.push(e)},isEmpty:function(){return 0===t.length}}),t.join("")},r.prototype.genCSS=function(e,t){t.add(this.value)},r.prototype.accept=function(e){this.value=e.visit(this.value)},r.prototype.eval=function(){return this},r.prototype._operate=function(e,t,n,r){switch(t){case"+":return n+r;case"-":return n-r;case"*":return n*r;case"/":return n/r}},r.prototype.fround=function(e,t){var n=e&&e.numPrecision;return null==n?t:Number((t+2e-16).toFixed(n))},r.compare=function(e,t){if(e.compare&&"Quoted"!==t.type&&"Anonymous"!==t.type)return e.compare(t);if(t.compare)return-t.compare(e);if(e.type!==t.type)return void 0;if(e=e.value,t=t.value,!Array.isArray(e))return e===t?0:void 0;if(e.length!==t.length)return void 0;for(var n=0;n<e.length;n++)if(0!==r.compare(e[n],t[n]))return void 0;return 0},r.numericCompare=function(e,t){return t>e?-1:e===t?0:e>t?1:void 0},t.exports=r},{}],70:[function(e,t,n){var r=e("./node"),i=e("./color"),o=e("./dimension"),s=function(e,t,n){this.op=e.trim(),this.operands=t,this.isSpaced=n};s.prototype=new r,s.prototype.type="Operation",s.prototype.accept=function(e){this.operands=e.visit(this.operands)},s.prototype.eval=function(e){var t=this.operands[0].eval(e),n=this.operands[1].eval(e);if(e.isMathOn()){if(t instanceof o&&n instanceof i&&(t=t.toColor()),n instanceof o&&t instanceof i&&(n=n.toColor()),!t.operate)throw{type:"Operation",message:"Operation on an invalid type"};return t.operate(e,this.op,n)}return new s(this.op,[t,n],this.isSpaced)},s.prototype.genCSS=function(e,t){this.operands[0].genCSS(e,t),this.isSpaced&&t.add(" "),t.add(this.op),this.isSpaced&&t.add(" "),this.operands[1].genCSS(e,t)},t.exports=s},{"./color":49,"./dimension":55,"./node":69}],71:[function(e,t,n){var r=e("./node"),i=function(e){this.value=e};i.prototype=new r,i.prototype.type="Paren",i.prototype.genCSS=function(e,t){t.add("("),this.value.genCSS(e,t),t.add(")")},i.prototype.eval=function(e){return new i(this.value.eval(e))},t.exports=i},{"./node":69}],72:[function(e,t,n){var r=e("./node"),i=e("./js-eval-node"),o=e("./variable"),s=function(e,t,n,r,i){this.escaped=null==n?!0:n,this.value=t||"",this.quote=e.charAt(0),this.index=r,this.currentFileInfo=i};s.prototype=new i,s.prototype.type="Quoted",s.prototype.genCSS=function(e,t){this.escaped||t.add(this.quote,this.currentFileInfo,this.index),t.add(this.value),this.escaped||t.add(this.quote)},s.prototype.containsVariables=function(){return this.value.match(/(`([^`]+)`)|@\{([\w-]+)\}/)},s.prototype.eval=function(e){function t(e,t,n){var r=e;do e=r,r=e.replace(t,n);while(e!==r);return r}var n=this,r=this.value,i=function(t,r){return String(n.evaluateJavaScript(r,e))},a=function(t,r){var i=new o("@"+r,n.index,n.currentFileInfo).eval(e,!0);return i instanceof s?i.value:i.toCSS()};return r=t(r,/`([^`]+)`/g,i),r=t(r,/@\{([\w-]+)\}/g,a),new s(this.quote+r+this.quote,r,this.escaped,this.index,this.currentFileInfo)},s.prototype.compare=function(e){return"Quoted"!==e.type||this.escaped||e.escaped?e.toCSS&&this.toCSS()===e.toCSS()?0:void 0:r.numericCompare(this.value,e.value)},t.exports=s},{"./js-eval-node":63,"./node":69,"./variable":81}],73:[function(e,t,n){function r(e,t){var n,r="",i=t.length,o={add:function(e){r+=e}};for(n=0;i>n;n++)t[n].eval(e).genCSS(e,o);return r}var i=e("./node"),o=e("./value"),s=e("./keyword"),a=function(e,t,n,r,s,a,u,l){this.name=e,this.value=t instanceof i?t:new o([t]),this.important=n?" "+n.trim():"",this.merge=r,this.index=s,this.currentFileInfo=a,this.inline=u||!1,this.variable=void 0!==l?l:e.charAt&&"@"===e.charAt(0)};a.prototype=new i,a.prototype.type="Rule",a.prototype.genCSS=function(e,t){t.add(this.name+(e.compress?":":": "),this.currentFileInfo,this.index);try{this.value.genCSS(e,t)}catch(n){throw n.index=this.index,n.filename=this.currentFileInfo.filename,n}t.add(this.important+(this.inline||e.lastRule&&e.compress?"":";"),this.currentFileInfo,this.index)},a.prototype.eval=function(e){var t,n=!1,i=this.name,o=this.variable;"string"!=typeof i&&(i=1===i.length&&i[0]instanceof s?i[0].value:r(e,i),o=!1),"font"!==i||e.strictMath||(n=!0,e.strictMath=!0);try{if(e.importantScope.push({}),t=this.value.eval(e),!this.variable&&"DetachedRuleset"===t.type)throw{message:"Rulesets cannot be evaluated on a property.",index:this.index,filename:this.currentFileInfo.filename};var u=this.important,l=e.importantScope.pop();return!u&&l.important&&(u=l.important),new a(i,t,u,this.merge,this.index,this.currentFileInfo,this.inline,o)}catch(c){throw"number"!=typeof c.index&&(c.index=this.index,c.filename=this.currentFileInfo.filename),c}finally{n&&(e.strictMath=!1)}},a.prototype.makeImportant=function(){return new a(this.name,this.value,"!important",this.merge,this.index,this.currentFileInfo,this.inline)};var u=function(e){Array.isArray(e)?e.forEach(function(e){u(e)}):e.markReferenced&&e.markReferenced()};a.prototype.markReferenced=function(){this.value&&u(this.value)},t.exports=a},{"./keyword":64,"./node":69,"./value":80}],74:[function(e,t,n){var r=e("./node"),i=e("./variable"),o=function(e){this.variable=e};o.prototype=new r,o.prototype.type="RulesetCall",o.prototype.eval=function(e){var t=new i(this.variable).eval(e);return t.callEval(e)},t.exports=o},{"./node":69,"./variable":81}],75:[function(e,t,n){var r=e("./node"),i=e("./rule"),o=e("./selector"),s=e("./element"),a=e("./paren"),u=e("../contexts"),l=e("../functions/function-registry"),c=e("../functions/default"),h=e("./debug-info"),f=function(e,t,n){this.selectors=e,this.rules=t,this._lookups={},this.strictImports=n};f.prototype=new r,f.prototype.type="Ruleset",f.prototype.isRuleset=!0,f.prototype.isRulesetLike=!0,f.prototype.accept=function(e){this.paths?e.visitArray(this.paths,!0):this.selectors&&(this.selectors=e.visitArray(this.selectors)),this.rules&&this.rules.length&&(this.rules=e.visitArray(this.rules))},f.prototype.eval=function(e){var t,n,r,o,s=this.selectors,a=!1;if(s&&(n=s.length)){for(t=[],c.error({type:"Syntax",message:"it is currently only allowed in parametric mixin guards,"}),o=0;n>o;o++)r=s[o].eval(e),t.push(r),r.evaldCondition&&(a=!0);c.reset()}else a=!0;var u,h,p=this.rules?this.rules.slice(0):null,d=new f(t,p,this.strictImports);d.originalRuleset=this,d.root=this.root,d.firstRoot=this.firstRoot,d.allowImports=this.allowImports,this.debugInfo&&(d.debugInfo=this.debugInfo),a||(p.length=0),d.functionRegistry=function(e){for(var t,n=0,r=e.length;n!==r;++n)if(t=e[n].functionRegistry)return t;return l}(e.frames).inherit();var v=e.frames;v.unshift(d);var m=e.selectors;m||(e.selectors=m=[]),m.unshift(this.selectors),(d.root||d.allowImports||!d.strictImports)&&d.evalImports(e);var g=d.rules,y=g?g.length:0;for(o=0;y>o;o++)g[o].evalFirst&&(g[o]=g[o].eval(e));var w=e.mediaBlocks&&e.mediaBlocks.length||0;for(o=0;y>o;o++)"MixinCall"===g[o].type?(p=g[o].eval(e).filter(function(e){return e instanceof i&&e.variable?!d.variable(e.name):!0}),g.splice.apply(g,[o,1].concat(p)),y+=p.length-1,o+=p.length-1,d.resetCache()):"RulesetCall"===g[o].type&&(p=g[o].eval(e).rules.filter(function(e){return e instanceof i&&e.variable?!1:!0}),g.splice.apply(g,[o,1].concat(p)),y+=p.length-1,o+=p.length-1,d.resetCache());for(o=0;o<g.length;o++)u=g[o],u.evalFirst||(g[o]=u=u.eval?u.eval(e):u);for(o=0;o<g.length;o++)if(u=g[o],u instanceof f&&u.selectors&&1===u.selectors.length&&u.selectors[0].isJustParentSelector()){g.splice(o--,1);for(var x=0;x<u.rules.length;x++)h=u.rules[x],h instanceof i&&h.variable||g.splice(++o,0,h)}if(v.shift(),m.shift(),e.mediaBlocks)for(o=w;o<e.mediaBlocks.length;o++)e.mediaBlocks[o].bubbleSelectors(t);return d},f.prototype.evalImports=function(e){var t,n,r=this.rules;if(r)for(t=0;t<r.length;t++)"Import"===r[t].type&&(n=r[t].eval(e),n&&n.length?(r.splice.apply(r,[t,1].concat(n)),t+=n.length-1):r.splice(t,1,n),this.resetCache())},f.prototype.makeImportant=function(){var e=new f(this.selectors,this.rules.map(function(e){return e.makeImportant?e.makeImportant():e}),this.strictImports);return e},f.prototype.matchArgs=function(e){return!e||0===e.length},f.prototype.matchCondition=function(e,t){var n=this.selectors[this.selectors.length-1];return n.evaldCondition?n.condition&&!n.condition.eval(new u.Eval(t,t.frames))?!1:!0:!1},f.prototype.resetCache=function(){this._rulesets=null,this._variables=null,this._lookups={}},f.prototype.variables=function(){return this._variables||(this._variables=this.rules?this.rules.reduce(function(e,t){if(t instanceof i&&t.variable===!0&&(e[t.name]=t),"Import"===t.type&&t.root&&t.root.variables){var n=t.root.variables();for(var r in n)n.hasOwnProperty(r)&&(e[r]=n[r])}return e},{}):{}),this._variables},f.prototype.variable=function(e){return this.variables()[e]},f.prototype.rulesets=function(){if(!this.rules)return[];var e,t,n=[],r=this.rules,i=r.length;for(e=0;i>e;e++)t=r[e],t.isRuleset&&n.push(t);return n},f.prototype.prependRule=function(e){var t=this.rules;t?t.unshift(e):this.rules=[e]},f.prototype.find=function(e,t,n){t=t||this;var r,i,s=[],a=e.toCSS();return a in this._lookups?this._lookups[a]:(this.rulesets().forEach(function(a){if(a!==t)for(var u=0;u<a.selectors.length;u++)if(r=e.match(a.selectors[u])){if(e.elements.length>r){if(!n||n(a)){i=a.find(new o(e.elements.slice(r)),t,n);for(var l=0;l<i.length;++l)i[l].path.push(a);Array.prototype.push.apply(s,i)}}else s.push({rule:a,path:[]});break}}),this._lookups[a]=s,s)},f.prototype.genCSS=function(e,t){function n(e){return"boolean"==typeof e.isRulesetLike?e.isRulesetLike:"function"==typeof e.isRulesetLike?e.isRulesetLike():!1}var r,i,o,s,a,u=[],l=[];e.tabLevel=e.tabLevel||0,this.root||e.tabLevel++;var c,f=e.compress?"":Array(e.tabLevel+1).join("  "),p=e.compress?"":Array(e.tabLevel).join("  "),d=0,v=0;for(r=0;r<this.rules.length;r++)s=this.rules[r],"Comment"===s.type?(v===r&&v++,l.push(s)):s.isCharset&&s.isCharset()?(l.splice(d,0,s),d++,v++):"Import"===s.type?(l.splice(v,0,s),v++):l.push(s);if(l=u.concat(l),!this.root){o=h(e,this,p),o&&(t.add(o),t.add(p));var m,g=this.paths,y=g.length;for(c=e.compress?",":",\n"+p,r=0;y>r;r++)if(a=g[r],m=a.length)for(r>0&&t.add(c),e.firstSelector=!0,a[0].genCSS(e,t),e.firstSelector=!1,i=1;m>i;i++)a[i].genCSS(e,t);t.add((e.compress?"{":" {\n")+f)}for(r=0;r<l.length;r++){s=l[r],r+1===l.length&&(e.lastRule=!0);var w=e.lastRule;n(s)&&(e.lastRule=!1),s.genCSS?s.genCSS(e,t):s.value&&t.add(s.value.toString()),e.lastRule=w,e.lastRule?e.lastRule=!1:t.add(e.compress?"":"\n"+f)}this.root||(t.add(e.compress?"}":"\n"+p+"}"),e.tabLevel--),t.isEmpty()||e.compress||!this.firstRoot||t.add("\n")},f.prototype.markReferenced=function(){var e;if(this.selectors)for(e=0;e<this.selectors.length;e++)this.selectors[e].markReferenced();if(this.rules)for(e=0;e<this.rules.length;e++)this.rules[e].markReferenced&&this.rules[e].markReferenced()},f.prototype.getIsReferenced=function(){var e,t,n,r;if(this.paths)for(e=0;e<this.paths.length;e++)for(n=this.paths[e],t=0;t<n.length;t++)if(n[t].getIsReferenced&&n[t].getIsReferenced())return!0;if(this.selectors)for(e=0;e<this.selectors.length;e++)if(r=this.selectors[e],r.getIsReferenced&&r.getIsReferenced())return!0;return!1},f.prototype.joinSelectors=function(e,t,n){for(var r=0;r<n.length;r++)this.joinSelector(e,t,n[r])},f.prototype.joinSelector=function(e,t,n){function r(e,t){var n,r;if(0===e.length)n=new a(e[0]);else{var i=[];for(r=0;r<e.length;r++)i.push(new s(null,e[r],t.index,t.currentFileInfo));n=new a(new o(i))}return n}function i(e,t){var n,r;return n=new s(null,e,t.index,t.currentFileInfo),r=new o([n])}function u(e,t,n){function o(e){var t;return"Paren"!==e.value.type?null:(t=e.value.value,"Selector"!==t.type?null:t)}var a,f,p,d,v,m,g,y,w,x,b=!1;for(d=[],v=[[]],a=0;a<n.elements.length;a++)if(y=n.elements[a],"&"!==y.value){var S=o(y);if(null!=S){h(d,v);var C,k=[],I=[];for(C=u(k,t,S),b=b||C,p=0;p<k.length;p++){var M=i(r(k[p],y),y);c(v,[M],y,n,I)}v=I,d=[]}else d.push(y)}else{for(b=!0,m=[],h(d,v),f=0;f<v.length;f++)if(g=v[f],0===t.length)g.length>0&&g[0].elements.push(new s(y.combinator,"",y.index,y.currentFileInfo)),m.push(g);else for(p=0;p<t.length;p++){var R=l(g,t[p],y,n);m.push(R)}v=m,d=[]}for(h(d,v),a=0;a<v.length;a++)w=v[a].length,w>0&&(e.push(v[a]),x=v[a][w-1],v[a][w-1]=x.createDerived(x.elements,n.extendList));return b}function l(e,t,n,r){var i,o,a;if(i=[],e.length>0?(i=e.slice(0),o=i.pop(),a=r.createDerived(o.elements.slice(0))):a=r.createDerived([]),t.length>0){var u=n.combinator,l=t[0].elements[0];u.emptyOrWhitespace&&!l.combinator.emptyOrWhitespace&&(u=l.combinator),a.elements.push(new s(u,l.value,n.index,n.currentFileInfo)),a.elements=a.elements.concat(t[0].elements.slice(1))}return 0!==a.elements.length&&i.push(a),t.length>1&&(i=i.concat(t.slice(1))),i}function c(e,t,n,r,i){var o;for(o=0;o<e.length;o++){var s=l(e[o],t,n,r);i.push(s)}return i}function h(e,t){var n,r;if(0!==e.length){if(0===t.length)return void t.push([new o(e)]);for(n=0;n<t.length;n++)r=t[n],r.length>0?r[r.length-1]=r[r.length-1].createDerived(r[r.length-1].elements.concat(e)):r.push(new o(e))}}var f,p,d;if(p=[],d=u(p,t,n),!d)if(t.length>0)for(p=[],f=0;f<t.length;f++)p.push(t[f].concat(n));else p=[[n]];for(f=0;f<p.length;f++)e.push(p[f])},t.exports=f},{"../contexts":10,"../functions/default":19,"../functions/function-registry":21,"./debug-info":53,"./element":57,"./node":69,"./paren":71,"./rule":73,"./selector":76}],76:[function(e,t,n){var r=e("./node"),i=e("./element"),o=function(e,t,n,r,i,o){this.elements=e,this.extendList=t,this.condition=n,this.currentFileInfo=i||{},this.isReferenced=o,n||(this.evaldCondition=!0)};o.prototype=new r,o.prototype.type="Selector",o.prototype.accept=function(e){this.elements&&(this.elements=e.visitArray(this.elements)),this.extendList&&(this.extendList=e.visitArray(this.extendList)),this.condition&&(this.condition=e.visit(this.condition))},o.prototype.createDerived=function(e,t,n){n=null!=n?n:this.evaldCondition;var r=new o(e,t||this.extendList,null,this.index,this.currentFileInfo,this.isReferenced);return r.evaldCondition=n,r.mediaEmpty=this.mediaEmpty,r},o.prototype.createEmptySelectors=function(){var e=new i("","&",this.index,this.currentFileInfo),t=[new o([e],null,null,this.index,this.currentFileInfo)];return t[0].mediaEmpty=!0,t},o.prototype.match=function(e){var t,n,r=this.elements,i=r.length;if(e.CacheElements(),t=e._elements.length,0===t||t>i)return 0;for(n=0;t>n;n++)if(r[n].value!==e._elements[n])return 0;return t},o.prototype.CacheElements=function(){if(!this._elements){var e=this.elements.map(function(e){return e.combinator.value+(e.value.value||e.value)}).join("").match(/[,&#\*\.\w-]([\w-]|(\\.))*/g);e?"&"===e[0]&&e.shift():e=[],this._elements=e}},o.prototype.isJustParentSelector=function(){return!this.mediaEmpty&&1===this.elements.length&&"&"===this.elements[0].value&&(" "===this.elements[0].combinator.value||""===this.elements[0].combinator.value)},o.prototype.eval=function(e){var t=this.condition&&this.condition.eval(e),n=this.elements,r=this.extendList;return n=n&&n.map(function(t){return t.eval(e)}),r=r&&r.map(function(t){return t.eval(e)}),this.createDerived(n,r,t)},o.prototype.genCSS=function(e,t){var n,r;if(e&&e.firstSelector||""!==this.elements[0].combinator.value||t.add(" ",this.currentFileInfo,this.index),!this._css)for(n=0;n<this.elements.length;n++)r=this.elements[n],r.genCSS(e,t)},o.prototype.markReferenced=function(){this.isReferenced=!0},o.prototype.getIsReferenced=function(){return!this.currentFileInfo.reference||this.isReferenced},o.prototype.getIsOutput=function(){return this.evaldCondition},t.exports=o},{"./element":57,"./node":69}],77:[function(e,t,n){var r=e("./node"),i=function(e){this.value=e};i.prototype=new r,i.prototype.type="UnicodeDescriptor",t.exports=i},{"./node":69}],78:[function(e,t,n){var r=e("./node"),i=e("../data/unit-conversions"),o=function(e,t,n){this.numerator=e?e.slice(0).sort():[],this.denominator=t?t.slice(0).sort():[],n?this.backupUnit=n:e&&e.length&&(this.backupUnit=e[0])};o.prototype=new r,o.prototype.type="Unit",o.prototype.clone=function(){return new o(this.numerator.slice(0),this.denominator.slice(0),this.backupUnit)},o.prototype.genCSS=function(e,t){var n=e&&e.strictUnits;1===this.numerator.length?t.add(this.numerator[0]):!n&&this.backupUnit?t.add(this.backupUnit):!n&&this.denominator.length&&t.add(this.denominator[0])},o.prototype.toString=function(){var e,t=this.numerator.join("*");for(e=0;e<this.denominator.length;e++)t+="/"+this.denominator[e];return t},o.prototype.compare=function(e){return this.is(e.toString())?0:void 0},o.prototype.is=function(e){return this.toString().toUpperCase()===e.toUpperCase()},o.prototype.isLength=function(){return Boolean(this.toCSS().match(/px|em|%|in|cm|mm|pc|pt|ex/))},o.prototype.isEmpty=function(){return 0===this.numerator.length&&0===this.denominator.length},o.prototype.isSingular=function(){return this.numerator.length<=1&&0===this.denominator.length},o.prototype.map=function(e){var t;for(t=0;t<this.numerator.length;t++)this.numerator[t]=e(this.numerator[t],!1);for(t=0;t<this.denominator.length;t++)this.denominator[t]=e(this.denominator[t],!0)},o.prototype.usedUnits=function(){var e,t,n={};t=function(t){return e.hasOwnProperty(t)&&!n[r]&&(n[r]=t),t};for(var r in i)i.hasOwnProperty(r)&&(e=i[r],this.map(t));return n},o.prototype.cancel=function(){var e,t,n={};for(t=0;t<this.numerator.length;t++)e=this.numerator[t],n[e]=(n[e]||0)+1;for(t=0;t<this.denominator.length;t++)e=this.denominator[t],n[e]=(n[e]||0)-1;this.numerator=[],this.denominator=[];for(e in n)if(n.hasOwnProperty(e)){var r=n[e];if(r>0)for(t=0;r>t;t++)this.numerator.push(e);else if(0>r)for(t=0;-r>t;t++)this.denominator.push(e)}this.numerator.sort(),this.denominator.sort()},t.exports=o},{"../data/unit-conversions":13,"./node":69}],79:[function(e,t,n){var r=e("./node"),i=function(e,t,n,r){this.value=e,this.currentFileInfo=n,this.index=t,this.isEvald=r};i.prototype=new r,i.prototype.type="Url",i.prototype.accept=function(e){this.value=e.visit(this.value)},i.prototype.genCSS=function(e,t){t.add("url("),this.value.genCSS(e,t),t.add(")")},i.prototype.eval=function(e){var t,n=this.value.eval(e);if(!this.isEvald&&(t=this.currentFileInfo&&this.currentFileInfo.rootpath,t&&"string"==typeof n.value&&e.isPathRelative(n.value)&&(n.quote||(t=t.replace(/[\(\)'"\s]/g,function(e){return"\\"+e})),n.value=t+n.value),n.value=e.normalizePath(n.value),e.urlArgs&&!n.value.match(/^\s*data:/))){var r=-1===n.value.indexOf("?")?"?":"&",o=r+e.urlArgs;-1!==n.value.indexOf("#")?n.value=n.value.replace("#",o+"#"):n.value+=o}return new i(n,this.index,this.currentFileInfo,!0)},t.exports=i},{"./node":69}],80:[function(e,t,n){var r=e("./node"),i=function(e){if(this.value=e,!e)throw new Error("Value requires an array argument")};i.prototype=new r,i.prototype.type="Value",i.prototype.accept=function(e){this.value&&(this.value=e.visitArray(this.value))},i.prototype.eval=function(e){return 1===this.value.length?this.value[0].eval(e):new i(this.value.map(function(t){return t.eval(e)}))},i.prototype.genCSS=function(e,t){var n;for(n=0;n<this.value.length;n++)this.value[n].genCSS(e,t),n+1<this.value.length&&t.add(e&&e.compress?",":", ")},t.exports=i},{"./node":69}],81:[function(e,t,n){var r=e("./node"),i=function(e,t,n){this.name=e,this.index=t,this.currentFileInfo=n||{}};i.prototype=new r,i.prototype.type="Variable",i.prototype.eval=function(e){var t,n=this.name;if(0===n.indexOf("@@")&&(n="@"+new i(n.slice(1),this.index,this.currentFileInfo).eval(e).value),this.evaluating)throw{type:"Name",message:"Recursive variable definition for "+n,filename:this.currentFileInfo.filename,index:this.index};if(this.evaluating=!0,t=this.find(e.frames,function(t){var r=t.variable(n);if(r){if(r.important){var i=e.importantScope[e.importantScope.length-1];i.important=r.important}return r.value.eval(e)}}))return this.evaluating=!1,t;throw{type:"Name",message:"variable "+n+" is undefined",filename:this.currentFileInfo.filename,index:this.index}},i.prototype.find=function(e,t){for(var n,r=0;r<e.length;r++)if(n=t.call(e,e[r]))return n;return null},t.exports=i},{"./node":69}],82:[function(e,t,n){t.exports={getLocation:function(e,t){for(var n=e+1,r=null,i=-1;--n>=0&&"\n"!==t.charAt(n);)i++;return"number"==typeof e&&(r=(t.slice(0,e).match(/\n/g)||"").length),{line:r,column:i}}}},{}],83:[function(e,t,n){var r=e("../tree"),i=e("./visitor"),o=e("../logger"),s=function(){this._visitor=new i(this),this.contexts=[],this.allExtendsStack=[[]]};s.prototype={run:function(e){return e=this._visitor.visit(e),e.allExtends=this.allExtendsStack[0],e},visitRule:function(e,t){t.visitDeeper=!1},visitMixinDefinition:function(e,t){t.visitDeeper=!1},visitRuleset:function(e,t){if(!e.root){var n,i,o,s,a=[],u=e.rules,l=u?u.length:0;for(n=0;l>n;n++)e.rules[n]instanceof r.Extend&&(a.push(u[n]),e.extendOnEveryPath=!0);var c=e.paths;for(n=0;n<c.length;n++){var h=c[n],f=h[h.length-1],p=f.extendList;for(s=p?p.slice(0).concat(a):a,s&&(s=s.map(function(e){return e.clone()})),i=0;i<s.length;i++)this.foundExtends=!0,o=s[i],o.findSelfSelectors(h),o.ruleset=e,0===i&&(o.firstExtendOnThisSelectorPath=!0),this.allExtendsStack[this.allExtendsStack.length-1].push(o)}this.contexts.push(e.selectors)}},visitRulesetOut:function(e){e.root||(this.contexts.length=this.contexts.length-1)},visitMedia:function(e,t){e.allExtends=[],this.allExtendsStack.push(e.allExtends)},visitMediaOut:function(e){this.allExtendsStack.length=this.allExtendsStack.length-1},visitDirective:function(e,t){e.allExtends=[],this.allExtendsStack.push(e.allExtends)},visitDirectiveOut:function(e){this.allExtendsStack.length=this.allExtendsStack.length-1}};var a=function(){this._visitor=new i(this)};a.prototype={run:function(e){var t=new s;if(this.extendIndicies={},t.run(e),!t.foundExtends)return e;e.allExtends=e.allExtends.concat(this.doExtendChaining(e.allExtends,e.allExtends)),this.allExtendsStack=[e.allExtends];var n=this._visitor.visit(e);return this.checkExtendsForNonMatched(e.allExtends),n},checkExtendsForNonMatched:function(e){var t=this.extendIndicies;e.filter(function(e){return!e.hasFoundMatches&&1==e.parent_ids.length}).forEach(function(e){var n="_unknown_";try{n=e.selector.toCSS({})}catch(r){}t[e.index+" "+n]||(t[e.index+" "+n]=!0,o.warn("extend '"+n+"' has no matches"))})},doExtendChaining:function(e,t,n){var i,o,s,a,u,l,c,h,f=[],p=this;for(n=n||0,i=0;i<e.length;i++)for(o=0;o<t.length;o++)l=e[i],c=t[o],l.parent_ids.indexOf(c.object_id)>=0||(u=[c.selfSelectors[0]],s=p.findMatch(l,u),s.length&&(l.hasFoundMatches=!0,l.selfSelectors.forEach(function(e){a=p.extendSelector(s,u,e),h=new r.Extend(c.selector,c.option,0),h.selfSelectors=a,a[a.length-1].extendList=[h],f.push(h),h.ruleset=c.ruleset,h.parent_ids=h.parent_ids.concat(c.parent_ids,l.parent_ids),c.firstExtendOnThisSelectorPath&&(h.firstExtendOnThisSelectorPath=!0,c.ruleset.paths.push(a))})));if(f.length){if(this.extendChainCount++,n>100){var d="{unable to calculate}",v="{unable to calculate}";try{d=f[0].selfSelectors[0].toCSS(),v=f[0].selector.toCSS()}catch(m){}throw{message:"extend circular reference detected. One of the circular extends is currently:"+d+":extend("+v+")"}}return f.concat(p.doExtendChaining(f,t,n+1))}return f},visitRule:function(e,t){t.visitDeeper=!1},visitMixinDefinition:function(e,t){t.visitDeeper=!1},visitSelector:function(e,t){t.visitDeeper=!1},visitRuleset:function(e,t){if(!e.root){var n,r,i,o,s=this.allExtendsStack[this.allExtendsStack.length-1],a=[],u=this;for(i=0;i<s.length;i++)for(r=0;r<e.paths.length;r++)if(o=e.paths[r],!e.extendOnEveryPath){var l=o[o.length-1].extendList;l&&l.length||(n=this.findMatch(s[i],o),n.length&&(s[i].hasFoundMatches=!0,s[i].selfSelectors.forEach(function(e){a.push(u.extendSelector(n,o,e))})))}e.paths=e.paths.concat(a)}},findMatch:function(e,t){var n,r,i,o,s,a,u,l=this,c=e.selector.elements,h=[],f=[];for(n=0;n<t.length;n++)for(r=t[n],i=0;i<r.elements.length;i++)for(o=r.elements[i],(e.allowBefore||0===n&&0===i)&&h.push({pathIndex:n,index:i,matched:0,initialCombinator:o.combinator}),a=0;a<h.length;a++)u=h[a],s=o.combinator.value,""===s&&0===i&&(s=" "),!l.isElementValuesEqual(c[u.matched].value,o.value)||u.matched>0&&c[u.matched].combinator.value!==s?u=null:u.matched++,u&&(u.finished=u.matched===c.length,u.finished&&!e.allowAfter&&(i+1<r.elements.length||n+1<t.length)&&(u=null)),u?u.finished&&(u.length=c.length,u.endPathIndex=n,u.endPathElementIndex=i+1,h.length=0,f.push(u)):(h.splice(a,1),a--);return f},isElementValuesEqual:function(e,t){if("string"==typeof e||"string"==typeof t)return e===t;if(e instanceof r.Attribute)return e.op!==t.op||e.key!==t.key?!1:e.value&&t.value?(e=e.value.value||e.value,t=t.value.value||t.value,e===t):e.value||t.value?!1:!0;if(e=e.value,t=t.value,e instanceof r.Selector){if(!(t instanceof r.Selector)||e.elements.length!==t.elements.length)return!1;for(var n=0;n<e.elements.length;n++){if(e.elements[n].combinator.value!==t.elements[n].combinator.value&&(0!==n||(e.elements[n].combinator.value||" ")!==(t.elements[n].combinator.value||" ")))return!1;if(!this.isElementValuesEqual(e.elements[n].value,t.elements[n].value))return!1}return!0}return!1},extendSelector:function(e,t,n){var i,o,s,a,u,l=0,c=0,h=[];for(i=0;i<e.length;i++)a=e[i],o=t[a.pathIndex],s=new r.Element(a.initialCombinator,n.elements[0].value,n.elements[0].index,n.elements[0].currentFileInfo),a.pathIndex>l&&c>0&&(h[h.length-1].elements=h[h.length-1].elements.concat(t[l].elements.slice(c)),c=0,l++),u=o.elements.slice(c,a.index).concat([s]).concat(n.elements.slice(1)),l===a.pathIndex&&i>0?h[h.length-1].elements=h[h.length-1].elements.concat(u):(h=h.concat(t.slice(l,a.pathIndex)),h.push(new r.Selector(u))),l=a.endPathIndex,c=a.endPathElementIndex,c>=t[l].elements.length&&(c=0,l++);return l<t.length&&c>0&&(h[h.length-1].elements=h[h.length-1].elements.concat(t[l].elements.slice(c)),l++),h=h.concat(t.slice(l,t.length))},visitRulesetOut:function(e){},visitMedia:function(e,t){var n=e.allExtends.concat(this.allExtendsStack[this.allExtendsStack.length-1]);n=n.concat(this.doExtendChaining(n,e.allExtends)),this.allExtendsStack.push(n)},visitMediaOut:function(e){var t=this.allExtendsStack.length-1;this.allExtendsStack.length=t},visitDirective:function(e,t){var n=e.allExtends.concat(this.allExtendsStack[this.allExtendsStack.length-1]);n=n.concat(this.doExtendChaining(n,e.allExtends)),this.allExtendsStack.push(n)},visitDirectiveOut:function(e){var t=this.allExtendsStack.length-1;this.allExtendsStack.length=t}},t.exports=a},{"../logger":32,"../tree":61,"./visitor":89}],84:[function(e,t,n){function r(e){this.imports=[],this.variableImports=[],this._onSequencerEmpty=e,this._currentDepth=0}r.prototype.addImport=function(e){var t=this,n={callback:e,args:null,isReady:!1};return this.imports.push(n),function(){n.args=Array.prototype.slice.call(arguments,0),n.isReady=!0,t.tryRun()}},r.prototype.addVariableImport=function(e){this.variableImports.push(e)},r.prototype.tryRun=function(){this._currentDepth++;try{for(;;){for(;this.imports.length>0;){var e=this.imports[0];if(!e.isReady)return;this.imports=this.imports.slice(1),e.callback.apply(null,e.args)}if(0===this.variableImports.length)break;var t=this.variableImports[0];this.variableImports=this.variableImports.slice(1),t()}}finally{this._currentDepth--}0===this._currentDepth&&this._onSequencerEmpty&&this._onSequencerEmpty()},t.exports=r},{}],85:[function(e,t,n){var r=e("../contexts"),i=e("./visitor"),o=e("./import-sequencer"),s=function(e,t){this._visitor=new i(this),this._importer=e,this._finish=t,this.context=new r.Eval,this.importCount=0,this.onceFileDetectionMap={},this.recursionDetector={},this._sequencer=new o(this._onSequencerEmpty.bind(this))};s.prototype={isReplacing:!1,run:function(e){try{this._visitor.visit(e)}catch(t){this.error=t}this.isFinished=!0,this._sequencer.tryRun()},_onSequencerEmpty:function(){this.isFinished&&this._finish(this.error)},visitImport:function(e,t){var n=e.options.inline;if(!e.css||n){var i=new r.Eval(this.context,this.context.frames.slice(0)),o=i.frames[0];this.importCount++,e.isVariableImport()?this._sequencer.addVariableImport(this.processImportNode.bind(this,e,i,o)):this.processImportNode(e,i,o)}t.visitDeeper=!1},processImportNode:function(e,t,n){var r,i=e.options.inline;try{r=e.evalForImport(t)}catch(o){o.filename||(o.index=e.index,o.filename=e.currentFileInfo.filename),e.css=!0,e.error=o}if(!r||r.css&&!i)this.importCount--,this.isFinished&&this._sequencer.tryRun();else{r.options.multiple&&(t.importMultiple=!0);for(var s=void 0===r.css,a=0;a<n.rules.length;a++)if(n.rules[a]===e){n.rules[a]=r;break}var u=this.onImported.bind(this,r,t),l=this._sequencer.addImport(u);this._importer.push(r.getPath(),s,r.currentFileInfo,r.options,l)}},onImported:function(e,t,n,r,i,o){n&&(n.filename||(n.index=e.index,n.filename=e.currentFileInfo.filename),this.error=n);var s=this,a=e.options.inline,u=e.options.plugin,l=e.options.optional,c=i||o in s.recursionDetector;if(t.importMultiple||(c?e.skip=!0:e.skip=function(){return o in s.onceFileDetectionMap?!0:(s.onceFileDetectionMap[o]=!0,!1)}),!o&&l&&(e.skip=!0),r&&(e.root=r,e.importedFilename=o,!a&&!u&&(t.importMultiple||!c))){s.recursionDetector[o]=!0;var h=this.context;this.context=t;try{this._visitor.visit(r)}catch(n){this.error=n}this.context=h}s.importCount--,s.isFinished&&s._sequencer.tryRun()},visitRule:function(e,t){"DetachedRuleset"===e.value.type?this.context.frames.unshift(e):t.visitDeeper=!1},visitRuleOut:function(e){"DetachedRuleset"===e.value.type&&this.context.frames.shift()},visitDirective:function(e,t){this.context.frames.unshift(e)},visitDirectiveOut:function(e){this.context.frames.shift()},visitMixinDefinition:function(e,t){this.context.frames.unshift(e)},visitMixinDefinitionOut:function(e){this.context.frames.shift()},visitRuleset:function(e,t){this.context.frames.unshift(e)},visitRulesetOut:function(e){this.context.frames.shift()},visitMedia:function(e,t){this.context.frames.unshift(e.rules[0])},visitMediaOut:function(e){
-this.context.frames.shift()}},t.exports=s},{"../contexts":10,"./import-sequencer":84,"./visitor":89}],86:[function(e,t,n){var r={Visitor:e("./visitor"),ImportVisitor:e("./import-visitor"),ExtendVisitor:e("./extend-visitor"),JoinSelectorVisitor:e("./join-selector-visitor"),ToCSSVisitor:e("./to-css-visitor")};t.exports=r},{"./extend-visitor":83,"./import-visitor":85,"./join-selector-visitor":87,"./to-css-visitor":88,"./visitor":89}],87:[function(e,t,n){var r=e("./visitor"),i=function(){this.contexts=[[]],this._visitor=new r(this)};i.prototype={run:function(e){return this._visitor.visit(e)},visitRule:function(e,t){t.visitDeeper=!1},visitMixinDefinition:function(e,t){t.visitDeeper=!1},visitRuleset:function(e,t){var n,r=this.contexts[this.contexts.length-1],i=[];this.contexts.push(i),e.root||(n=e.selectors,n&&(n=n.filter(function(e){return e.getIsOutput()}),e.selectors=n.length?n:n=null,n&&e.joinSelectors(i,r,n)),n||(e.rules=null),e.paths=i)},visitRulesetOut:function(e){this.contexts.length=this.contexts.length-1},visitMedia:function(e,t){var n=this.contexts[this.contexts.length-1];e.rules[0].root=0===n.length||n[0].multiMedia},visitDirective:function(e,t){var n=this.contexts[this.contexts.length-1];e.rules&&e.rules.length&&(e.rules[0].root=e.isRooted||0===n.length||null)}},t.exports=i},{"./visitor":89}],88:[function(e,t,n){var r=e("../tree"),i=e("./visitor"),o=function(e){this._visitor=new i(this),this._context=e};o.prototype={isReplacing:!0,run:function(e){return this._visitor.visit(e)},visitRule:function(e,t){return e.variable?void 0:e},visitMixinDefinition:function(e,t){e.frames=[]},visitExtend:function(e,t){},visitComment:function(e,t){return e.isSilent(this._context)?void 0:e},visitMedia:function(e,t){return e.accept(this._visitor),t.visitDeeper=!1,e.rules.length?e:void 0},visitImport:function(e,t){return void 0!==e.path.currentFileInfo.reference&&e.css?void 0:e},visitDirective:function(e,t){function n(e){var t,n=e.rules;1!==n.length||n[0].paths&&0!==n[0].paths.length||(n=n[0].rules);for(var r=0;r<n.length;r++)if(t=n[r],t.getIsReferenced&&t.getIsReferenced())return!0;return!1}if("@charset"===e.name){if(!e.getIsReferenced())return;if(this.charset){if(e.debugInfo){var i=new r.Comment("/* "+e.toCSS(this._context).replace(/\n/g,"")+" */\n");return i.debugInfo=e.debugInfo,this._visitor.visit(i)}return}this.charset=!0}if(e.rules&&e.rules.length){if(this._mergeRules(e.rules[0].rules),e.accept(this._visitor),t.visitDeeper=!1,e.getIsReferenced())return e;if(!e.rules||!e.rules.length)return;if(n(e))return e.markReferenced(),e}else if(e.getIsReferenced())return e},checkPropertiesInRoot:function(e){for(var t,n=0;n<e.length;n++)if(t=e[n],t instanceof r.Rule&&!t.variable)throw{message:"properties must be inside selector blocks, they cannot be in the root.",index:t.index,filename:t.currentFileInfo?t.currentFileInfo.filename:null}},visitRuleset:function(e,t){var n,i=[];if(e.firstRoot&&this.checkPropertiesInRoot(e.rules),e.root)e.accept(this._visitor),t.visitDeeper=!1,(e.firstRoot||e.rules&&e.rules.length>0)&&i.splice(0,0,e);else{e.paths&&(e.paths=e.paths.filter(function(e){var t;for(" "===e[0].elements[0].combinator.value&&(e[0].elements[0].combinator=new r.Combinator("")),t=0;t<e.length;t++)if(e[t].getIsReferenced()&&e[t].getIsOutput())return!0;return!1}));for(var o=e.rules,s=o?o.length:0,a=0;s>a;)n=o[a],n&&n.rules?(i.push(this._visitor.visit(n)),o.splice(a,1),s--):a++;s>0?e.accept(this._visitor):e.rules=null,t.visitDeeper=!1,o=e.rules,o&&(this._mergeRules(o),o=e.rules),o&&(this._removeDuplicateRules(o),o=e.rules),o&&o.length>0&&e.paths.length>0&&i.splice(0,0,e)}return 1===i.length?i[0]:i},_removeDuplicateRules:function(e){if(e){var t,n,i,o={};for(i=e.length-1;i>=0;i--)if(n=e[i],n instanceof r.Rule)if(o[n.name]){t=o[n.name],t instanceof r.Rule&&(t=o[n.name]=[o[n.name].toCSS(this._context)]);var s=n.toCSS(this._context);-1!==t.indexOf(s)?e.splice(i,1):t.push(s)}else o[n.name]=n}},_mergeRules:function(e){if(e){for(var t,n,i,o={},s=0;s<e.length;s++)n=e[s],n instanceof r.Rule&&n.merge&&(i=[n.name,n.important?"!":""].join(","),o[i]?e.splice(s--,1):o[i]=[],o[i].push(n));Object.keys(o).map(function(e){function i(e){return new r.Expression(e.map(function(e){return e.value}))}function s(e){return new r.Value(e.map(function(e){return e}))}if(t=o[e],t.length>1){n=t[0];var a=[],u=[];t.map(function(e){"+"===e.merge&&(u.length>0&&a.push(i(u)),u=[]),u.push(e)}),a.push(i(u)),n.value=s(a)}})}},visitAnonymous:function(e,t){return e.getIsReferenced()?(e.accept(this._visitor),e):void 0}},t.exports=o},{"../tree":61,"./visitor":89}],89:[function(e,t,n){function r(e){return e}function i(e,t){var n,r;for(n in e)if(e.hasOwnProperty(n))switch(r=e[n],typeof r){case"function":r.prototype&&r.prototype.type&&(r.prototype.typeIndex=t++);break;case"object":t=i(r,t)}return t}var o=e("../tree"),s={visitDeeper:!0},a=!1,u=function(e){this._implementation=e,this._visitFnCache=[],a||(i(o,1),a=!0)};u.prototype={visit:function(e){if(!e)return e;var t=e.typeIndex;if(!t)return e;var n,i=this._visitFnCache,o=this._implementation,a=t<<1,u=1|a,l=i[a],c=i[u],h=s;if(h.visitDeeper=!0,l||(n="visit"+e.type,l=o[n]||r,c=o[n+"Out"]||r,i[a]=l,i[u]=c),l!==r){var f=l.call(o,e,h);o.isReplacing&&(e=f)}return h.visitDeeper&&e&&e.accept&&e.accept(this),c!=r&&c.call(o,e),e},visitArray:function(e,t){if(!e)return e;var n,r=e.length;if(t||!this._implementation.isReplacing){for(n=0;r>n;n++)this.visit(e[n]);return e}var i=[];for(n=0;r>n;n++){var o=this.visit(e[n]);void 0!==o&&(o.splice?o.length&&this.flatten(o,i):i.push(o))}return i},flatten:function(e,t){t||(t=[]);var n,r,i,o,s,a;for(r=0,n=e.length;n>r;r++)if(i=e[r],void 0!==i)if(i.splice)for(s=0,o=i.length;o>s;s++)a=i[s],void 0!==a&&(a.splice?a.length&&this.flatten(a,t):t.push(a));else t.push(i);return t}},t.exports=u},{"../tree":61}],90:[function(e,t,n){function r(){if(!a){a=!0;for(var e,t=s.length;t;){e=s,s=[];for(var n=-1;++n<t;)e[n]();t=s.length}a=!1}}function i(){}var o=t.exports={},s=[],a=!1;o.nextTick=function(e){s.push(e),a||setTimeout(r,0)},o.title="browser",o.browser=!0,o.env={},o.argv=[],o.version="",o.versions={},o.on=i,o.addListener=i,o.once=i,o.off=i,o.removeListener=i,o.removeAllListeners=i,o.emit=i,o.binding=function(e){throw new Error("process.binding is not supported")},o.cwd=function(){return"/"},o.chdir=function(e){throw new Error("process.chdir is not supported")},o.umask=function(){return 0}},{}],91:[function(e,t,n){"use strict";function r(e){function t(e){return null===u?void c.push(e):void s(function(){var t=u?e.onFulfilled:e.onRejected;if(null===t)return void(u?e.resolve:e.reject)(l);var n;try{n=t(l)}catch(r){return void e.reject(r)}e.resolve(n)})}function n(e){try{if(e===h)throw new TypeError("A promise cannot be resolved with itself.");if(e&&("object"==typeof e||"function"==typeof e)){var t=e.then;if("function"==typeof t)return void o(t.bind(e),n,r)}u=!0,l=e,a()}catch(i){r(i)}}function r(e){u=!1,l=e,a()}function a(){for(var e=0,n=c.length;n>e;e++)t(c[e]);c=null}if("object"!=typeof this)throw new TypeError("Promises must be constructed via new");if("function"!=typeof e)throw new TypeError("not a function");var u=null,l=null,c=[],h=this;this.then=function(e,n){return new h.constructor(function(r,o){t(new i(e,n,r,o))})},o(e,n,r)}function i(e,t,n,r){this.onFulfilled="function"==typeof e?e:null,this.onRejected="function"==typeof t?t:null,this.resolve=n,this.reject=r}function o(e,t,n){var r=!1;try{e(function(e){r||(r=!0,t(e))},function(e){r||(r=!0,n(e))})}catch(i){if(r)return;r=!0,n(i)}}var s=e("asap");t.exports=r},{asap:93}],92:[function(e,t,n){"use strict";function r(e){this.then=function(t){return"function"!=typeof t?this:new i(function(n,r){o(function(){try{n(t(e))}catch(i){r(i)}})})}}var i=e("./core.js"),o=e("asap");t.exports=i,r.prototype=i.prototype;var s=new r(!0),a=new r(!1),u=new r(null),l=new r(void 0),c=new r(0),h=new r("");i.resolve=function(e){if(e instanceof i)return e;if(null===e)return u;if(void 0===e)return l;if(e===!0)return s;if(e===!1)return a;if(0===e)return c;if(""===e)return h;if("object"==typeof e||"function"==typeof e)try{var t=e.then;if("function"==typeof t)return new i(t.bind(e))}catch(n){return new i(function(e,t){t(n)})}return new r(e)},i.all=function(e){var t=Array.prototype.slice.call(e);return new i(function(e,n){function r(o,s){try{if(s&&("object"==typeof s||"function"==typeof s)){var a=s.then;if("function"==typeof a)return void a.call(s,function(e){r(o,e)},n)}t[o]=s,0===--i&&e(t)}catch(u){n(u)}}if(0===t.length)return e([]);for(var i=t.length,o=0;o<t.length;o++)r(o,t[o])})},i.reject=function(e){return new i(function(t,n){n(e)})},i.race=function(e){return new i(function(t,n){e.forEach(function(e){i.resolve(e).then(t,n)})})},i.prototype["catch"]=function(e){return this.then(null,e)}},{"./core.js":91,asap:93}],93:[function(e,t,n){(function(e){function n(){for(;i.next;){i=i.next;var e=i.task;i.task=void 0;var t=i.domain;t&&(i.domain=void 0,t.enter());try{e()}catch(r){if(u)throw t&&t.exit(),setTimeout(n,0),t&&t.enter(),r;setTimeout(function(){throw r},0)}t&&t.exit()}s=!1}function r(t){o=o.next={task:t,domain:u&&e.domain,next:null},s||(s=!0,a())}var i={task:void 0,next:null},o=i,s=!1,a=void 0,u=!1;if("undefined"!=typeof e&&e.nextTick)u=!0,a=function(){e.nextTick(n)};else if("function"==typeof setImmediate)a="undefined"!=typeof window?setImmediate.bind(window,n):function(){setImmediate(n)};else if("undefined"!=typeof MessageChannel){var l=new MessageChannel;l.port1.onmessage=n,a=function(){l.port2.postMessage(0)}}else a=function(){setTimeout(n,0)};t.exports=r}).call(this,e("_process"))},{_process:90}],94:[function(e,t,n){"function"!=typeof Promise.prototype.done&&(Promise.prototype.done=function(e,t){var n=arguments.length?this.then.apply(this,arguments):this;n.then(null,function(e){setTimeout(function(){throw e},0)})})},{}],95:[function(e,t,n){e("asap");"undefined"==typeof Promise&&(Promise=e("./lib/core.js"),e("./lib/es6-extensions.js")),e("./polyfill-done.js")},{"./lib/core.js":91,"./lib/es6-extensions.js":92,"./polyfill-done.js":94,asap:93}]},{},[2])(2)});
+/*!
+ * Less - Leaner CSS v2.5.3
+ * http://lesscss.org
+ *
+ * Copyright (c) 2009-2015, Alexis Sellier <self@cloudhead.net>
+ * Licensed under the  License.
+ *
+ */
+
+ /** * @license 
+ */
+
+(function(f){if(typeof exports==="object"&&typeof module!=="undefined"){module.exports=f()}else if(typeof define==="function"&&define.amd){define([],f)}else{var g;if(typeof window!=="undefined"){g=window}else if(typeof global!=="undefined"){g=global}else if(typeof self!=="undefined"){g=self}else{g=this}g.less = f()}})(function(){var define,module,exports;return (function e(t,n,r){function s(o,u){if(!n[o]){if(!t[o]){var a=typeof require=="function"&&require;if(!u&&a)return a(o,!0);if(i)return i(o,!0);var f=new Error("Cannot find module '"+o+"'");throw f.code="MODULE_NOT_FOUND",f}var l=n[o]={exports:{}};t[o][0].call(l.exports,function(e){var n=t[o][1][e];return s(n?n:e)},l,l.exports,e,t,n,r)}return n[o].exports}var i=typeof require=="function"&&require;for(var o=0;o<r.length;o++)s(r[o]);return s})({1:[function(require,module,exports){
+var addDataAttr = require("./utils").addDataAttr,
+    browser = require("./browser");
+
+module.exports = function(window, options) {
+
+    // use options from the current script tag data attribues
+    addDataAttr(options, browser.currentScript(window));
+
+    if (options.isFileProtocol === undefined) {
+        options.isFileProtocol = /^(file|(chrome|safari)(-extension)?|resource|qrc|app):/.test(window.location.protocol);
+    }
+
+    // Load styles asynchronously (default: false)
+    //
+    // This is set to `false` by default, so that the body
+    // doesn't start loading before the stylesheets are parsed.
+    // Setting this to `true` can result in flickering.
+    //
+    options.async = options.async || false;
+    options.fileAsync = options.fileAsync || false;
+
+    // Interval between watch polls
+    options.poll = options.poll || (options.isFileProtocol ? 1000 : 1500);
+
+    options.env = options.env || (window.location.hostname == '127.0.0.1' ||
+        window.location.hostname == '0.0.0.0'   ||
+        window.location.hostname == 'localhost' ||
+        (window.location.port &&
+            window.location.port.length > 0)      ||
+        options.isFileProtocol                   ? 'development'
+        : 'production');
+
+    var dumpLineNumbers = /!dumpLineNumbers:(comments|mediaquery|all)/.exec(window.location.hash);
+    if (dumpLineNumbers) {
+        options.dumpLineNumbers = dumpLineNumbers[1];
+    }
+
+    if (options.useFileCache === undefined) {
+        options.useFileCache = true;
+    }
+
+    if (options.onReady === undefined) {
+        options.onReady = true;
+    }
+
+};
+
+},{"./browser":3,"./utils":9}],2:[function(require,module,exports){
+/**
+ * Kicks off less and compiles any stylesheets
+ * used in the browser distributed version of less
+ * to kick-start less using the browser api
+ */
+/*global window */
+
+// shim Promise if required
+require('promise/polyfill.js');
+
+var options = window.less || {};
+require("./add-default-options")(window, options);
+
+var less = module.exports = require("./index")(window, options);
+
+window.less = less;
+
+if (options.onReady) {
+    if (/!watch/.test(window.location.hash)) {
+        less.watch();
+    }
+
+    less.registerStylesheetsImmediately();
+    less.pageLoadFinished = less.refresh(less.env === 'development');
+}
+
+},{"./add-default-options":1,"./index":7,"promise/polyfill.js":95}],3:[function(require,module,exports){
+var utils = require("./utils");
+module.exports = {
+    createCSS: function (document, styles, sheet) {
+        // Strip the query-string
+        var href = sheet.href || '';
+
+        // If there is no title set, use the filename, minus the extension
+        var id = 'less:' + (sheet.title || utils.extractId(href));
+
+        // If this has already been inserted into the DOM, we may need to replace it
+        var oldStyleNode = document.getElementById(id);
+        var keepOldStyleNode = false;
+
+        // Create a new stylesheet node for insertion or (if necessary) replacement
+        var styleNode = document.createElement('style');
+        styleNode.setAttribute('type', 'text/css');
+        if (sheet.media) {
+            styleNode.setAttribute('media', sheet.media);
+        }
+        styleNode.id = id;
+
+        if (!styleNode.styleSheet) {
+            styleNode.appendChild(document.createTextNode(styles));
+
+            // If new contents match contents of oldStyleNode, don't replace oldStyleNode
+            keepOldStyleNode = (oldStyleNode !== null && oldStyleNode.childNodes.length > 0 && styleNode.childNodes.length > 0 &&
+                oldStyleNode.firstChild.nodeValue === styleNode.firstChild.nodeValue);
+        }
+
+        var head = document.getElementsByTagName('head')[0];
+
+        // If there is no oldStyleNode, just append; otherwise, only append if we need
+        // to replace oldStyleNode with an updated stylesheet
+        if (oldStyleNode === null || keepOldStyleNode === false) {
+            var nextEl = sheet && sheet.nextSibling || null;
+            if (nextEl) {
+                nextEl.parentNode.insertBefore(styleNode, nextEl);
+            } else {
+                head.appendChild(styleNode);
+            }
+        }
+        if (oldStyleNode && keepOldStyleNode === false) {
+            oldStyleNode.parentNode.removeChild(oldStyleNode);
+        }
+
+        // For IE.
+        // This needs to happen *after* the style element is added to the DOM, otherwise IE 7 and 8 may crash.
+        // See http://social.msdn.microsoft.com/Forums/en-US/7e081b65-878a-4c22-8e68-c10d39c2ed32/internet-explorer-crashes-appending-style-element-to-head
+        if (styleNode.styleSheet) {
+            try {
+                styleNode.styleSheet.cssText = styles;
+            } catch (e) {
+                throw new Error("Couldn't reassign styleSheet.cssText.");
+            }
+        }
+    },
+    currentScript: function(window) {
+        var document = window.document;
+        return document.currentScript || (function() {
+            var scripts = document.getElementsByTagName("script");
+            return scripts[scripts.length - 1];
+        })();
+    }
+};
+
+},{"./utils":9}],4:[function(require,module,exports){
+// Cache system is a bit outdated and could do with work
+
+module.exports = function(window, options, logger) {
+    var cache = null;
+    if (options.env !== 'development') {
+        try {
+            cache = (typeof window.localStorage === 'undefined') ? null : window.localStorage;
+        } catch (_) {}
+    }
+    return {
+        setCSS: function(path, lastModified, styles) {
+            if (cache) {
+                logger.info('saving ' + path + ' to cache.');
+                try {
+                    cache.setItem(path, styles);
+                    cache.setItem(path + ':timestamp', lastModified);
+                } catch(e) {
+                    //TODO - could do with adding more robust error handling
+                    logger.error('failed to save "' + path + '" to local storage for caching.');
+                }
+            }
+        },
+        getCSS: function(path, webInfo) {
+            var css       = cache && cache.getItem(path),
+                timestamp = cache && cache.getItem(path + ':timestamp');
+
+            if (timestamp && webInfo.lastModified &&
+                (new Date(webInfo.lastModified).valueOf() ===
+                    new Date(timestamp).valueOf())) {
+                // Use local copy
+                return css;
+            }
+        }
+    };
+};
+
+},{}],5:[function(require,module,exports){
+var utils = require("./utils"),
+    browser = require("./browser");
+
+module.exports = function(window, less, options) {
+
+    function errorHTML(e, rootHref) {
+        var id = 'less-error-message:' + utils.extractId(rootHref || "");
+        var template = '<li><label>{line}</label><pre class="{class}">{content}</pre></li>';
+        var elem = window.document.createElement('div'), timer, content, errors = [];
+        var filename = e.filename || rootHref;
+        var filenameNoPath = filename.match(/([^\/]+(\?.*)?)$/)[1];
+
+        elem.id        = id;
+        elem.className = "less-error-message";
+
+        content = '<h3>'  + (e.type || "Syntax") + "Error: " + (e.message || 'There is an error in your .less file') +
+            '</h3>' + '<p>in <a href="' + filename   + '">' + filenameNoPath + "</a> ";
+
+        var errorline = function (e, i, classname) {
+            if (e.extract[i] !== undefined) {
+                errors.push(template.replace(/\{line\}/, (parseInt(e.line, 10) || 0) + (i - 1))
+                    .replace(/\{class\}/, classname)
+                    .replace(/\{content\}/, e.extract[i]));
+            }
+        };
+
+        if (e.extract) {
+            errorline(e, 0, '');
+            errorline(e, 1, 'line');
+            errorline(e, 2, '');
+            content += 'on line ' + e.line + ', column ' + (e.column + 1) + ':</p>' +
+                '<ul>' + errors.join('') + '</ul>';
+        }
+        if (e.stack && (e.extract || options.logLevel >= 4)) {
+            content += '<br/>Stack Trace</br />' + e.stack.split('\n').slice(1).join('<br/>');
+        }
+        elem.innerHTML = content;
+
+        // CSS for error messages
+        browser.createCSS(window.document, [
+            '.less-error-message ul, .less-error-message li {',
+            'list-style-type: none;',
+            'margin-right: 15px;',
+            'padding: 4px 0;',
+            'margin: 0;',
+            '}',
+            '.less-error-message label {',
+            'font-size: 12px;',
+            'margin-right: 15px;',
+            'padding: 4px 0;',
+            'color: #cc7777;',
+            '}',
+            '.less-error-message pre {',
+            'color: #dd6666;',
+            'padding: 4px 0;',
+            'margin: 0;',
+            'display: inline-block;',
+            '}',
+            '.less-error-message pre.line {',
+            'color: #ff0000;',
+            '}',
+            '.less-error-message h3 {',
+            'font-size: 20px;',
+            'font-weight: bold;',
+            'padding: 15px 0 5px 0;',
+            'margin: 0;',
+            '}',
+            '.less-error-message a {',
+            'color: #10a',
+            '}',
+            '.less-error-message .error {',
+            'color: red;',
+            'font-weight: bold;',
+            'padding-bottom: 2px;',
+            'border-bottom: 1px dashed red;',
+            '}'
+        ].join('\n'), { title: 'error-message' });
+
+        elem.style.cssText = [
+            "font-family: Arial, sans-serif",
+            "border: 1px solid #e00",
+            "background-color: #eee",
+            "border-radius: 5px",
+            "-webkit-border-radius: 5px",
+            "-moz-border-radius: 5px",
+            "color: #e00",
+            "padding: 15px",
+            "margin-bottom: 15px"
+        ].join(';');
+
+        if (options.env === 'development') {
+            timer = setInterval(function () {
+                var document = window.document,
+                    body = document.body;
+                if (body) {
+                    if (document.getElementById(id)) {
+                        body.replaceChild(elem, document.getElementById(id));
+                    } else {
+                        body.insertBefore(elem, body.firstChild);
+                    }
+                    clearInterval(timer);
+                }
+            }, 10);
+        }
+    }
+
+    function error(e, rootHref) {
+        if (!options.errorReporting || options.errorReporting === "html") {
+            errorHTML(e, rootHref);
+        } else if (options.errorReporting === "console") {
+            errorConsole(e, rootHref);
+        } else if (typeof options.errorReporting === 'function') {
+            options.errorReporting("add", e, rootHref);
+        }
+    }
+
+    function removeErrorHTML(path) {
+        var node = window.document.getElementById('less-error-message:' + utils.extractId(path));
+        if (node) {
+            node.parentNode.removeChild(node);
+        }
+    }
+
+    function removeErrorConsole(path) {
+        //no action
+    }
+
+    function removeError(path) {
+        if (!options.errorReporting || options.errorReporting === "html") {
+            removeErrorHTML(path);
+        } else if (options.errorReporting === "console") {
+            removeErrorConsole(path);
+        } else if (typeof options.errorReporting === 'function') {
+            options.errorReporting("remove", path);
+        }
+    }
+
+    function errorConsole(e, rootHref) {
+        var template = '{line} {content}';
+        var filename = e.filename || rootHref;
+        var errors = [];
+        var content = (e.type || "Syntax") + "Error: " + (e.message || 'There is an error in your .less file') +
+            " in " + filename + " ";
+
+        var errorline = function (e, i, classname) {
+            if (e.extract[i] !== undefined) {
+                errors.push(template.replace(/\{line\}/, (parseInt(e.line, 10) || 0) + (i - 1))
+                    .replace(/\{class\}/, classname)
+                    .replace(/\{content\}/, e.extract[i]));
+            }
+        };
+
+        if (e.extract) {
+            errorline(e, 0, '');
+            errorline(e, 1, 'line');
+            errorline(e, 2, '');
+            content += 'on line ' + e.line + ', column ' + (e.column + 1) + ':\n' +
+                errors.join('\n');
+        }
+        if (e.stack && (e.extract || options.logLevel >= 4)) {
+            content += '\nStack Trace\n' + e.stack;
+        }
+        less.logger.error(content);
+    }
+
+    return {
+        add: error,
+        remove: removeError
+    };
+};
+
+},{"./browser":3,"./utils":9}],6:[function(require,module,exports){
+/*global window, XMLHttpRequest */
+
+module.exports = function(options, logger) {
+
+    var AbstractFileManager = require("../less/environment/abstract-file-manager.js");
+
+    var fileCache = {};
+
+    //TODOS - move log somewhere. pathDiff and doing something similar in node. use pathDiff in the other browser file for the initial load
+
+    function getXMLHttpRequest() {
+        if (window.XMLHttpRequest && (window.location.protocol !== "file:" || !("ActiveXObject" in window))) {
+            return new XMLHttpRequest();
+        } else {
+            try {
+                /*global ActiveXObject */
+                return new ActiveXObject("Microsoft.XMLHTTP");
+            } catch (e) {
+                logger.error("browser doesn't support AJAX.");
+                return null;
+            }
+        }
+    }
+
+    var FileManager = function() {
+    };
+
+    FileManager.prototype = new AbstractFileManager();
+
+    FileManager.prototype.alwaysMakePathsAbsolute = function alwaysMakePathsAbsolute() {
+        return true;
+    };
+    FileManager.prototype.join = function join(basePath, laterPath) {
+        if (!basePath) {
+            return laterPath;
+        }
+        return this.extractUrlParts(laterPath, basePath).path;
+    };
+    FileManager.prototype.doXHR = function doXHR(url, type, callback, errback) {
+
+        var xhr = getXMLHttpRequest();
+        var async = options.isFileProtocol ? options.fileAsync : options.async;
+
+        if (typeof xhr.overrideMimeType === 'function') {
+            xhr.overrideMimeType('text/css');
+        }
+        logger.debug("XHR: Getting '" + url + "'");
+        xhr.open('GET', url, async);
+        xhr.setRequestHeader('Accept', type || 'text/x-less, text/css; q=0.9, */*; q=0.5');
+        xhr.send(null);
+
+        function handleResponse(xhr, callback, errback) {
+            if (xhr.status >= 200 && xhr.status < 300) {
+                callback(xhr.responseText,
+                    xhr.getResponseHeader("Last-Modified"));
+            } else if (typeof errback === 'function') {
+                errback(xhr.status, url);
+            }
+        }
+
+        if (options.isFileProtocol && !options.fileAsync) {
+            if (xhr.status === 0 || (xhr.status >= 200 && xhr.status < 300)) {
+                callback(xhr.responseText);
+            } else {
+                errback(xhr.status, url);
+            }
+        } else if (async) {
+            xhr.onreadystatechange = function () {
+                if (xhr.readyState == 4) {
+                    handleResponse(xhr, callback, errback);
+                }
+            };
+        } else {
+            handleResponse(xhr, callback, errback);
+        }
+    };
+    FileManager.prototype.supports = function(filename, currentDirectory, options, environment) {
+        return true;
+    };
+
+    FileManager.prototype.clearFileCache = function() {
+        fileCache = {};
+    };
+
+    FileManager.prototype.loadFile = function loadFile(filename, currentDirectory, options, environment, callback) {
+        if (currentDirectory && !this.isPathAbsolute(filename)) {
+            filename = currentDirectory + filename;
+        }
+
+        options = options || {};
+
+        // sheet may be set to the stylesheet for the initial load or a collection of properties including
+        // some context variables for imports
+        var hrefParts = this.extractUrlParts(filename, window.location.href);
+        var href      = hrefParts.url;
+
+        if (options.useFileCache && fileCache[href]) {
+            try {
+                var lessText = fileCache[href];
+                callback(null, { contents: lessText, filename: href, webInfo: { lastModified: new Date() }});
+            } catch (e) {
+                callback({filename: href, message: "Error loading file " + href + " error was " + e.message});
+            }
+            return;
+        }
+
+        this.doXHR(href, options.mime, function doXHRCallback(data, lastModified) {
+            // per file cache
+            fileCache[href] = data;
+
+            // Use remote copy (re-parse)
+            callback(null, { contents: data, filename: href, webInfo: { lastModified: lastModified }});
+        }, function doXHRError(status, url) {
+            callback({ type: 'File', message: "'" + url + "' wasn't found (" + status + ")", href: href });
+        });
+    };
+
+    return FileManager;
+};
+
+},{"../less/environment/abstract-file-manager.js":14}],7:[function(require,module,exports){
+//
+// index.js
+// Should expose the additional browser functions on to the less object
+//
+var addDataAttr = require("./utils").addDataAttr,
+    browser = require("./browser");
+
+module.exports = function(window, options) {
+    var document = window.document;
+    var less = require('../less')();
+    //module.exports = less;
+    less.options = options;
+    var environment = less.environment,
+        FileManager = require("./file-manager")(options, less.logger),
+        fileManager = new FileManager();
+    environment.addFileManager(fileManager);
+    less.FileManager = FileManager;
+
+    require("./log-listener")(less, options);
+    var errors = require("./error-reporting")(window, less, options);
+    var cache = less.cache = options.cache || require("./cache")(window, options, less.logger);
+
+    //Setup user functions
+    if (options.functions) {
+        less.functions.functionRegistry.addMultiple(options.functions);
+    }
+
+    var typePattern = /^text\/(x-)?less$/;
+
+    function postProcessCSS(styles) { // deprecated, use a plugin for postprocesstasks
+        if (options.postProcessor && typeof options.postProcessor === 'function') {
+            styles = options.postProcessor.call(styles, styles) || styles;
+        }
+        return styles;
+    }
+
+    function clone(obj) {
+        var cloned = {};
+        for (var prop in obj) {
+            if (obj.hasOwnProperty(prop)) {
+                cloned[prop] = obj[prop];
+            }
+        }
+        return cloned;
+    }
+
+    // only really needed for phantom
+    function bind(func, thisArg) {
+        var curryArgs = Array.prototype.slice.call(arguments, 2);
+        return function() {
+            var args = curryArgs.concat(Array.prototype.slice.call(arguments, 0));
+            return func.apply(thisArg, args);
+        };
+    }
+
+    function loadStyles(modifyVars) {
+        var styles = document.getElementsByTagName('style'),
+            style;
+
+        for (var i = 0; i < styles.length; i++) {
+            style = styles[i];
+            if (style.type.match(typePattern)) {
+                var instanceOptions = clone(options);
+                instanceOptions.modifyVars = modifyVars;
+                var lessText = style.innerHTML || '';
+                instanceOptions.filename = document.location.href.replace(/#.*$/, '');
+
+                /*jshint loopfunc:true */
+                // use closure to store current style
+                less.render(lessText, instanceOptions,
+                        bind(function(style, e, result) {
+                            if (e) {
+                                errors.add(e, "inline");
+                            } else {
+                                style.type = 'text/css';
+                                if (style.styleSheet) {
+                                    style.styleSheet.cssText = result.css;
+                                } else {
+                                    style.innerHTML = result.css;
+                                }
+                            }
+                        }, null, style));
+            }
+        }
+    }
+
+    function loadStyleSheet(sheet, callback, reload, remaining, modifyVars) {
+
+        var instanceOptions = clone(options);
+        addDataAttr(instanceOptions, sheet);
+        instanceOptions.mime = sheet.type;
+
+        if (modifyVars) {
+            instanceOptions.modifyVars = modifyVars;
+        }
+
+        function loadInitialFileCallback(loadedFile) {
+
+            var data = loadedFile.contents,
+                path = loadedFile.filename,
+                webInfo = loadedFile.webInfo;
+
+            var newFileInfo = {
+                currentDirectory: fileManager.getPath(path),
+                filename: path,
+                rootFilename: path,
+                relativeUrls: instanceOptions.relativeUrls};
+
+            newFileInfo.entryPath = newFileInfo.currentDirectory;
+            newFileInfo.rootpath = instanceOptions.rootpath || newFileInfo.currentDirectory;
+
+            if (webInfo) {
+                webInfo.remaining = remaining;
+
+                if (!instanceOptions.modifyVars) {
+                    var css = cache.getCSS(path, webInfo);
+                    if (!reload && css) {
+                        webInfo.local = true;
+                        callback(null, css, data, sheet, webInfo, path);
+                        return;
+                    }
+                }
+            }
+
+            //TODO add tests around how this behaves when reloading
+            errors.remove(path);
+
+            instanceOptions.rootFileInfo = newFileInfo;
+            less.render(data, instanceOptions, function(e, result) {
+                if (e) {
+                    e.href = path;
+                    callback(e);
+                } else {
+                    result.css = postProcessCSS(result.css);
+                    if (!instanceOptions.modifyVars) {
+                        cache.setCSS(sheet.href, webInfo.lastModified, result.css);
+                    }
+                    callback(null, result.css, data, sheet, webInfo, path);
+                }
+            });
+        }
+
+        fileManager.loadFile(sheet.href, null, instanceOptions, environment, function(e, loadedFile) {
+            if (e) {
+                callback(e);
+                return;
+            }
+            loadInitialFileCallback(loadedFile);
+        });
+    }
+
+    function loadStyleSheets(callback, reload, modifyVars) {
+        for (var i = 0; i < less.sheets.length; i++) {
+            loadStyleSheet(less.sheets[i], callback, reload, less.sheets.length - (i + 1), modifyVars);
+        }
+    }
+
+    function initRunningMode() {
+        if (less.env === 'development') {
+            less.watchTimer = setInterval(function () {
+                if (less.watchMode) {
+                    fileManager.clearFileCache();
+                    loadStyleSheets(function (e, css, _, sheet, webInfo) {
+                        if (e) {
+                            errors.add(e, e.href || sheet.href);
+                        } else if (css) {
+                            browser.createCSS(window.document, css, sheet);
+                        }
+                    });
+                }
+            }, options.poll);
+        }
+    }
+
+    //
+    // Watch mode
+    //
+    less.watch   = function () {
+        if (!less.watchMode ) {
+            less.env = 'development';
+            initRunningMode();
+        }
+        this.watchMode = true;
+        return true;
+    };
+
+    less.unwatch = function () {clearInterval(less.watchTimer); this.watchMode = false; return false; };
+
+    //
+    // Synchronously get all <link> tags with the 'rel' attribute set to
+    // "stylesheet/less".
+    //
+    less.registerStylesheetsImmediately = function() {
+        var links = document.getElementsByTagName('link');
+        less.sheets = [];
+
+        for (var i = 0; i < links.length; i++) {
+            if (links[i].rel === 'stylesheet/less' || (links[i].rel.match(/stylesheet/) &&
+                (links[i].type.match(typePattern)))) {
+                less.sheets.push(links[i]);
+            }
+        }
+    };
+
+    //
+    // Asynchronously get all <link> tags with the 'rel' attribute set to
+    // "stylesheet/less", returning a Promise.
+    //
+    less.registerStylesheets = function() {
+        return new Promise(function(resolve, reject) {
+            less.registerStylesheetsImmediately();
+            resolve();
+        });
+    };
+
+    //
+    // With this function, it's possible to alter variables and re-render
+    // CSS without reloading less-files
+    //
+    less.modifyVars = function(record) {
+        return less.refresh(true, record, false);
+    };
+
+    less.refresh = function (reload, modifyVars, clearFileCache) {
+        if ((reload || clearFileCache) && clearFileCache !== false) {
+            fileManager.clearFileCache();
+        }
+        return new Promise(function (resolve, reject) {
+            var startTime, endTime, totalMilliseconds;
+            startTime = endTime = new Date();
+
+            loadStyleSheets(function (e, css, _, sheet, webInfo) {
+                if (e) {
+                    errors.add(e, e.href || sheet.href);
+                    reject(e);
+                    return;
+                }
+                if (webInfo.local) {
+                    less.logger.info("loading " + sheet.href + " from cache.");
+                } else {
+                    less.logger.info("rendered " + sheet.href + " successfully.");
+                }
+                browser.createCSS(window.document, css, sheet);
+                less.logger.info("css for " + sheet.href + " generated in " + (new Date() - endTime) + 'ms');
+                if (webInfo.remaining === 0) {
+                    totalMilliseconds = new Date() - startTime;
+                    less.logger.info("less has finished. css generated in " + totalMilliseconds + 'ms');
+                    resolve({
+                        startTime: startTime,
+                        endTime: endTime,
+                        totalMilliseconds: totalMilliseconds,
+                        sheets: less.sheets.length
+                    });
+                }
+                endTime = new Date();
+            }, reload, modifyVars);
+
+            loadStyles(modifyVars);
+        });
+    };
+
+    less.refreshStyles = loadStyles;
+    return less;
+};
+
+},{"../less":30,"./browser":3,"./cache":4,"./error-reporting":5,"./file-manager":6,"./log-listener":8,"./utils":9}],8:[function(require,module,exports){
+module.exports = function(less, options) {
+
+    var logLevel_debug = 4,
+        logLevel_info = 3,
+        logLevel_warn = 2,
+        logLevel_error = 1;
+
+    // The amount of logging in the javascript console.
+    // 3 - Debug, information and errors
+    // 2 - Information and errors
+    // 1 - Errors
+    // 0 - None
+    // Defaults to 2
+    options.logLevel = typeof options.logLevel !== 'undefined' ? options.logLevel : (options.env === 'development' ?  logLevel_info : logLevel_error);
+
+    if (!options.loggers) {
+        options.loggers = [{
+            debug: function(msg) {
+                if (options.logLevel >= logLevel_debug) {
+                    console.log(msg);
+                }
+            },
+            info: function(msg) {
+                if (options.logLevel >= logLevel_info) {
+                    console.log(msg);
+                }
+            },
+            warn: function(msg) {
+                if (options.logLevel >= logLevel_warn) {
+                    console.warn(msg);
+                }
+            },
+            error: function(msg) {
+                if (options.logLevel >= logLevel_error) {
+                    console.error(msg);
+                }
+            }
+        }];
+    }
+    for (var i = 0; i < options.loggers.length; i++) {
+        less.logger.addListener(options.loggers[i]);
+    }
+};
+
+},{}],9:[function(require,module,exports){
+module.exports = {
+    extractId: function(href) {
+        return href.replace(/^[a-z-]+:\/+?[^\/]+/, '')  // Remove protocol & domain
+            .replace(/[\?\&]livereload=\w+/, '')        // Remove LiveReload cachebuster
+            .replace(/^\//, '')                         // Remove root /
+            .replace(/\.[a-zA-Z]+$/, '')                // Remove simple extension
+            .replace(/[^\.\w-]+/g, '-')                 // Replace illegal characters
+            .replace(/\./g, ':');                       // Replace dots with colons(for valid id)
+    },
+    addDataAttr: function(options, tag) {
+        for (var opt in tag.dataset) {
+            if (tag.dataset.hasOwnProperty(opt)) {
+                if (opt === "env" || opt === "dumpLineNumbers" || opt === "rootpath" || opt === "errorReporting") {
+                    options[opt] = tag.dataset[opt];
+                } else {
+                    try {
+                        options[opt] = JSON.parse(tag.dataset[opt]);
+                    }
+                    catch(_) {}
+                }
+            }
+        }
+    }
+};
+
+},{}],10:[function(require,module,exports){
+var contexts = {};
+module.exports = contexts;
+
+var copyFromOriginal = function copyFromOriginal(original, destination, propertiesToCopy) {
+    if (!original) { return; }
+
+    for (var i = 0; i < propertiesToCopy.length; i++) {
+        if (original.hasOwnProperty(propertiesToCopy[i])) {
+            destination[propertiesToCopy[i]] = original[propertiesToCopy[i]];
+        }
+    }
+};
+
+/*
+ parse is used whilst parsing
+ */
+var parseCopyProperties = [
+    // options
+    'paths',            // option - unmodified - paths to search for imports on
+    'relativeUrls',     // option - whether to adjust URL's to be relative
+    'rootpath',         // option - rootpath to append to URL's
+    'strictImports',    // option -
+    'insecure',         // option - whether to allow imports from insecure ssl hosts
+    'dumpLineNumbers',  // option - whether to dump line numbers
+    'compress',         // option - whether to compress
+    'syncImport',       // option - whether to import synchronously
+    'chunkInput',       // option - whether to chunk input. more performant but causes parse issues.
+    'mime',             // browser only - mime type for sheet import
+    'useFileCache',     // browser only - whether to use the per file session cache
+    // context
+    'processImports',   // option & context - whether to process imports. if false then imports will not be imported.
+                        // Used by the import manager to stop multiple import visitors being created.
+    'reference',        // Used to indicate that the contents are imported by reference
+    'pluginManager'     // Used as the plugin manager for the session
+];
+
+contexts.Parse = function(options) {
+    copyFromOriginal(options, this, parseCopyProperties);
+
+    if (typeof this.paths === "string") { this.paths = [this.paths]; }
+};
+
+var evalCopyProperties = [
+    'paths',          // additional include paths
+    'compress',       // whether to compress
+    'ieCompat',       // whether to enforce IE compatibility (IE8 data-uri)
+    'strictMath',     // whether math has to be within parenthesis
+    'strictUnits',    // whether units need to evaluate correctly
+    'sourceMap',      // whether to output a source map
+    'importMultiple', // whether we are currently importing multiple copies
+    'urlArgs',        // whether to add args into url tokens
+    'javascriptEnabled',// option - whether JavaScript is enabled. if undefined, defaults to true
+    'pluginManager',  // Used as the plugin manager for the session
+    'importantScope'  // used to bubble up !important statements
+    ];
+
+contexts.Eval = function(options, frames) {
+    copyFromOriginal(options, this, evalCopyProperties);
+
+    if (typeof this.paths === "string") { this.paths = [this.paths]; }
+
+    this.frames = frames || [];
+    this.importantScope = this.importantScope || [];
+};
+
+contexts.Eval.prototype.inParenthesis = function () {
+    if (!this.parensStack) {
+        this.parensStack = [];
+    }
+    this.parensStack.push(true);
+};
+
+contexts.Eval.prototype.outOfParenthesis = function () {
+    this.parensStack.pop();
+};
+
+contexts.Eval.prototype.isMathOn = function () {
+    return this.strictMath ? (this.parensStack && this.parensStack.length) : true;
+};
+
+contexts.Eval.prototype.isPathRelative = function (path) {
+    return !/^(?:[a-z-]+:|\/|#)/i.test(path);
+};
+
+contexts.Eval.prototype.normalizePath = function( path ) {
+    var
+      segments = path.split("/").reverse(),
+      segment;
+
+    path = [];
+    while (segments.length !== 0 ) {
+        segment = segments.pop();
+        switch( segment ) {
+            case ".":
+                break;
+            case "..":
+                if ((path.length === 0) || (path[path.length - 1] === "..")) {
+                    path.push( segment );
+                } else {
+                    path.pop();
+                }
+                break;
+            default:
+                path.push( segment );
+                break;
+        }
+    }
+
+    return path.join("/");
+};
+
+//todo - do the same for the toCSS ?
+
+},{}],11:[function(require,module,exports){
+module.exports = {
+    'aliceblue':'#f0f8ff',
+    'antiquewhite':'#faebd7',
+    'aqua':'#00ffff',
+    'aquamarine':'#7fffd4',
+    'azure':'#f0ffff',
+    'beige':'#f5f5dc',
+    'bisque':'#ffe4c4',
+    'black':'#000000',
+    'blanchedalmond':'#ffebcd',
+    'blue':'#0000ff',
+    'blueviolet':'#8a2be2',
+    'brown':'#a52a2a',
+    'burlywood':'#deb887',
+    'cadetblue':'#5f9ea0',
+    'chartreuse':'#7fff00',
+    'chocolate':'#d2691e',
+    'coral':'#ff7f50',
+    'cornflowerblue':'#6495ed',
+    'cornsilk':'#fff8dc',
+    'crimson':'#dc143c',
+    'cyan':'#00ffff',
+    'darkblue':'#00008b',
+    'darkcyan':'#008b8b',
+    'darkgoldenrod':'#b8860b',
+    'darkgray':'#a9a9a9',
+    'darkgrey':'#a9a9a9',
+    'darkgreen':'#006400',
+    'darkkhaki':'#bdb76b',
+    'darkmagenta':'#8b008b',
+    'darkolivegreen':'#556b2f',
+    'darkorange':'#ff8c00',
+    'darkorchid':'#9932cc',
+    'darkred':'#8b0000',
+    'darksalmon':'#e9967a',
+    'darkseagreen':'#8fbc8f',
+    'darkslateblue':'#483d8b',
+    'darkslategray':'#2f4f4f',
+    'darkslategrey':'#2f4f4f',
+    'darkturquoise':'#00ced1',
+    'darkviolet':'#9400d3',
+    'deeppink':'#ff1493',
+    'deepskyblue':'#00bfff',
+    'dimgray':'#696969',
+    'dimgrey':'#696969',
+    'dodgerblue':'#1e90ff',
+    'firebrick':'#b22222',
+    'floralwhite':'#fffaf0',
+    'forestgreen':'#228b22',
+    'fuchsia':'#ff00ff',
+    'gainsboro':'#dcdcdc',
+    'ghostwhite':'#f8f8ff',
+    'gold':'#ffd700',
+    'goldenrod':'#daa520',
+    'gray':'#808080',
+    'grey':'#808080',
+    'green':'#008000',
+    'greenyellow':'#adff2f',
+    'honeydew':'#f0fff0',
+    'hotpink':'#ff69b4',
+    'indianred':'#cd5c5c',
+    'indigo':'#4b0082',
+    'ivory':'#fffff0',
+    'khaki':'#f0e68c',
+    'lavender':'#e6e6fa',
+    'lavenderblush':'#fff0f5',
+    'lawngreen':'#7cfc00',
+    'lemonchiffon':'#fffacd',
+    'lightblue':'#add8e6',
+    'lightcoral':'#f08080',
+    'lightcyan':'#e0ffff',
+    'lightgoldenrodyellow':'#fafad2',
+    'lightgray':'#d3d3d3',
+    'lightgrey':'#d3d3d3',
+    'lightgreen':'#90ee90',
+    'lightpink':'#ffb6c1',
+    'lightsalmon':'#ffa07a',
+    'lightseagreen':'#20b2aa',
+    'lightskyblue':'#87cefa',
+    'lightslategray':'#778899',
+    'lightslategrey':'#778899',
+    'lightsteelblue':'#b0c4de',
+    'lightyellow':'#ffffe0',
+    'lime':'#00ff00',
+    'limegreen':'#32cd32',
+    'linen':'#faf0e6',
+    'magenta':'#ff00ff',
+    'maroon':'#800000',
+    'mediumaquamarine':'#66cdaa',
+    'mediumblue':'#0000cd',
+    'mediumorchid':'#ba55d3',
+    'mediumpurple':'#9370d8',
+    'mediumseagreen':'#3cb371',
+    'mediumslateblue':'#7b68ee',
+    'mediumspringgreen':'#00fa9a',
+    'mediumturquoise':'#48d1cc',
+    'mediumvioletred':'#c71585',
+    'midnightblue':'#191970',
+    'mintcream':'#f5fffa',
+    'mistyrose':'#ffe4e1',
+    'moccasin':'#ffe4b5',
+    'navajowhite':'#ffdead',
+    'navy':'#000080',
+    'oldlace':'#fdf5e6',
+    'olive':'#808000',
+    'olivedrab':'#6b8e23',
+    'orange':'#ffa500',
+    'orangered':'#ff4500',
+    'orchid':'#da70d6',
+    'palegoldenrod':'#eee8aa',
+    'palegreen':'#98fb98',
+    'paleturquoise':'#afeeee',
+    'palevioletred':'#d87093',
+    'papayawhip':'#ffefd5',
+    'peachpuff':'#ffdab9',
+    'peru':'#cd853f',
+    'pink':'#ffc0cb',
+    'plum':'#dda0dd',
+    'powderblue':'#b0e0e6',
+    'purple':'#800080',
+    'rebeccapurple':'#663399',
+    'red':'#ff0000',
+    'rosybrown':'#bc8f8f',
+    'royalblue':'#4169e1',
+    'saddlebrown':'#8b4513',
+    'salmon':'#fa8072',
+    'sandybrown':'#f4a460',
+    'seagreen':'#2e8b57',
+    'seashell':'#fff5ee',
+    'sienna':'#a0522d',
+    'silver':'#c0c0c0',
+    'skyblue':'#87ceeb',
+    'slateblue':'#6a5acd',
+    'slategray':'#708090',
+    'slategrey':'#708090',
+    'snow':'#fffafa',
+    'springgreen':'#00ff7f',
+    'steelblue':'#4682b4',
+    'tan':'#d2b48c',
+    'teal':'#008080',
+    'thistle':'#d8bfd8',
+    'tomato':'#ff6347',
+    'turquoise':'#40e0d0',
+    'violet':'#ee82ee',
+    'wheat':'#f5deb3',
+    'white':'#ffffff',
+    'whitesmoke':'#f5f5f5',
+    'yellow':'#ffff00',
+    'yellowgreen':'#9acd32'
+};
+},{}],12:[function(require,module,exports){
+module.exports = {
+    colors: require("./colors"),
+    unitConversions: require("./unit-conversions")
+};
+
+},{"./colors":11,"./unit-conversions":13}],13:[function(require,module,exports){
+module.exports = {
+    length: {
+        'm': 1,
+        'cm': 0.01,
+        'mm': 0.001,
+        'in': 0.0254,
+        'px': 0.0254 / 96,
+        'pt': 0.0254 / 72,
+        'pc': 0.0254 / 72 * 12
+    },
+    duration: {
+        's': 1,
+        'ms': 0.001
+    },
+    angle: {
+        'rad': 1 / (2 * Math.PI),
+        'deg': 1 / 360,
+        'grad': 1 / 400,
+        'turn': 1
+    }
+};
+},{}],14:[function(require,module,exports){
+var abstractFileManager = function() {
+};
+
+abstractFileManager.prototype.getPath = function (filename) {
+    var j = filename.lastIndexOf('?');
+    if (j > 0) {
+        filename = filename.slice(0, j);
+    }
+    j = filename.lastIndexOf('/');
+    if (j < 0) {
+        j = filename.lastIndexOf('\\');
+    }
+    if (j < 0) {
+        return "";
+    }
+    return filename.slice(0, j + 1);
+};
+
+abstractFileManager.prototype.tryAppendExtension = function(path, ext) {
+    return /(\.[a-z]*$)|([\?;].*)$/.test(path) ? path : path + ext;
+};
+
+abstractFileManager.prototype.tryAppendLessExtension = function(path) {
+    return this.tryAppendExtension(path, '.less');
+};
+
+abstractFileManager.prototype.supportsSync = function() {
+    return false;
+};
+
+abstractFileManager.prototype.alwaysMakePathsAbsolute = function() {
+    return false;
+};
+
+abstractFileManager.prototype.isPathAbsolute = function(filename) {
+    return (/^(?:[a-z-]+:|\/|\\|#)/i).test(filename);
+};
+
+abstractFileManager.prototype.join = function(basePath, laterPath) {
+    if (!basePath) {
+        return laterPath;
+    }
+    return basePath + laterPath;
+};
+abstractFileManager.prototype.pathDiff = function pathDiff(url, baseUrl) {
+    // diff between two paths to create a relative path
+
+    var urlParts = this.extractUrlParts(url),
+        baseUrlParts = this.extractUrlParts(baseUrl),
+        i, max, urlDirectories, baseUrlDirectories, diff = "";
+    if (urlParts.hostPart !== baseUrlParts.hostPart) {
+        return "";
+    }
+    max = Math.max(baseUrlParts.directories.length, urlParts.directories.length);
+    for (i = 0; i < max; i++) {
+        if (baseUrlParts.directories[i] !== urlParts.directories[i]) { break; }
+    }
+    baseUrlDirectories = baseUrlParts.directories.slice(i);
+    urlDirectories = urlParts.directories.slice(i);
+    for (i = 0; i < baseUrlDirectories.length - 1; i++) {
+        diff += "../";
+    }
+    for (i = 0; i < urlDirectories.length - 1; i++) {
+        diff += urlDirectories[i] + "/";
+    }
+    return diff;
+};
+// helper function, not part of API
+abstractFileManager.prototype.extractUrlParts = function extractUrlParts(url, baseUrl) {
+    // urlParts[1] = protocol&hostname || /
+    // urlParts[2] = / if path relative to host base
+    // urlParts[3] = directories
+    // urlParts[4] = filename
+    // urlParts[5] = parameters
+
+    var urlPartsRegex = /^((?:[a-z-]+:)?\/+?(?:[^\/\?#]*\/)|([\/\\]))?((?:[^\/\\\?#]*[\/\\])*)([^\/\\\?#]*)([#\?].*)?$/i,
+        urlParts = url.match(urlPartsRegex),
+        returner = {}, directories = [], i, baseUrlParts;
+
+    if (!urlParts) {
+        throw new Error("Could not parse sheet href - '" + url + "'");
+    }
+
+    // Stylesheets in IE don't always return the full path
+    if (baseUrl && (!urlParts[1] || urlParts[2])) {
+        baseUrlParts = baseUrl.match(urlPartsRegex);
+        if (!baseUrlParts) {
+            throw new Error("Could not parse page url - '" + baseUrl + "'");
+        }
+        urlParts[1] = urlParts[1] || baseUrlParts[1] || "";
+        if (!urlParts[2]) {
+            urlParts[3] = baseUrlParts[3] + urlParts[3];
+        }
+    }
+
+    if (urlParts[3]) {
+        directories = urlParts[3].replace(/\\/g, "/").split("/");
+
+        // extract out . before .. so .. doesn't absorb a non-directory
+        for (i = 0; i < directories.length; i++) {
+            if (directories[i] === ".") {
+                directories.splice(i, 1);
+                i -= 1;
+            }
+        }
+
+        for (i = 0; i < directories.length; i++) {
+            if (directories[i] === ".." && i > 0) {
+                directories.splice(i - 1, 2);
+                i -= 2;
+            }
+        }
+    }
+
+    returner.hostPart = urlParts[1];
+    returner.directories = directories;
+    returner.path = (urlParts[1] || "") + directories.join("/");
+    returner.fileUrl = returner.path + (urlParts[4] || "");
+    returner.url = returner.fileUrl + (urlParts[5] || "");
+    return returner;
+};
+
+module.exports = abstractFileManager;
+
+},{}],15:[function(require,module,exports){
+var logger = require("../logger");
+var environment = function(externalEnvironment, fileManagers) {
+    this.fileManagers = fileManagers || [];
+    externalEnvironment = externalEnvironment || {};
+
+    var optionalFunctions = ["encodeBase64", "mimeLookup", "charsetLookup", "getSourceMapGenerator"],
+        requiredFunctions = [],
+        functions = requiredFunctions.concat(optionalFunctions);
+
+    for (var i = 0; i < functions.length; i++) {
+        var propName = functions[i],
+            environmentFunc = externalEnvironment[propName];
+        if (environmentFunc) {
+            this[propName] = environmentFunc.bind(externalEnvironment);
+        } else if (i < requiredFunctions.length) {
+            this.warn("missing required function in environment - " + propName);
+        }
+    }
+};
+
+environment.prototype.getFileManager = function (filename, currentDirectory, options, environment, isSync) {
+
+    if (!filename) {
+        logger.warn("getFileManager called with no filename.. Please report this issue. continuing.");
+    }
+    if (currentDirectory == null) {
+        logger.warn("getFileManager called with null directory.. Please report this issue. continuing.");
+    }
+
+    var fileManagers = this.fileManagers;
+    if (options.pluginManager) {
+        fileManagers = [].concat(fileManagers).concat(options.pluginManager.getFileManagers());
+    }
+    for (var i = fileManagers.length - 1; i >= 0 ; i--) {
+        var fileManager = fileManagers[i];
+        if (fileManager[isSync ? "supportsSync" : "supports"](filename, currentDirectory, options, environment)) {
+            return fileManager;
+        }
+    }
+    return null;
+};
+
+environment.prototype.addFileManager = function (fileManager) {
+    this.fileManagers.push(fileManager);
+};
+
+environment.prototype.clearFileManagers = function () {
+    this.fileManagers = [];
+};
+
+module.exports = environment;
+
+},{"../logger":32}],16:[function(require,module,exports){
+var Color = require("../tree/color"),
+    functionRegistry = require("./function-registry");
+
+// Color Blending
+// ref: http://www.w3.org/TR/compositing-1
+
+function colorBlend(mode, color1, color2) {
+    var ab = color1.alpha, cb, // backdrop
+        as = color2.alpha, cs, // source
+        ar, cr, r = [];        // result
+
+    ar = as + ab * (1 - as);
+    for (var i = 0; i < 3; i++) {
+        cb = color1.rgb[i] / 255;
+        cs = color2.rgb[i] / 255;
+        cr = mode(cb, cs);
+        if (ar) {
+            cr = (as * cs + ab * (cb -
+                  as * (cb + cs - cr))) / ar;
+        }
+        r[i] = cr * 255;
+    }
+
+    return new Color(r, ar);
+}
+
+var colorBlendModeFunctions = {
+    multiply: function(cb, cs) {
+        return cb * cs;
+    },
+    screen: function(cb, cs) {
+        return cb + cs - cb * cs;
+    },
+    overlay: function(cb, cs) {
+        cb *= 2;
+        return (cb <= 1) ?
+            colorBlendModeFunctions.multiply(cb, cs) :
+            colorBlendModeFunctions.screen(cb - 1, cs);
+    },
+    softlight: function(cb, cs) {
+        var d = 1, e = cb;
+        if (cs > 0.5) {
+            e = 1;
+            d = (cb > 0.25) ? Math.sqrt(cb)
+                : ((16 * cb - 12) * cb + 4) * cb;
+        }
+        return cb - (1 - 2 * cs) * e * (d - cb);
+    },
+    hardlight: function(cb, cs) {
+        return colorBlendModeFunctions.overlay(cs, cb);
+    },
+    difference: function(cb, cs) {
+        return Math.abs(cb - cs);
+    },
+    exclusion: function(cb, cs) {
+        return cb + cs - 2 * cb * cs;
+    },
+
+    // non-w3c functions:
+    average: function(cb, cs) {
+        return (cb + cs) / 2;
+    },
+    negation: function(cb, cs) {
+        return 1 - Math.abs(cb + cs - 1);
+    }
+};
+
+for (var f in colorBlendModeFunctions) {
+    if (colorBlendModeFunctions.hasOwnProperty(f)) {
+        colorBlend[f] = colorBlend.bind(null, colorBlendModeFunctions[f]);
+    }
+}
+
+functionRegistry.addMultiple(colorBlend);
+
+},{"../tree/color":49,"./function-registry":21}],17:[function(require,module,exports){
+var Dimension = require("../tree/dimension"),
+    Color = require("../tree/color"),
+    Quoted = require("../tree/quoted"),
+    Anonymous = require("../tree/anonymous"),
+    functionRegistry = require("./function-registry"),
+    colorFunctions;
+
+function clamp(val) {
+    return Math.min(1, Math.max(0, val));
+}
+function hsla(color) {
+    return colorFunctions.hsla(color.h, color.s, color.l, color.a);
+}
+function number(n) {
+    if (n instanceof Dimension) {
+        return parseFloat(n.unit.is('%') ? n.value / 100 : n.value);
+    } else if (typeof n === 'number') {
+        return n;
+    } else {
+        throw {
+            type: "Argument",
+            message: "color functions take numbers as parameters"
+        };
+    }
+}
+function scaled(n, size) {
+    if (n instanceof Dimension && n.unit.is('%')) {
+        return parseFloat(n.value * size / 100);
+    } else {
+        return number(n);
+    }
+}
+colorFunctions = {
+    rgb: function (r, g, b) {
+        return colorFunctions.rgba(r, g, b, 1.0);
+    },
+    rgba: function (r, g, b, a) {
+        var rgb = [r, g, b].map(function (c) { return scaled(c, 255); });
+        a = number(a);
+        return new Color(rgb, a);
+    },
+    hsl: function (h, s, l) {
+        return colorFunctions.hsla(h, s, l, 1.0);
+    },
+    hsla: function (h, s, l, a) {
+        function hue(h) {
+            h = h < 0 ? h + 1 : (h > 1 ? h - 1 : h);
+            if (h * 6 < 1) {
+                return m1 + (m2 - m1) * h * 6;
+            }
+            else if (h * 2 < 1) {
+                return m2;
+            }
+            else if (h * 3 < 2) {
+                return m1 + (m2 - m1) * (2 / 3 - h) * 6;
+            }
+            else {
+                return m1;
+            }
+        }
+
+        h = (number(h) % 360) / 360;
+        s = clamp(number(s)); l = clamp(number(l)); a = clamp(number(a));
+
+        var m2 = l <= 0.5 ? l * (s + 1) : l + s - l * s;
+        var m1 = l * 2 - m2;
+
+        return colorFunctions.rgba(hue(h + 1 / 3) * 255,
+            hue(h)       * 255,
+            hue(h - 1 / 3) * 255,
+            a);
+    },
+
+    hsv: function(h, s, v) {
+        return colorFunctions.hsva(h, s, v, 1.0);
+    },
+
+    hsva: function(h, s, v, a) {
+        h = ((number(h) % 360) / 360) * 360;
+        s = number(s); v = number(v); a = number(a);
+
+        var i, f;
+        i = Math.floor((h / 60) % 6);
+        f = (h / 60) - i;
+
+        var vs = [v,
+            v * (1 - s),
+            v * (1 - f * s),
+            v * (1 - (1 - f) * s)];
+        var perm = [[0, 3, 1],
+            [2, 0, 1],
+            [1, 0, 3],
+            [1, 2, 0],
+            [3, 1, 0],
+            [0, 1, 2]];
+
+        return colorFunctions.rgba(vs[perm[i][0]] * 255,
+            vs[perm[i][1]] * 255,
+            vs[perm[i][2]] * 255,
+            a);
+    },
+
+    hue: function (color) {
+        return new Dimension(color.toHSL().h);
+    },
+    saturation: function (color) {
+        return new Dimension(color.toHSL().s * 100, '%');
+    },
+    lightness: function (color) {
+        return new Dimension(color.toHSL().l * 100, '%');
+    },
+    hsvhue: function(color) {
+        return new Dimension(color.toHSV().h);
+    },
+    hsvsaturation: function (color) {
+        return new Dimension(color.toHSV().s * 100, '%');
+    },
+    hsvvalue: function (color) {
+        return new Dimension(color.toHSV().v * 100, '%');
+    },
+    red: function (color) {
+        return new Dimension(color.rgb[0]);
+    },
+    green: function (color) {
+        return new Dimension(color.rgb[1]);
+    },
+    blue: function (color) {
+        return new Dimension(color.rgb[2]);
+    },
+    alpha: function (color) {
+        return new Dimension(color.toHSL().a);
+    },
+    luma: function (color) {
+        return new Dimension(color.luma() * color.alpha * 100, '%');
+    },
+    luminance: function (color) {
+        var luminance =
+            (0.2126 * color.rgb[0] / 255) +
+                (0.7152 * color.rgb[1] / 255) +
+                (0.0722 * color.rgb[2] / 255);
+
+        return new Dimension(luminance * color.alpha * 100, '%');
+    },
+    saturate: function (color, amount, method) {
+        // filter: saturate(3.2);
+        // should be kept as is, so check for color
+        if (!color.rgb) {
+            return null;
+        }
+        var hsl = color.toHSL();
+
+        if (typeof method !== "undefined" && method.value === "relative") {
+            hsl.s +=  hsl.s * amount.value / 100;
+        }
+        else {
+            hsl.s += amount.value / 100;
+        }
+        hsl.s = clamp(hsl.s);
+        return hsla(hsl);
+    },
+    desaturate: function (color, amount, method) {
+        var hsl = color.toHSL();
+
+        if (typeof method !== "undefined" && method.value === "relative") {
+            hsl.s -=  hsl.s * amount.value / 100;
+        }
+        else {
+            hsl.s -= amount.value / 100;
+        }
+        hsl.s = clamp(hsl.s);
+        return hsla(hsl);
+    },
+    lighten: function (color, amount, method) {
+        var hsl = color.toHSL();
+
+        if (typeof method !== "undefined" && method.value === "relative") {
+            hsl.l +=  hsl.l * amount.value / 100;
+        }
+        else {
+            hsl.l += amount.value / 100;
+        }
+        hsl.l = clamp(hsl.l);
+        return hsla(hsl);
+    },
+    darken: function (color, amount, method) {
+        var hsl = color.toHSL();
+
+        if (typeof method !== "undefined" && method.value === "relative") {
+            hsl.l -=  hsl.l * amount.value / 100;
+        }
+        else {
+            hsl.l -= amount.value / 100;
+        }
+        hsl.l = clamp(hsl.l);
+        return hsla(hsl);
+    },
+    fadein: function (color, amount, method) {
+        var hsl = color.toHSL();
+
+        if (typeof method !== "undefined" && method.value === "relative") {
+            hsl.a +=  hsl.a * amount.value / 100;
+        }
+        else {
+            hsl.a += amount.value / 100;
+        }
+        hsl.a = clamp(hsl.a);
+        return hsla(hsl);
+    },
+    fadeout: function (color, amount, method) {
+        var hsl = color.toHSL();
+
+        if (typeof method !== "undefined" && method.value === "relative") {
+            hsl.a -=  hsl.a * amount.value / 100;
+        }
+        else {
+            hsl.a -= amount.value / 100;
+        }
+        hsl.a = clamp(hsl.a);
+        return hsla(hsl);
+    },
+    fade: function (color, amount) {
+        var hsl = color.toHSL();
+
+        hsl.a = amount.value / 100;
+        hsl.a = clamp(hsl.a);
+        return hsla(hsl);
+    },
+    spin: function (color, amount) {
+        var hsl = color.toHSL();
+        var hue = (hsl.h + amount.value) % 360;
+
+        hsl.h = hue < 0 ? 360 + hue : hue;
+
+        return hsla(hsl);
+    },
+    //
+    // Copyright (c) 2006-2009 Hampton Catlin, Nathan Weizenbaum, and Chris Eppstein
+    // http://sass-lang.com
+    //
+    mix: function (color1, color2, weight) {
+        if (!color1.toHSL || !color2.toHSL) {
+            console.log(color2.type);
+            console.dir(color2);
+        }
+        if (!weight) {
+            weight = new Dimension(50);
+        }
+        var p = weight.value / 100.0;
+        var w = p * 2 - 1;
+        var a = color1.toHSL().a - color2.toHSL().a;
+
+        var w1 = (((w * a == -1) ? w : (w + a) / (1 + w * a)) + 1) / 2.0;
+        var w2 = 1 - w1;
+
+        var rgb = [color1.rgb[0] * w1 + color2.rgb[0] * w2,
+            color1.rgb[1] * w1 + color2.rgb[1] * w2,
+            color1.rgb[2] * w1 + color2.rgb[2] * w2];
+
+        var alpha = color1.alpha * p + color2.alpha * (1 - p);
+
+        return new Color(rgb, alpha);
+    },
+    greyscale: function (color) {
+        return colorFunctions.desaturate(color, new Dimension(100));
+    },
+    contrast: function (color, dark, light, threshold) {
+        // filter: contrast(3.2);
+        // should be kept as is, so check for color
+        if (!color.rgb) {
+            return null;
+        }
+        if (typeof light === 'undefined') {
+            light = colorFunctions.rgba(255, 255, 255, 1.0);
+        }
+        if (typeof dark === 'undefined') {
+            dark = colorFunctions.rgba(0, 0, 0, 1.0);
+        }
+        //Figure out which is actually light and dark!
+        if (dark.luma() > light.luma()) {
+            var t = light;
+            light = dark;
+            dark = t;
+        }
+        if (typeof threshold === 'undefined') {
+            threshold = 0.43;
+        } else {
+            threshold = number(threshold);
+        }
+        if (color.luma() < threshold) {
+            return light;
+        } else {
+            return dark;
+        }
+    },
+    argb: function (color) {
+        return new Anonymous(color.toARGB());
+    },
+    color: function(c) {
+        if ((c instanceof Quoted) &&
+            (/^#([a-f0-9]{6}|[a-f0-9]{3})$/i.test(c.value))) {
+            return new Color(c.value.slice(1));
+        }
+        if ((c instanceof Color) || (c = Color.fromKeyword(c.value))) {
+            c.value = undefined;
+            return c;
+        }
+        throw {
+            type:    "Argument",
+            message: "argument must be a color keyword or 3/6 digit hex e.g. #FFF"
+        };
+    },
+    tint: function(color, amount) {
+        return colorFunctions.mix(colorFunctions.rgb(255, 255, 255), color, amount);
+    },
+    shade: function(color, amount) {
+        return colorFunctions.mix(colorFunctions.rgb(0, 0, 0), color, amount);
+    }
+};
+functionRegistry.addMultiple(colorFunctions);
+
+},{"../tree/anonymous":45,"../tree/color":49,"../tree/dimension":55,"../tree/quoted":72,"./function-registry":21}],18:[function(require,module,exports){
+module.exports = function(environment) {
+    var Quoted = require("../tree/quoted"),
+        URL = require("../tree/url"),
+        functionRegistry = require("./function-registry"),
+        fallback = function(functionThis, node) {
+            return new URL(node, functionThis.index, functionThis.currentFileInfo).eval(functionThis.context);
+        },
+        logger = require('../logger');
+
+    functionRegistry.add("data-uri", function(mimetypeNode, filePathNode) {
+
+        if (!filePathNode) {
+            filePathNode = mimetypeNode;
+            mimetypeNode = null;
+        }
+
+        var mimetype = mimetypeNode && mimetypeNode.value;
+        var filePath = filePathNode.value;
+        var currentFileInfo = this.currentFileInfo;
+        var currentDirectory = currentFileInfo.relativeUrls ?
+            currentFileInfo.currentDirectory : currentFileInfo.entryPath;
+
+        var fragmentStart = filePath.indexOf('#');
+        var fragment = '';
+        if (fragmentStart !== -1) {
+            fragment = filePath.slice(fragmentStart);
+            filePath = filePath.slice(0, fragmentStart);
+        }
+
+        var fileManager = environment.getFileManager(filePath, currentDirectory, this.context, environment, true);
+
+        if (!fileManager) {
+            return fallback(this, filePathNode);
+        }
+
+        var useBase64 = false;
+
+        // detect the mimetype if not given
+        if (!mimetypeNode) {
+
+            mimetype = environment.mimeLookup(filePath);
+
+            if (mimetype === "image/svg+xml") {
+                useBase64 = false;
+            } else {
+                // use base 64 unless it's an ASCII or UTF-8 format
+                var charset = environment.charsetLookup(mimetype);
+                useBase64 = ['US-ASCII', 'UTF-8'].indexOf(charset) < 0;
+            }
+            if (useBase64) { mimetype += ';base64'; }
+        }
+        else {
+            useBase64 = /;base64$/.test(mimetype);
+        }
+
+        var fileSync = fileManager.loadFileSync(filePath, currentDirectory, this.context, environment);
+        if (!fileSync.contents) {
+            logger.warn("Skipped data-uri embedding of " + filePath + " because file not found");
+            return fallback(this, filePathNode || mimetypeNode);
+        }
+        var buf = fileSync.contents;
+        if (useBase64 && !environment.encodeBase64) {
+            return fallback(this, filePathNode);
+        }
+
+        buf = useBase64 ? environment.encodeBase64(buf) : encodeURIComponent(buf);
+
+        var uri = "data:" + mimetype + ',' + buf + fragment;
+
+        // IE8 cannot handle a data-uri larger than 32,768 characters. If this is exceeded
+        // and the --ieCompat flag is enabled, return a normal url() instead.
+        var DATA_URI_MAX = 32768;
+        if (uri.length >= DATA_URI_MAX) {
+
+            if (this.context.ieCompat !== false) {
+                logger.warn("Skipped data-uri embedding of " + filePath + " because its size (" + uri.length +
+                    " characters) exceeds IE8-safe " + DATA_URI_MAX + " characters!");
+
+                return fallback(this, filePathNode || mimetypeNode);
+            }
+        }
+
+        return new URL(new Quoted('"' + uri + '"', uri, false, this.index, this.currentFileInfo), this.index, this.currentFileInfo);
+    });
+};
+
+},{"../logger":32,"../tree/quoted":72,"../tree/url":79,"./function-registry":21}],19:[function(require,module,exports){
+var Keyword = require("../tree/keyword"),
+    functionRegistry = require("./function-registry");
+
+var defaultFunc = {
+    eval: function () {
+        var v = this.value_, e = this.error_;
+        if (e) {
+            throw e;
+        }
+        if (v != null) {
+            return v ? Keyword.True : Keyword.False;
+        }
+    },
+    value: function (v) {
+        this.value_ = v;
+    },
+    error: function (e) {
+        this.error_ = e;
+    },
+    reset: function () {
+        this.value_ = this.error_ = null;
+    }
+};
+
+functionRegistry.add("default", defaultFunc.eval.bind(defaultFunc));
+
+module.exports = defaultFunc;
+
+},{"../tree/keyword":64,"./function-registry":21}],20:[function(require,module,exports){
+var Expression = require("../tree/expression");
+
+var functionCaller = function(name, context, index, currentFileInfo) {
+    this.name = name.toLowerCase();
+    this.index = index;
+    this.context = context;
+    this.currentFileInfo = currentFileInfo;
+
+    this.func = context.frames[0].functionRegistry.get(this.name);
+};
+functionCaller.prototype.isValid = function() {
+    return Boolean(this.func);
+};
+functionCaller.prototype.call = function(args) {
+
+    // This code is terrible and should be replaced as per this issue...
+    // https://github.com/less/less.js/issues/2477
+    if (Array.isArray(args)) {
+        args = args.filter(function (item) {
+            if (item.type === "Comment") {
+                return false;
+            }
+            return true;
+        })
+        .map(function(item) {
+            if (item.type === "Expression") {
+                var subNodes = item.value.filter(function (item) {
+                    if (item.type === "Comment") {
+                        return false;
+                    }
+                    return true;
+                });
+                if (subNodes.length === 1) {
+                    return subNodes[0];
+                } else {
+                    return new Expression(subNodes);
+                }
+            }
+            return item;
+        });
+    }
+
+    return this.func.apply(this, args);
+};
+
+module.exports = functionCaller;
+
+},{"../tree/expression":58}],21:[function(require,module,exports){
+function makeRegistry( base ) {
+    return {
+        _data: {},
+        add: function(name, func) {
+            // precautionary case conversion, as later querying of
+            // the registry by function-caller uses lower case as well.
+            name = name.toLowerCase();
+
+            if (this._data.hasOwnProperty(name)) {
+                //TODO warn
+            }
+            this._data[name] = func;
+        },
+        addMultiple: function(functions) {
+            Object.keys(functions).forEach(
+                function(name) {
+                    this.add(name, functions[name]);
+                }.bind(this));
+        },
+        get: function(name) {
+            return this._data[name] || ( base && base.get( name ));
+        },
+        inherit : function() {
+            return makeRegistry( this );
+        }
+    };
+}
+
+module.exports = makeRegistry( null );
+},{}],22:[function(require,module,exports){
+module.exports = function(environment) {
+    var functions = {
+        functionRegistry: require("./function-registry"),
+        functionCaller: require("./function-caller")
+    };
+
+    //register functions
+    require("./default");
+    require("./color");
+    require("./color-blending");
+    require("./data-uri")(environment);
+    require("./math");
+    require("./number");
+    require("./string");
+    require("./svg")(environment);
+    require("./types");
+
+    return functions;
+};
+
+},{"./color":17,"./color-blending":16,"./data-uri":18,"./default":19,"./function-caller":20,"./function-registry":21,"./math":24,"./number":25,"./string":26,"./svg":27,"./types":28}],23:[function(require,module,exports){
+var Dimension = require("../tree/dimension");
+
+var MathHelper = function() {
+};
+MathHelper._math = function (fn, unit, n) {
+    if (!(n instanceof Dimension)) {
+        throw { type: "Argument", message: "argument must be a number" };
+    }
+    if (unit == null) {
+        unit = n.unit;
+    } else {
+        n = n.unify();
+    }
+    return new Dimension(fn(parseFloat(n.value)), unit);
+};
+module.exports = MathHelper;
+},{"../tree/dimension":55}],24:[function(require,module,exports){
+var functionRegistry = require("./function-registry"),
+    mathHelper = require("./math-helper.js");
+
+var mathFunctions = {
+    // name,  unit
+    ceil:  null,
+    floor: null,
+    sqrt:  null,
+    abs:   null,
+    tan:   "",
+    sin:   "",
+    cos:   "",
+    atan:  "rad",
+    asin:  "rad",
+    acos:  "rad"
+};
+
+for (var f in mathFunctions) {
+    if (mathFunctions.hasOwnProperty(f)) {
+        mathFunctions[f] = mathHelper._math.bind(null, Math[f], mathFunctions[f]);
+    }
+}
+
+mathFunctions.round = function (n, f) {
+    var fraction = typeof f === "undefined" ? 0 : f.value;
+    return mathHelper._math(function(num) { return num.toFixed(fraction); }, null, n);
+};
+
+functionRegistry.addMultiple(mathFunctions);
+
+},{"./function-registry":21,"./math-helper.js":23}],25:[function(require,module,exports){
+var Dimension = require("../tree/dimension"),
+    Anonymous = require("../tree/anonymous"),
+    functionRegistry = require("./function-registry"),
+    mathHelper = require("./math-helper.js");
+
+var minMax = function (isMin, args) {
+    args = Array.prototype.slice.call(args);
+    switch(args.length) {
+        case 0: throw { type: "Argument", message: "one or more arguments required" };
+    }
+    var i, j, current, currentUnified, referenceUnified, unit, unitStatic, unitClone,
+        order  = [], // elems only contains original argument values.
+        values = {}; // key is the unit.toString() for unified Dimension values,
+    // value is the index into the order array.
+    for (i = 0; i < args.length; i++) {
+        current = args[i];
+        if (!(current instanceof Dimension)) {
+            if (Array.isArray(args[i].value)) {
+                Array.prototype.push.apply(args, Array.prototype.slice.call(args[i].value));
+            }
+            continue;
+        }
+        currentUnified = current.unit.toString() === "" && unitClone !== undefined ? new Dimension(current.value, unitClone).unify() : current.unify();
+        unit = currentUnified.unit.toString() === "" && unitStatic !== undefined ? unitStatic : currentUnified.unit.toString();
+        unitStatic = unit !== "" && unitStatic === undefined || unit !== "" && order[0].unify().unit.toString() === "" ? unit : unitStatic;
+        unitClone = unit !== "" && unitClone === undefined ? current.unit.toString() : unitClone;
+        j = values[""] !== undefined && unit !== "" && unit === unitStatic ? values[""] : values[unit];
+        if (j === undefined) {
+            if (unitStatic !== undefined && unit !== unitStatic) {
+                throw{ type: "Argument", message: "incompatible types" };
+            }
+            values[unit] = order.length;
+            order.push(current);
+            continue;
+        }
+        referenceUnified = order[j].unit.toString() === "" && unitClone !== undefined ? new Dimension(order[j].value, unitClone).unify() : order[j].unify();
+        if ( isMin && currentUnified.value < referenceUnified.value ||
+            !isMin && currentUnified.value > referenceUnified.value) {
+            order[j] = current;
+        }
+    }
+    if (order.length == 1) {
+        return order[0];
+    }
+    args = order.map(function (a) { return a.toCSS(this.context); }).join(this.context.compress ? "," : ", ");
+    return new Anonymous((isMin ? "min" : "max") + "(" + args + ")");
+};
+functionRegistry.addMultiple({
+    min: function () {
+        return minMax(true, arguments);
+    },
+    max: function () {
+        return minMax(false, arguments);
+    },
+    convert: function (val, unit) {
+        return val.convertTo(unit.value);
+    },
+    pi: function () {
+        return new Dimension(Math.PI);
+    },
+    mod: function(a, b) {
+        return new Dimension(a.value % b.value, a.unit);
+    },
+    pow: function(x, y) {
+        if (typeof x === "number" && typeof y === "number") {
+            x = new Dimension(x);
+            y = new Dimension(y);
+        } else if (!(x instanceof Dimension) || !(y instanceof Dimension)) {
+            throw { type: "Argument", message: "arguments must be numbers" };
+        }
+
+        return new Dimension(Math.pow(x.value, y.value), x.unit);
+    },
+    percentage: function (n) {
+        var result = mathHelper._math(function(num) {
+            return num * 100;
+        }, '%', n);
+
+        return result;
+    }
+});
+
+},{"../tree/anonymous":45,"../tree/dimension":55,"./function-registry":21,"./math-helper.js":23}],26:[function(require,module,exports){
+var Quoted = require("../tree/quoted"),
+    Anonymous = require("../tree/anonymous"),
+    JavaScript = require("../tree/javascript"),
+    functionRegistry = require("./function-registry");
+
+functionRegistry.addMultiple({
+    e: function (str) {
+        return new Anonymous(str instanceof JavaScript ? str.evaluated : str.value);
+    },
+    escape: function (str) {
+        return new Anonymous(
+            encodeURI(str.value).replace(/=/g, "%3D").replace(/:/g, "%3A").replace(/#/g, "%23").replace(/;/g, "%3B")
+                .replace(/\(/g, "%28").replace(/\)/g, "%29"));
+    },
+    replace: function (string, pattern, replacement, flags) {
+        var result = string.value;
+        replacement = (replacement.type === "Quoted") ?
+            replacement.value : replacement.toCSS();
+        result = result.replace(new RegExp(pattern.value, flags ? flags.value : ''), replacement);
+        return new Quoted(string.quote || '', result, string.escaped);
+    },
+    '%': function (string /* arg, arg, ...*/) {
+        var args = Array.prototype.slice.call(arguments, 1),
+            result = string.value;
+
+        for (var i = 0; i < args.length; i++) {
+            /*jshint loopfunc:true */
+            result = result.replace(/%[sda]/i, function(token) {
+                var value = ((args[i].type === "Quoted") &&
+                    token.match(/s/i)) ? args[i].value : args[i].toCSS();
+                return token.match(/[A-Z]$/) ? encodeURIComponent(value) : value;
+            });
+        }
+        result = result.replace(/%%/g, '%');
+        return new Quoted(string.quote || '', result, string.escaped);
+    }
+});
+
+},{"../tree/anonymous":45,"../tree/javascript":62,"../tree/quoted":72,"./function-registry":21}],27:[function(require,module,exports){
+module.exports = function(environment) {
+    var Dimension = require("../tree/dimension"),
+        Color = require("../tree/color"),
+        Expression = require("../tree/expression"),
+        Quoted = require("../tree/quoted"),
+        URL = require("../tree/url"),
+        functionRegistry = require("./function-registry");
+
+    functionRegistry.add("svg-gradient", function(direction) {
+
+        var stops,
+            gradientDirectionSvg,
+            gradientType = "linear",
+            rectangleDimension = 'x="0" y="0" width="1" height="1"',
+            renderEnv = {compress: false},
+            returner,
+            directionValue = direction.toCSS(renderEnv),
+			i, color, position, positionValue, alpha;
+
+        function throwArgumentDescriptor() {
+            throw { type: "Argument",
+					message: "svg-gradient expects direction, start_color [start_position], [color position,]...," +
+							" end_color [end_position] or direction, color list" };
+        }
+
+        if (arguments.length == 2) {
+            if (arguments[1].value.length < 2) {
+                throwArgumentDescriptor();
+            }
+            stops = arguments[1].value;
+        } else if (arguments.length < 3) {
+            throwArgumentDescriptor();
+        } else {
+            stops = Array.prototype.slice.call(arguments, 1);
+        }
+
+        switch (directionValue) {
+            case "to bottom":
+                gradientDirectionSvg = 'x1="0%" y1="0%" x2="0%" y2="100%"';
+                break;
+            case "to right":
+                gradientDirectionSvg = 'x1="0%" y1="0%" x2="100%" y2="0%"';
+                break;
+            case "to bottom right":
+                gradientDirectionSvg = 'x1="0%" y1="0%" x2="100%" y2="100%"';
+                break;
+            case "to top right":
+                gradientDirectionSvg = 'x1="0%" y1="100%" x2="100%" y2="0%"';
+                break;
+            case "ellipse":
+            case "ellipse at center":
+                gradientType = "radial";
+                gradientDirectionSvg = 'cx="50%" cy="50%" r="75%"';
+                rectangleDimension = 'x="-50" y="-50" width="101" height="101"';
+                break;
+            default:
+                throw { type: "Argument", message: "svg-gradient direction must be 'to bottom', 'to right'," +
+                    " 'to bottom right', 'to top right' or 'ellipse at center'" };
+        }
+        returner = '<?xml version="1.0" ?>' +
+            '<svg xmlns="http://www.w3.org/2000/svg" version="1.1" width="100%" height="100%" viewBox="0 0 1 1" preserveAspectRatio="none">' +
+            '<' + gradientType + 'Gradient id="gradient" gradientUnits="userSpaceOnUse" ' + gradientDirectionSvg + '>';
+
+        for (i = 0; i < stops.length; i+= 1) {
+            if (stops[i] instanceof Expression) {
+                color = stops[i].value[0];
+                position = stops[i].value[1];
+            } else {
+                color = stops[i];
+                position = undefined;
+            }
+
+            if (!(color instanceof Color) || (!((i === 0 || i + 1 === stops.length) && position === undefined) && !(position instanceof Dimension))) {
+                throwArgumentDescriptor();
+            }
+            positionValue = position ? position.toCSS(renderEnv) : i === 0 ? "0%" : "100%";
+            alpha = color.alpha;
+            returner += '<stop offset="' + positionValue + '" stop-color="' + color.toRGB() + '"' + (alpha < 1 ? ' stop-opacity="' + alpha + '"' : '') + '/>';
+        }
+        returner += '</' + gradientType + 'Gradient>' +
+            '<rect ' + rectangleDimension + ' fill="url(#gradient)" /></svg>';
+
+        returner = encodeURIComponent(returner);
+
+        returner = "data:image/svg+xml," + returner;
+        return new URL(new Quoted("'" + returner + "'", returner, false, this.index, this.currentFileInfo), this.index, this.currentFileInfo);
+    });
+};
+
+},{"../tree/color":49,"../tree/dimension":55,"../tree/expression":58,"../tree/quoted":72,"../tree/url":79,"./function-registry":21}],28:[function(require,module,exports){
+var Keyword = require("../tree/keyword"),
+    DetachedRuleset = require("../tree/detached-ruleset"),
+    Dimension = require("../tree/dimension"),
+    Color = require("../tree/color"),
+    Quoted = require("../tree/quoted"),
+    Anonymous = require("../tree/anonymous"),
+    URL = require("../tree/url"),
+    Operation = require("../tree/operation"),
+    functionRegistry = require("./function-registry");
+
+var isa = function (n, Type) {
+        return (n instanceof Type) ? Keyword.True : Keyword.False;
+    },
+    isunit = function (n, unit) {
+        if (unit === undefined) {
+            throw { type: "Argument", message: "missing the required second argument to isunit." };
+        }
+        unit = typeof unit.value === "string" ? unit.value : unit;
+        if (typeof unit !== "string") {
+            throw { type: "Argument", message: "Second argument to isunit should be a unit or a string." };
+        }
+        return (n instanceof Dimension) && n.unit.is(unit) ? Keyword.True : Keyword.False;
+    },
+    getItemsFromNode = function(node) {
+        // handle non-array values as an array of length 1
+        // return 'undefined' if index is invalid
+        var items = Array.isArray(node.value) ?
+            node.value : Array(node);
+
+        return items;
+    };
+functionRegistry.addMultiple({
+    isruleset: function (n) {
+        return isa(n, DetachedRuleset);
+    },
+    iscolor: function (n) {
+        return isa(n, Color);
+    },
+    isnumber: function (n) {
+        return isa(n, Dimension);
+    },
+    isstring: function (n) {
+        return isa(n, Quoted);
+    },
+    iskeyword: function (n) {
+        return isa(n, Keyword);
+    },
+    isurl: function (n) {
+        return isa(n, URL);
+    },
+    ispixel: function (n) {
+        return isunit(n, 'px');
+    },
+    ispercentage: function (n) {
+        return isunit(n, '%');
+    },
+    isem: function (n) {
+        return isunit(n, 'em');
+    },
+    isunit: isunit,
+    unit: function (val, unit) {
+        if (!(val instanceof Dimension)) {
+            throw { type: "Argument",
+                message: "the first argument to unit must be a number" +
+                    (val instanceof Operation ? ". Have you forgotten parenthesis?" : "") };
+        }
+        if (unit) {
+            if (unit instanceof Keyword) {
+                unit = unit.value;
+            } else {
+                unit = unit.toCSS();
+            }
+        } else {
+            unit = "";
+        }
+        return new Dimension(val.value, unit);
+    },
+    "get-unit": function (n) {
+        return new Anonymous(n.unit);
+    },
+    extract: function(values, index) {
+        index = index.value - 1; // (1-based index)
+
+        return getItemsFromNode(values)[index];
+    },
+    length: function(values) {
+        return new Dimension(getItemsFromNode(values).length);
+    }
+});
+
+},{"../tree/anonymous":45,"../tree/color":49,"../tree/detached-ruleset":54,"../tree/dimension":55,"../tree/keyword":64,"../tree/operation":70,"../tree/quoted":72,"../tree/url":79,"./function-registry":21}],29:[function(require,module,exports){
+var contexts = require("./contexts"),
+    Parser = require('./parser/parser'),
+    FunctionImporter = require('./plugins/function-importer');
+
+module.exports = function(environment) {
+
+    // FileInfo = {
+    //  'relativeUrls' - option - whether to adjust URL's to be relative
+    //  'filename' - full resolved filename of current file
+    //  'rootpath' - path to append to normal URLs for this node
+    //  'currentDirectory' - path to the current file, absolute
+    //  'rootFilename' - filename of the base file
+    //  'entryPath' - absolute path to the entry file
+    //  'reference' - whether the file should not be output and only output parts that are referenced
+
+    var ImportManager = function(context, rootFileInfo) {
+        this.rootFilename = rootFileInfo.filename;
+        this.paths = context.paths || [];  // Search paths, when importing
+        this.contents = {};             // map - filename to contents of all the files
+        this.contentsIgnoredChars = {}; // map - filename to lines at the beginning of each file to ignore
+        this.mime = context.mime;
+        this.error = null;
+        this.context = context;
+        // Deprecated? Unused outside of here, could be useful.
+        this.queue = [];        // Files which haven't been imported yet
+        this.files = {};        // Holds the imported parse trees.
+    };
+    /**
+     * Add an import to be imported
+     * @param path - the raw path
+     * @param tryAppendLessExtension - whether to try appending the less extension (if the path has no extension)
+     * @param currentFileInfo - the current file info (used for instance to work out relative paths)
+     * @param importOptions - import options
+     * @param callback - callback for when it is imported
+     */
+    ImportManager.prototype.push = function (path, tryAppendLessExtension, currentFileInfo, importOptions, callback) {
+        var importManager = this;
+        this.queue.push(path);
+
+        var fileParsedFunc = function (e, root, fullPath) {
+            importManager.queue.splice(importManager.queue.indexOf(path), 1); // Remove the path from the queue
+
+            var importedEqualsRoot = fullPath === importManager.rootFilename;
+            if (importOptions.optional && e) {
+                callback(null, {rules:[]}, false, null);
+            }
+            else {
+                importManager.files[fullPath] = root;
+                if (e && !importManager.error) { importManager.error = e; }
+                callback(e, root, importedEqualsRoot, fullPath);
+            }
+        };
+
+        var newFileInfo = {
+            relativeUrls: this.context.relativeUrls,
+            entryPath: currentFileInfo.entryPath,
+            rootpath: currentFileInfo.rootpath,
+            rootFilename: currentFileInfo.rootFilename
+        };
+
+        var fileManager = environment.getFileManager(path, currentFileInfo.currentDirectory, this.context, environment);
+
+        if (!fileManager) {
+            fileParsedFunc({ message: "Could not find a file-manager for " + path });
+            return;
+        }
+
+        if (tryAppendLessExtension) {
+            path = fileManager.tryAppendExtension(path, importOptions.plugin ? ".js" : ".less");
+        }
+
+        var loadFileCallback = function(loadedFile) {
+            var resolvedFilename = loadedFile.filename,
+                contents = loadedFile.contents.replace(/^\uFEFF/, '');
+
+            // Pass on an updated rootpath if path of imported file is relative and file
+            // is in a (sub|sup) directory
+            //
+            // Examples:
+            // - If path of imported file is 'module/nav/nav.less' and rootpath is 'less/',
+            //   then rootpath should become 'less/module/nav/'
+            // - If path of imported file is '../mixins.less' and rootpath is 'less/',
+            //   then rootpath should become 'less/../'
+            newFileInfo.currentDirectory = fileManager.getPath(resolvedFilename);
+            if (newFileInfo.relativeUrls) {
+                newFileInfo.rootpath = fileManager.join(
+                    (importManager.context.rootpath || ""),
+                    fileManager.pathDiff(newFileInfo.currentDirectory, newFileInfo.entryPath));
+
+                if (!fileManager.isPathAbsolute(newFileInfo.rootpath) && fileManager.alwaysMakePathsAbsolute()) {
+                    newFileInfo.rootpath = fileManager.join(newFileInfo.entryPath, newFileInfo.rootpath);
+                }
+            }
+            newFileInfo.filename = resolvedFilename;
+
+            var newEnv = new contexts.Parse(importManager.context);
+
+            newEnv.processImports = false;
+            importManager.contents[resolvedFilename] = contents;
+
+            if (currentFileInfo.reference || importOptions.reference) {
+                newFileInfo.reference = true;
+            }
+
+            if (importOptions.plugin) {
+                new FunctionImporter(newEnv, newFileInfo).eval(contents, function (e, root) {
+                    fileParsedFunc(e, root, resolvedFilename);
+                });
+            } else if (importOptions.inline) {
+                fileParsedFunc(null, contents, resolvedFilename);
+            } else {
+                new Parser(newEnv, importManager, newFileInfo).parse(contents, function (e, root) {
+                    fileParsedFunc(e, root, resolvedFilename);
+                });
+            }
+        };
+
+        var promise = fileManager.loadFile(path, currentFileInfo.currentDirectory, this.context, environment,
+            function(err, loadedFile) {
+            if (err) {
+                fileParsedFunc(err);
+            } else {
+                loadFileCallback(loadedFile);
+            }
+        });
+        if (promise) {
+            promise.then(loadFileCallback, fileParsedFunc);
+        }
+    };
+    return ImportManager;
+};
+
+},{"./contexts":10,"./parser/parser":37,"./plugins/function-importer":39}],30:[function(require,module,exports){
+module.exports = function(environment, fileManagers) {
+    var SourceMapOutput, SourceMapBuilder, ParseTree, ImportManager, Environment;
+
+    var less = {
+        version: [2, 5, 3],
+        data: require('./data'),
+        tree: require('./tree'),
+        Environment: (Environment = require("./environment/environment")),
+        AbstractFileManager: require("./environment/abstract-file-manager"),
+        environment: (environment = new Environment(environment, fileManagers)),
+        visitors: require('./visitors'),
+        Parser: require('./parser/parser'),
+        functions: require('./functions')(environment),
+        contexts: require("./contexts"),
+        SourceMapOutput: (SourceMapOutput = require('./source-map-output')(environment)),
+        SourceMapBuilder: (SourceMapBuilder = require('./source-map-builder')(SourceMapOutput, environment)),
+        ParseTree: (ParseTree = require('./parse-tree')(SourceMapBuilder)),
+        ImportManager: (ImportManager = require('./import-manager')(environment)),
+        render: require("./render")(environment, ParseTree, ImportManager),
+        parse: require("./parse")(environment, ParseTree, ImportManager),
+        LessError: require('./less-error'),
+        transformTree: require('./transform-tree'),
+        utils: require('./utils'),
+        PluginManager: require('./plugin-manager'),
+        logger: require('./logger')
+    };
+
+    return less;
+};
+
+},{"./contexts":10,"./data":12,"./environment/abstract-file-manager":14,"./environment/environment":15,"./functions":22,"./import-manager":29,"./less-error":31,"./logger":32,"./parse":34,"./parse-tree":33,"./parser/parser":37,"./plugin-manager":38,"./render":40,"./source-map-builder":41,"./source-map-output":42,"./transform-tree":43,"./tree":61,"./utils":82,"./visitors":86}],31:[function(require,module,exports){
+var utils = require("./utils");
+
+var LessError = module.exports = function LessError(e, importManager, currentFilename) {
+
+    Error.call(this);
+
+    var filename = e.filename || currentFilename;
+
+    if (importManager && filename) {
+        var input = importManager.contents[filename],
+            loc = utils.getLocation(e.index, input),
+            line = loc.line,
+            col  = loc.column,
+            callLine = e.call && utils.getLocation(e.call, input).line,
+            lines = input.split('\n');
+
+        this.type = e.type || 'Syntax';
+        this.filename = filename;
+        this.index = e.index;
+        this.line = typeof line === 'number' ? line + 1 : null;
+        this.callLine = callLine + 1;
+        this.callExtract = lines[callLine];
+        this.column = col;
+        this.extract = [
+            lines[line - 1],
+            lines[line],
+            lines[line + 1]
+        ];
+    }
+    this.message = e.message;
+    this.stack = e.stack;
+};
+
+if (typeof Object.create === 'undefined') {
+    var F = function () {};
+    F.prototype = Error.prototype;
+    LessError.prototype = new F();
+} else {
+    LessError.prototype = Object.create(Error.prototype);
+}
+
+LessError.prototype.constructor = LessError;
+
+},{"./utils":82}],32:[function(require,module,exports){
+module.exports = {
+    error: function(msg) {
+        this._fireEvent("error", msg);
+    },
+    warn: function(msg) {
+        this._fireEvent("warn", msg);
+    },
+    info: function(msg) {
+        this._fireEvent("info", msg);
+    },
+    debug: function(msg) {
+        this._fireEvent("debug", msg);
+    },
+    addListener: function(listener) {
+        this._listeners.push(listener);
+    },
+    removeListener: function(listener) {
+        for (var i = 0; i < this._listeners.length; i++) {
+            if (this._listeners[i] === listener) {
+                this._listeners.splice(i, 1);
+                return;
+            }
+        }
+    },
+    _fireEvent: function(type, msg) {
+        for (var i = 0; i < this._listeners.length; i++) {
+            var logFunction = this._listeners[i][type];
+            if (logFunction) {
+                logFunction(msg);
+            }
+        }
+    },
+    _listeners: []
+};
+
+},{}],33:[function(require,module,exports){
+var LessError = require('./less-error'),
+    transformTree = require("./transform-tree"),
+    logger = require("./logger");
+
+module.exports = function(SourceMapBuilder) {
+    var ParseTree = function(root, imports) {
+        this.root = root;
+        this.imports = imports;
+    };
+
+    ParseTree.prototype.toCSS = function(options) {
+        var evaldRoot, result = {}, sourceMapBuilder;
+        try {
+            evaldRoot = transformTree(this.root, options);
+        } catch (e) {
+            throw new LessError(e, this.imports);
+        }
+
+        try {
+            var compress = Boolean(options.compress);
+            if (compress) {
+                logger.warn("The compress option has been deprecated. We recommend you use a dedicated css minifier, for instance see less-plugin-clean-css.");
+            }
+
+            var toCSSOptions = {
+                compress: compress,
+                dumpLineNumbers: options.dumpLineNumbers,
+                strictUnits: Boolean(options.strictUnits),
+                numPrecision: 8};
+
+            if (options.sourceMap) {
+                sourceMapBuilder = new SourceMapBuilder(options.sourceMap);
+                result.css = sourceMapBuilder.toCSS(evaldRoot, toCSSOptions, this.imports);
+            } else {
+                result.css = evaldRoot.toCSS(toCSSOptions);
+            }
+        } catch (e) {
+            throw new LessError(e, this.imports);
+        }
+
+        if (options.pluginManager) {
+            var postProcessors = options.pluginManager.getPostProcessors();
+            for (var i = 0; i < postProcessors.length; i++) {
+                result.css = postProcessors[i].process(result.css, { sourceMap: sourceMapBuilder, options: options, imports: this.imports });
+            }
+        }
+        if (options.sourceMap) {
+            result.map = sourceMapBuilder.getExternalSourceMap();
+        }
+
+        result.imports = [];
+        for (var file in this.imports.files) {
+            if (this.imports.files.hasOwnProperty(file) && file !== this.imports.rootFilename) {
+                result.imports.push(file);
+            }
+        }
+        return result;
+    };
+    return ParseTree;
+};
+
+},{"./less-error":31,"./logger":32,"./transform-tree":43}],34:[function(require,module,exports){
+var PromiseConstructor,
+    contexts = require("./contexts"),
+    Parser = require('./parser/parser'),
+    PluginManager = require('./plugin-manager');
+
+module.exports = function(environment, ParseTree, ImportManager) {
+    var parse = function (input, options, callback) {
+        options = options || {};
+
+        if (typeof options === 'function') {
+            callback = options;
+            options = {};
+        }
+
+        if (!callback) {
+            if (!PromiseConstructor) {
+                PromiseConstructor = typeof Promise === 'undefined' ? require('promise') : Promise;
+            }
+            var self = this;
+            return new PromiseConstructor(function (resolve, reject) {
+                parse.call(self, input, options, function(err, output) {
+                    if (err) {
+                        reject(err);
+                    } else {
+                        resolve(output);
+                    }
+                });
+            });
+        } else {
+            var context,
+                rootFileInfo,
+                pluginManager = new PluginManager(this);
+
+            pluginManager.addPlugins(options.plugins);
+            options.pluginManager = pluginManager;
+
+            context = new contexts.Parse(options);
+
+            if (options.rootFileInfo) {
+                rootFileInfo = options.rootFileInfo;
+            } else {
+                var filename = options.filename || "input";
+                var entryPath = filename.replace(/[^\/\\]*$/, "");
+                rootFileInfo = {
+                    filename: filename,
+                    relativeUrls: context.relativeUrls,
+                    rootpath: context.rootpath || "",
+                    currentDirectory: entryPath,
+                    entryPath: entryPath,
+                    rootFilename: filename
+                };
+                // add in a missing trailing slash
+                if (rootFileInfo.rootpath && rootFileInfo.rootpath.slice(-1) !== "/") {
+                    rootFileInfo.rootpath += "/";
+                }
+            }
+
+            var imports = new ImportManager(context, rootFileInfo);
+
+            new Parser(context, imports, rootFileInfo)
+                .parse(input, function (e, root) {
+                if (e) { return callback(e); }
+                callback(null, root, imports, options);
+            }, options);
+        }
+    };
+    return parse;
+};
+
+},{"./contexts":10,"./parser/parser":37,"./plugin-manager":38,"promise":undefined}],35:[function(require,module,exports){
+// Split the input into chunks.
+module.exports = function (input, fail) {
+    var len = input.length, level = 0, parenLevel = 0,
+        lastOpening, lastOpeningParen, lastMultiComment, lastMultiCommentEndBrace,
+        chunks = [], emitFrom = 0,
+        chunkerCurrentIndex, currentChunkStartIndex, cc, cc2, matched;
+
+    function emitChunk(force) {
+        var len = chunkerCurrentIndex - emitFrom;
+        if (((len < 512) && !force) || !len) {
+            return;
+        }
+        chunks.push(input.slice(emitFrom, chunkerCurrentIndex + 1));
+        emitFrom = chunkerCurrentIndex + 1;
+    }
+
+    for (chunkerCurrentIndex = 0; chunkerCurrentIndex < len; chunkerCurrentIndex++) {
+        cc = input.charCodeAt(chunkerCurrentIndex);
+        if (((cc >= 97) && (cc <= 122)) || (cc < 34)) {
+            // a-z or whitespace
+            continue;
+        }
+
+        switch (cc) {
+            case 40:                        // (
+                parenLevel++;
+                lastOpeningParen = chunkerCurrentIndex;
+                continue;
+            case 41:                        // )
+                if (--parenLevel < 0) {
+                    return fail("missing opening `(`", chunkerCurrentIndex);
+                }
+                continue;
+            case 59:                        // ;
+                if (!parenLevel) { emitChunk(); }
+                continue;
+            case 123:                       // {
+                level++;
+                lastOpening = chunkerCurrentIndex;
+                continue;
+            case 125:                       // }
+                if (--level < 0) {
+                    return fail("missing opening `{`", chunkerCurrentIndex);
+                }
+                if (!level && !parenLevel) { emitChunk(); }
+                continue;
+            case 92:                        // \
+                if (chunkerCurrentIndex < len - 1) { chunkerCurrentIndex++; continue; }
+                return fail("unescaped `\\`", chunkerCurrentIndex);
+            case 34:
+            case 39:
+            case 96:                        // ", ' and `
+                matched = 0;
+                currentChunkStartIndex = chunkerCurrentIndex;
+                for (chunkerCurrentIndex = chunkerCurrentIndex + 1; chunkerCurrentIndex < len; chunkerCurrentIndex++) {
+                    cc2 = input.charCodeAt(chunkerCurrentIndex);
+                    if (cc2 > 96) { continue; }
+                    if (cc2 == cc) { matched = 1; break; }
+                    if (cc2 == 92) {        // \
+                        if (chunkerCurrentIndex == len - 1) {
+                            return fail("unescaped `\\`", chunkerCurrentIndex);
+                        }
+                        chunkerCurrentIndex++;
+                    }
+                }
+                if (matched) { continue; }
+                return fail("unmatched `" + String.fromCharCode(cc) + "`", currentChunkStartIndex);
+            case 47:                        // /, check for comment
+                if (parenLevel || (chunkerCurrentIndex == len - 1)) { continue; }
+                cc2 = input.charCodeAt(chunkerCurrentIndex + 1);
+                if (cc2 == 47) {
+                    // //, find lnfeed
+                    for (chunkerCurrentIndex = chunkerCurrentIndex + 2; chunkerCurrentIndex < len; chunkerCurrentIndex++) {
+                        cc2 = input.charCodeAt(chunkerCurrentIndex);
+                        if ((cc2 <= 13) && ((cc2 == 10) || (cc2 == 13))) { break; }
+                    }
+                } else if (cc2 == 42) {
+                    // /*, find */
+                    lastMultiComment = currentChunkStartIndex = chunkerCurrentIndex;
+                    for (chunkerCurrentIndex = chunkerCurrentIndex + 2; chunkerCurrentIndex < len - 1; chunkerCurrentIndex++) {
+                        cc2 = input.charCodeAt(chunkerCurrentIndex);
+                        if (cc2 == 125) { lastMultiCommentEndBrace = chunkerCurrentIndex; }
+                        if (cc2 != 42) { continue; }
+                        if (input.charCodeAt(chunkerCurrentIndex + 1) == 47) { break; }
+                    }
+                    if (chunkerCurrentIndex == len - 1) {
+                        return fail("missing closing `*/`", currentChunkStartIndex);
+                    }
+                    chunkerCurrentIndex++;
+                }
+                continue;
+            case 42:                       // *, check for unmatched */
+                if ((chunkerCurrentIndex < len - 1) && (input.charCodeAt(chunkerCurrentIndex + 1) == 47)) {
+                    return fail("unmatched `/*`", chunkerCurrentIndex);
+                }
+                continue;
+        }
+    }
+
+    if (level !== 0) {
+        if ((lastMultiComment > lastOpening) && (lastMultiCommentEndBrace > lastMultiComment)) {
+            return fail("missing closing `}` or `*/`", lastOpening);
+        } else {
+            return fail("missing closing `}`", lastOpening);
+        }
+    } else if (parenLevel !== 0) {
+        return fail("missing closing `)`", lastOpeningParen);
+    }
+
+    emitChunk(true);
+    return chunks;
+};
+
+},{}],36:[function(require,module,exports){
+var chunker = require('./chunker');
+
+module.exports = function() {
+    var input,       // LeSS input string
+        j,           // current chunk
+        saveStack = [],   // holds state for backtracking
+        furthest,    // furthest index the parser has gone to
+        furthestPossibleErrorMessage,// if this is furthest we got to, this is the probably cause
+        chunks,      // chunkified input
+        current,     // current chunk
+        currentPos,  // index of current chunk, in `input`
+        parserInput = {};
+
+    parserInput.save = function() {
+        currentPos = parserInput.i;
+        saveStack.push( { current: current, i: parserInput.i, j: j });
+    };
+    parserInput.restore = function(possibleErrorMessage) {
+
+        if (parserInput.i > furthest || (parserInput.i === furthest && possibleErrorMessage && !furthestPossibleErrorMessage)) {
+            furthest = parserInput.i;
+            furthestPossibleErrorMessage = possibleErrorMessage;
+        }
+        var state = saveStack.pop();
+        current = state.current;
+        currentPos = parserInput.i = state.i;
+        j = state.j;
+    };
+    parserInput.forget = function() {
+        saveStack.pop();
+    };
+    parserInput.isWhitespace = function (offset) {
+        var pos = parserInput.i + (offset || 0),
+            code = input.charCodeAt(pos);
+        return (code === CHARCODE_SPACE || code === CHARCODE_CR || code === CHARCODE_TAB || code === CHARCODE_LF);
+    };
+
+    // Specialization of $(tok)
+    parserInput.$re = function(tok) {
+        if (parserInput.i > currentPos) {
+            current = current.slice(parserInput.i - currentPos);
+            currentPos = parserInput.i;
+        }
+
+        var m = tok.exec(current);
+        if (!m) {
+            return null;
+        }
+
+        skipWhitespace(m[0].length);
+        if (typeof m === "string") {
+            return m;
+        }
+
+        return m.length === 1 ? m[0] : m;
+    };
+
+    parserInput.$char = function(tok) {
+        if (input.charAt(parserInput.i) !== tok) {
+            return null;
+        }
+        skipWhitespace(1);
+        return tok;
+    };
+
+    parserInput.$str = function(tok) {
+        var tokLength = tok.length;
+
+        // https://jsperf.com/string-startswith/21
+        for (var i = 0; i < tokLength; i++) {
+            if (input.charAt(parserInput.i + i) !== tok.charAt(i)) {
+                return null;
+            }
+        }
+
+        skipWhitespace(tokLength);
+        return tok;
+    };
+
+    parserInput.$quoted = function() {
+
+        var startChar = input.charAt(parserInput.i);
+        if (startChar !== "'" && startChar !== '"') {
+            return;
+        }
+        var length = input.length,
+            currentPosition = parserInput.i;
+
+        for (var i = 1; i + currentPosition < length; i++) {
+            var nextChar = input.charAt(i + currentPosition);
+            switch(nextChar) {
+                case "\\":
+                    i++;
+                    continue;
+                case "\r":
+                case "\n":
+                    break;
+                case startChar:
+                    var str = input.substr(currentPosition, i + 1);
+                    skipWhitespace(i + 1);
+                    return str;
+                default:
+            }
+        }
+        return null;
+    };
+
+    var CHARCODE_SPACE = 32,
+        CHARCODE_TAB = 9,
+        CHARCODE_LF = 10,
+        CHARCODE_CR = 13,
+        CHARCODE_PLUS = 43,
+        CHARCODE_COMMA = 44,
+        CHARCODE_FORWARD_SLASH = 47,
+        CHARCODE_9 = 57;
+
+    parserInput.autoCommentAbsorb = true;
+    parserInput.commentStore = [];
+    parserInput.finished = false;
+
+    var skipWhitespace = function(length) {
+        var oldi = parserInput.i, oldj = j,
+            curr = parserInput.i - currentPos,
+            endIndex = parserInput.i + current.length - curr,
+            mem = (parserInput.i += length),
+            inp = input,
+            c, nextChar, comment;
+
+        for (; parserInput.i < endIndex; parserInput.i++) {
+            c = inp.charCodeAt(parserInput.i);
+
+            if (parserInput.autoCommentAbsorb && c === CHARCODE_FORWARD_SLASH) {
+                nextChar = inp.charAt(parserInput.i + 1);
+                if (nextChar === '/') {
+                    comment = {index: parserInput.i, isLineComment: true};
+                    var nextNewLine = inp.indexOf("\n", parserInput.i + 2);
+                    if (nextNewLine < 0) {
+                        nextNewLine = endIndex;
+                    }
+                    parserInput.i = nextNewLine;
+                    comment.text = inp.substr(comment.i, parserInput.i - comment.i);
+                    parserInput.commentStore.push(comment);
+                    continue;
+                } else if (nextChar === '*') {
+                    var nextStarSlash = inp.indexOf("*/", parserInput.i + 2);
+                    if (nextStarSlash >= 0) {
+                        comment = {
+                            index: parserInput.i,
+                            text: inp.substr(parserInput.i, nextStarSlash + 2 - parserInput.i),
+                            isLineComment: false
+                        };
+                        parserInput.i += comment.text.length - 1;
+                        parserInput.commentStore.push(comment);
+                        continue;
+                    }
+                }
+                break;
+            }
+
+            if ((c !== CHARCODE_SPACE) && (c !== CHARCODE_LF) && (c !== CHARCODE_TAB) && (c !== CHARCODE_CR)) {
+                break;
+            }
+        }
+
+        current = current.slice(length + parserInput.i - mem + curr);
+        currentPos = parserInput.i;
+
+        if (!current.length) {
+            if (j < chunks.length - 1) {
+                current = chunks[++j];
+                skipWhitespace(0); // skip space at the beginning of a chunk
+                return true; // things changed
+            }
+            parserInput.finished = true;
+        }
+
+        return oldi !== parserInput.i || oldj !== j;
+    };
+
+    // Same as $(), but don't change the state of the parser,
+    // just return the match.
+    parserInput.peek = function(tok) {
+        if (typeof tok === 'string') {
+            // https://jsperf.com/string-startswith/21
+            for (var i = 0; i < tok.length; i++) {
+                if (input.charAt(parserInput.i + i) !== tok.charAt(i)) {
+                    return false;
+                }
+            }
+            return true;
+        } else {
+            return tok.test(current);
+        }
+    };
+
+    // Specialization of peek()
+    // TODO remove or change some currentChar calls to peekChar
+    parserInput.peekChar = function(tok) {
+        return input.charAt(parserInput.i) === tok;
+    };
+
+    parserInput.currentChar = function() {
+        return input.charAt(parserInput.i);
+    };
+
+    parserInput.getInput = function() {
+        return input;
+    };
+
+    parserInput.peekNotNumeric = function() {
+        var c = input.charCodeAt(parserInput.i);
+        //Is the first char of the dimension 0-9, '.', '+' or '-'
+        return (c > CHARCODE_9 || c < CHARCODE_PLUS) || c === CHARCODE_FORWARD_SLASH || c === CHARCODE_COMMA;
+    };
+
+    parserInput.start = function(str, chunkInput, failFunction) {
+        input = str;
+        parserInput.i = j = currentPos = furthest = 0;
+
+        // chunking apparantly makes things quicker (but my tests indicate
+        // it might actually make things slower in node at least)
+        // and it is a non-perfect parse - it can't recognise
+        // unquoted urls, meaning it can't distinguish comments
+        // meaning comments with quotes or {}() in them get 'counted'
+        // and then lead to parse errors.
+        // In addition if the chunking chunks in the wrong place we might
+        // not be able to parse a parser statement in one go
+        // this is officially deprecated but can be switched on via an option
+        // in the case it causes too much performance issues.
+        if (chunkInput) {
+            chunks = chunker(str, failFunction);
+        } else {
+            chunks = [str];
+        }
+
+        current = chunks[0];
+
+        skipWhitespace(0);
+    };
+
+    parserInput.end = function() {
+        var message,
+            isFinished = parserInput.i >= input.length;
+
+        if (parserInput.i < furthest) {
+            message = furthestPossibleErrorMessage;
+            parserInput.i = furthest;
+        }
+        return {
+            isFinished: isFinished,
+            furthest: parserInput.i,
+            furthestPossibleErrorMessage: message,
+            furthestReachedEnd: parserInput.i >= input.length - 1,
+            furthestChar: input[parserInput.i]
+        };
+    };
+
+    return parserInput;
+};
+
+},{"./chunker":35}],37:[function(require,module,exports){
+var LessError = require('../less-error'),
+    tree = require("../tree"),
+    visitors = require("../visitors"),
+    getParserInput = require("./parser-input"),
+    utils = require("../utils");
+
+//
+// less.js - parser
+//
+//    A relatively straight-forward predictive parser.
+//    There is no tokenization/lexing stage, the input is parsed
+//    in one sweep.
+//
+//    To make the parser fast enough to run in the browser, several
+//    optimization had to be made:
+//
+//    - Matching and slicing on a huge input is often cause of slowdowns.
+//      The solution is to chunkify the input into smaller strings.
+//      The chunks are stored in the `chunks` var,
+//      `j` holds the current chunk index, and `currentPos` holds
+//      the index of the current chunk in relation to `input`.
+//      This gives us an almost 4x speed-up.
+//
+//    - In many cases, we don't need to match individual tokens;
+//      for example, if a value doesn't hold any variables, operations
+//      or dynamic references, the parser can effectively 'skip' it,
+//      treating it as a literal.
+//      An example would be '1px solid #000' - which evaluates to itself,
+//      we don't need to know what the individual components are.
+//      The drawback, of course is that you don't get the benefits of
+//      syntax-checking on the CSS. This gives us a 50% speed-up in the parser,
+//      and a smaller speed-up in the code-gen.
+//
+//
+//    Token matching is done with the `$` function, which either takes
+//    a terminal string or regexp, or a non-terminal function to call.
+//    It also takes care of moving all the indices forwards.
+//
+//
+var Parser = function Parser(context, imports, fileInfo) {
+    var parsers,
+        parserInput = getParserInput();
+
+    function expect(arg, msg, index) {
+        // some older browsers return typeof 'function' for RegExp
+        var result = (Object.prototype.toString.call(arg) === '[object Function]') ? arg.call(parsers) : parserInput.$re(arg);
+        if (result) {
+            return result;
+        }
+        error(msg || (typeof arg === 'string' ? "expected '" + arg + "' got '" + parserInput.currentChar() + "'"
+                                               : "unexpected token"));
+    }
+
+    // Specialization of expect()
+    function expectChar(arg, msg) {
+        if (parserInput.$char(arg)) {
+            return arg;
+        }
+        error(msg || "expected '" + arg + "' got '" + parserInput.currentChar() + "'");
+    }
+
+    function error(msg, type) {
+        throw new LessError(
+            {
+                index: parserInput.i,
+                filename: fileInfo.filename,
+                type: type || 'Syntax',
+                message: msg
+            },
+            imports
+        );
+    }
+
+    function getDebugInfo(index) {
+        var filename = fileInfo.filename;
+
+        return {
+            lineNumber: utils.getLocation(index, parserInput.getInput()).line + 1,
+            fileName: filename
+        };
+    }
+
+    //
+    // The Parser
+    //
+    return {
+
+        //
+        // Parse an input string into an abstract syntax tree,
+        // @param str A string containing 'less' markup
+        // @param callback call `callback` when done.
+        // @param [additionalData] An optional map which can contains vars - a map (key, value) of variables to apply
+        //
+        parse: function (str, callback, additionalData) {
+            var root, error = null, globalVars, modifyVars, ignored, preText = "";
+
+            globalVars = (additionalData && additionalData.globalVars) ? Parser.serializeVars(additionalData.globalVars) + '\n' : '';
+            modifyVars = (additionalData && additionalData.modifyVars) ? '\n' + Parser.serializeVars(additionalData.modifyVars) : '';
+
+            if (context.pluginManager) {
+                var preProcessors = context.pluginManager.getPreProcessors();
+                for (var i = 0; i < preProcessors.length; i++) {
+                    str = preProcessors[i].process(str, { context: context, imports: imports, fileInfo: fileInfo });
+                }
+            }
+
+            if (globalVars || (additionalData && additionalData.banner)) {
+                preText = ((additionalData && additionalData.banner) ? additionalData.banner : "") + globalVars;
+                ignored = imports.contentsIgnoredChars;
+                ignored[fileInfo.filename] = ignored[fileInfo.filename] || 0;
+                ignored[fileInfo.filename] += preText.length;
+            }
+
+            str = str.replace(/\r\n?/g, '\n');
+            // Remove potential UTF Byte Order Mark
+            str = preText + str.replace(/^\uFEFF/, '') + modifyVars;
+            imports.contents[fileInfo.filename] = str;
+
+            // Start with the primary rule.
+            // The whole syntax tree is held under a Ruleset node,
+            // with the `root` property set to true, so no `{}` are
+            // output. The callback is called when the input is parsed.
+            try {
+                parserInput.start(str, context.chunkInput, function fail(msg, index) {
+                    throw new LessError({
+                        index: index,
+                        type: 'Parse',
+                        message: msg,
+                        filename: fileInfo.filename
+                    }, imports);
+                });
+
+                root = new(tree.Ruleset)(null, this.parsers.primary());
+                root.root = true;
+                root.firstRoot = true;
+            } catch (e) {
+                return callback(new LessError(e, imports, fileInfo.filename));
+            }
+
+            // If `i` is smaller than the `input.length - 1`,
+            // it means the parser wasn't able to parse the whole
+            // string, so we've got a parsing error.
+            //
+            // We try to extract a \n delimited string,
+            // showing the line where the parse error occurred.
+            // We split it up into two parts (the part which parsed,
+            // and the part which didn't), so we can color them differently.
+            var endInfo = parserInput.end();
+            if (!endInfo.isFinished) {
+
+                var message = endInfo.furthestPossibleErrorMessage;
+
+                if (!message) {
+                    message = "Unrecognised input";
+                    if (endInfo.furthestChar === '}') {
+                        message += ". Possibly missing opening '{'";
+                    } else if (endInfo.furthestChar === ')') {
+                        message += ". Possibly missing opening '('";
+                    } else if (endInfo.furthestReachedEnd) {
+                        message += ". Possibly missing something";
+                    }
+                }
+
+                error = new LessError({
+                    type: "Parse",
+                    message: message,
+                    index: endInfo.furthest,
+                    filename: fileInfo.filename
+                }, imports);
+            }
+
+            var finish = function (e) {
+                e = error || e || imports.error;
+
+                if (e) {
+                    if (!(e instanceof LessError)) {
+                        e = new LessError(e, imports, fileInfo.filename);
+                    }
+
+                    return callback(e);
+                }
+                else {
+                    return callback(null, root);
+                }
+            };
+
+            if (context.processImports !== false) {
+                new visitors.ImportVisitor(imports, finish)
+                    .run(root);
+            } else {
+                return finish();
+            }
+        },
+
+        //
+        // Here in, the parsing rules/functions
+        //
+        // The basic structure of the syntax tree generated is as follows:
+        //
+        //   Ruleset ->  Rule -> Value -> Expression -> Entity
+        //
+        // Here's some Less code:
+        //
+        //    .class {
+        //      color: #fff;
+        //      border: 1px solid #000;
+        //      width: @w + 4px;
+        //      > .child {...}
+        //    }
+        //
+        // And here's what the parse tree might look like:
+        //
+        //     Ruleset (Selector '.class', [
+        //         Rule ("color",  Value ([Expression [Color #fff]]))
+        //         Rule ("border", Value ([Expression [Dimension 1px][Keyword "solid"][Color #000]]))
+        //         Rule ("width",  Value ([Expression [Operation " + " [Variable "@w"][Dimension 4px]]]))
+        //         Ruleset (Selector [Element '>', '.child'], [...])
+        //     ])
+        //
+        //  In general, most rules will try to parse a token with the `$re()` function, and if the return
+        //  value is truly, will return a new node, of the relevant type. Sometimes, we need to check
+        //  first, before parsing, that's when we use `peek()`.
+        //
+        parsers: parsers = {
+            //
+            // The `primary` rule is the *entry* and *exit* point of the parser.
+            // The rules here can appear at any level of the parse tree.
+            //
+            // The recursive nature of the grammar is an interplay between the `block`
+            // rule, which represents `{ ... }`, the `ruleset` rule, and this `primary` rule,
+            // as represented by this simplified grammar:
+            //
+            //     primary  →  (ruleset | rule)+
+            //     ruleset  →  selector+ block
+            //     block    →  '{' primary '}'
+            //
+            // Only at one point is the primary rule not called from the
+            // block rule: at the root level.
+            //
+            primary: function () {
+                var mixin = this.mixin, root = [], node;
+
+                while (true) {
+                    while (true) {
+                        node = this.comment();
+                        if (!node) { break; }
+                        root.push(node);
+                    }
+                    // always process comments before deciding if finished
+                    if (parserInput.finished) {
+                        break;
+                    }
+                    if (parserInput.peek('}')) {
+                        break;
+                    }
+
+                    node = this.extendRule();
+                    if (node) {
+                        root = root.concat(node);
+                        continue;
+                    }
+
+                    node = mixin.definition() || this.rule() || this.ruleset() ||
+                        mixin.call() || this.rulesetCall() || this.directive();
+                    if (node) {
+                        root.push(node);
+                    } else {
+                        var foundSemiColon = false;
+                        while (parserInput.$char(";")) {
+                            foundSemiColon = true;
+                        }
+                        if (!foundSemiColon) {
+                            break;
+                        }
+                    }
+                }
+
+                return root;
+            },
+
+            // comments are collected by the main parsing mechanism and then assigned to nodes
+            // where the current structure allows it
+            comment: function () {
+                if (parserInput.commentStore.length) {
+                    var comment = parserInput.commentStore.shift();
+                    return new(tree.Comment)(comment.text, comment.isLineComment, comment.index, fileInfo);
+                }
+            },
+
+            //
+            // Entities are tokens which can be found inside an Expression
+            //
+            entities: {
+                //
+                // A string, which supports escaping " and '
+                //
+                //     "milky way" 'he\'s the one!'
+                //
+                quoted: function () {
+                    var str, index = parserInput.i, isEscaped = false;
+
+                    parserInput.save();
+                    if (parserInput.$char("~")) {
+                        isEscaped = true;
+                    }
+                    str = parserInput.$quoted();
+                    if (!str) {
+                        parserInput.restore();
+                        return;
+                    }
+                    parserInput.forget();
+
+                    return new(tree.Quoted)(str.charAt(0), str.substr(1, str.length - 2), isEscaped, index, fileInfo);
+                },
+
+                //
+                // A catch-all word, such as:
+                //
+                //     black border-collapse
+                //
+                keyword: function () {
+                    var k = parserInput.$char("%") || parserInput.$re(/^[_A-Za-z-][_A-Za-z0-9-]*/);
+                    if (k) {
+                        return tree.Color.fromKeyword(k) || new(tree.Keyword)(k);
+                    }
+                },
+
+                //
+                // A function call
+                //
+                //     rgb(255, 0, 255)
+                //
+                // We also try to catch IE's `alpha()`, but let the `alpha` parser
+                // deal with the details.
+                //
+                // The arguments are parsed with the `entities.arguments` parser.
+                //
+                call: function () {
+                    var name, nameLC, args, alpha, index = parserInput.i;
+
+                    // http://jsperf.com/case-insensitive-regex-vs-strtolower-then-regex/18
+                    if (parserInput.peek(/^url\(/i)) {
+                        return;
+                    }
+
+                    parserInput.save();
+
+                    name = parserInput.$re(/^([\w-]+|%|progid:[\w\.]+)\(/);
+                    if (!name) { parserInput.forget(); return; }
+
+                    name = name[1];
+                    nameLC = name.toLowerCase();
+
+                    if (nameLC === 'alpha') {
+                        alpha = parsers.alpha();
+                        if (alpha) {
+                            parserInput.forget();
+                            return alpha;
+                        }
+                    }
+
+                    args = this.arguments();
+
+                    if (! parserInput.$char(')')) {
+                        parserInput.restore("Could not parse call arguments or missing ')'");
+                        return;
+                    }
+
+                    parserInput.forget();
+                    return new(tree.Call)(name, args, index, fileInfo);
+                },
+                arguments: function () {
+                    var args = [], arg;
+
+                    while (true) {
+                        arg = this.assignment() || parsers.expression();
+                        if (!arg) {
+                            break;
+                        }
+                        args.push(arg);
+                        if (! parserInput.$char(',')) {
+                            break;
+                        }
+                    }
+                    return args;
+                },
+                literal: function () {
+                    return this.dimension() ||
+                           this.color() ||
+                           this.quoted() ||
+                           this.unicodeDescriptor();
+                },
+
+                // Assignments are argument entities for calls.
+                // They are present in ie filter properties as shown below.
+                //
+                //     filter: progid:DXImageTransform.Microsoft.Alpha( *opacity=50* )
+                //
+
+                assignment: function () {
+                    var key, value;
+                    parserInput.save();
+                    key = parserInput.$re(/^\w+(?=\s?=)/i);
+                    if (!key) {
+                        parserInput.restore();
+                        return;
+                    }
+                    if (!parserInput.$char('=')) {
+                        parserInput.restore();
+                        return;
+                    }
+                    value = parsers.entity();
+                    if (value) {
+                        parserInput.forget();
+                        return new(tree.Assignment)(key, value);
+                    } else {
+                        parserInput.restore();
+                    }
+                },
+
+                //
+                // Parse url() tokens
+                //
+                // We use a specific rule for urls, because they don't really behave like
+                // standard function calls. The difference is that the argument doesn't have
+                // to be enclosed within a string, so it can't be parsed as an Expression.
+                //
+                url: function () {
+                    var value, index = parserInput.i;
+
+                    parserInput.autoCommentAbsorb = false;
+
+                    if (!parserInput.$str("url(")) {
+                        parserInput.autoCommentAbsorb = true;
+                        return;
+                    }
+
+                    value = this.quoted() || this.variable() ||
+                            parserInput.$re(/^(?:(?:\\[\(\)'"])|[^\(\)'"])+/) || "";
+
+                    parserInput.autoCommentAbsorb = true;
+
+                    expectChar(')');
+
+                    return new(tree.URL)((value.value != null || value instanceof tree.Variable) ?
+                                        value : new(tree.Anonymous)(value), index, fileInfo);
+                },
+
+                //
+                // A Variable entity, such as `@fink`, in
+                //
+                //     width: @fink + 2px
+                //
+                // We use a different parser for variable definitions,
+                // see `parsers.variable`.
+                //
+                variable: function () {
+                    var name, index = parserInput.i;
+
+                    if (parserInput.currentChar() === '@' && (name = parserInput.$re(/^@@?[\w-]+/))) {
+                        return new(tree.Variable)(name, index, fileInfo);
+                    }
+                },
+
+                // A variable entity useing the protective {} e.g. @{var}
+                variableCurly: function () {
+                    var curly, index = parserInput.i;
+
+                    if (parserInput.currentChar() === '@' && (curly = parserInput.$re(/^@\{([\w-]+)\}/))) {
+                        return new(tree.Variable)("@" + curly[1], index, fileInfo);
+                    }
+                },
+
+                //
+                // A Hexadecimal color
+                //
+                //     #4F3C2F
+                //
+                // `rgb` and `hsl` colors are parsed through the `entities.call` parser.
+                //
+                color: function () {
+                    var rgb;
+
+                    if (parserInput.currentChar() === '#' && (rgb = parserInput.$re(/^#([A-Fa-f0-9]{6}|[A-Fa-f0-9]{3})/))) {
+                        // strip colons, brackets, whitespaces and other characters that should not
+                        // definitely be part of color string
+                        var colorCandidateString = rgb.input.match(/^#([\w]+).*/);
+                        colorCandidateString = colorCandidateString[1];
+                        if (!colorCandidateString.match(/^[A-Fa-f0-9]+$/)) { // verify if candidate consists only of allowed HEX characters
+                            error("Invalid HEX color code");
+                        }
+                        return new(tree.Color)(rgb[1], undefined, '#' + colorCandidateString);
+                    }
+                },
+
+                //
+                // A Dimension, that is, a number and a unit
+                //
+                //     0.5em 95%
+                //
+                dimension: function () {
+                    if (parserInput.peekNotNumeric()) {
+                        return;
+                    }
+
+                    var value = parserInput.$re(/^([+-]?\d*\.?\d+)(%|[a-z]+)?/i);
+                    if (value) {
+                        return new(tree.Dimension)(value[1], value[2]);
+                    }
+                },
+
+                //
+                // A unicode descriptor, as is used in unicode-range
+                //
+                // U+0??  or U+00A1-00A9
+                //
+                unicodeDescriptor: function () {
+                    var ud;
+
+                    ud = parserInput.$re(/^U\+[0-9a-fA-F?]+(\-[0-9a-fA-F?]+)?/);
+                    if (ud) {
+                        return new(tree.UnicodeDescriptor)(ud[0]);
+                    }
+                },
+
+                //
+                // JavaScript code to be evaluated
+                //
+                //     `window.location.href`
+                //
+                javascript: function () {
+                    var js, index = parserInput.i;
+
+                    parserInput.save();
+
+                    var escape = parserInput.$char("~");
+                    var jsQuote = parserInput.$char("`");
+
+                    if (!jsQuote) {
+                        parserInput.restore();
+                        return;
+                    }
+
+                    js = parserInput.$re(/^[^`]*`/);
+                    if (js) {
+                        parserInput.forget();
+                        return new(tree.JavaScript)(js.substr(0, js.length - 1), Boolean(escape), index, fileInfo);
+                    }
+                    parserInput.restore("invalid javascript definition");
+                }
+            },
+
+            //
+            // The variable part of a variable definition. Used in the `rule` parser
+            //
+            //     @fink:
+            //
+            variable: function () {
+                var name;
+
+                if (parserInput.currentChar() === '@' && (name = parserInput.$re(/^(@[\w-]+)\s*:/))) { return name[1]; }
+            },
+
+            //
+            // The variable part of a variable definition. Used in the `rule` parser
+            //
+            //     @fink();
+            //
+            rulesetCall: function () {
+                var name;
+
+                if (parserInput.currentChar() === '@' && (name = parserInput.$re(/^(@[\w-]+)\s*\(\s*\)\s*;/))) {
+                    return new tree.RulesetCall(name[1]);
+                }
+            },
+
+            //
+            // extend syntax - used to extend selectors
+            //
+            extend: function(isRule) {
+                var elements, e, index = parserInput.i, option, extendList, extend;
+
+                if (!parserInput.$str(isRule ? "&:extend(" : ":extend(")) {
+                    return;
+                }
+
+                do {
+                    option = null;
+                    elements = null;
+                    while (! (option = parserInput.$re(/^(all)(?=\s*(\)|,))/))) {
+                        e = this.element();
+                        if (!e) {
+                            break;
+                        }
+                        if (elements) {
+                            elements.push(e);
+                        } else {
+                            elements = [ e ];
+                        }
+                    }
+
+                    option = option && option[1];
+                    if (!elements) {
+                        error("Missing target selector for :extend().");
+                    }
+                    extend = new(tree.Extend)(new(tree.Selector)(elements), option, index);
+                    if (extendList) {
+                        extendList.push(extend);
+                    } else {
+                        extendList = [ extend ];
+                    }
+                } while (parserInput.$char(","));
+
+                expect(/^\)/);
+
+                if (isRule) {
+                    expect(/^;/);
+                }
+
+                return extendList;
+            },
+
+            //
+            // extendRule - used in a rule to extend all the parent selectors
+            //
+            extendRule: function() {
+                return this.extend(true);
+            },
+
+            //
+            // Mixins
+            //
+            mixin: {
+                //
+                // A Mixin call, with an optional argument list
+                //
+                //     #mixins > .square(#fff);
+                //     .rounded(4px, black);
+                //     .button;
+                //
+                // The `while` loop is there because mixins can be
+                // namespaced, but we only support the child and descendant
+                // selector for now.
+                //
+                call: function () {
+                    var s = parserInput.currentChar(), important = false, index = parserInput.i, elemIndex,
+                        elements, elem, e, c, args;
+
+                    if (s !== '.' && s !== '#') { return; }
+
+                    parserInput.save(); // stop us absorbing part of an invalid selector
+
+                    while (true) {
+                        elemIndex = parserInput.i;
+                        e = parserInput.$re(/^[#.](?:[\w-]|\\(?:[A-Fa-f0-9]{1,6} ?|[^A-Fa-f0-9]))+/);
+                        if (!e) {
+                            break;
+                        }
+                        elem = new(tree.Element)(c, e, elemIndex, fileInfo);
+                        if (elements) {
+                            elements.push(elem);
+                        } else {
+                            elements = [ elem ];
+                        }
+                        c = parserInput.$char('>');
+                    }
+
+                    if (elements) {
+                        if (parserInput.$char('(')) {
+                            args = this.args(true).args;
+                            expectChar(')');
+                        }
+
+                        if (parsers.important()) {
+                            important = true;
+                        }
+
+                        if (parsers.end()) {
+                            parserInput.forget();
+                            return new(tree.mixin.Call)(elements, args, index, fileInfo, important);
+                        }
+                    }
+
+                    parserInput.restore();
+                },
+                args: function (isCall) {
+                    var entities = parsers.entities,
+                        returner = { args:null, variadic: false },
+                        expressions = [], argsSemiColon = [], argsComma = [],
+                        isSemiColonSeparated, expressionContainsNamed, name, nameLoop,
+                        value, arg, expand;
+
+                    parserInput.save();
+
+                    while (true) {
+                        if (isCall) {
+                            arg = parsers.detachedRuleset() || parsers.expression();
+                        } else {
+                            parserInput.commentStore.length = 0;
+                            if (parserInput.$str("...")) {
+                                returner.variadic = true;
+                                if (parserInput.$char(";") && !isSemiColonSeparated) {
+                                    isSemiColonSeparated = true;
+                                }
+                                (isSemiColonSeparated ? argsSemiColon : argsComma)
+                                    .push({ variadic: true });
+                                break;
+                            }
+                            arg = entities.variable() || entities.literal() || entities.keyword();
+                        }
+
+                        if (!arg) {
+                            break;
+                        }
+
+                        nameLoop = null;
+                        if (arg.throwAwayComments) {
+                            arg.throwAwayComments();
+                        }
+                        value = arg;
+                        var val = null;
+
+                        if (isCall) {
+                            // Variable
+                            if (arg.value && arg.value.length == 1) {
+                                val = arg.value[0];
+                            }
+                        } else {
+                            val = arg;
+                        }
+
+                        if (val && val instanceof tree.Variable) {
+                            if (parserInput.$char(':')) {
+                                if (expressions.length > 0) {
+                                    if (isSemiColonSeparated) {
+                                        error("Cannot mix ; and , as delimiter types");
+                                    }
+                                    expressionContainsNamed = true;
+                                }
+
+                                value = parsers.detachedRuleset() || parsers.expression();
+
+                                if (!value) {
+                                    if (isCall) {
+                                        error("could not understand value for named argument");
+                                    } else {
+                                        parserInput.restore();
+                                        returner.args = [];
+                                        return returner;
+                                    }
+                                }
+                                nameLoop = (name = val.name);
+                            } else if (parserInput.$str("...")) {
+                                if (!isCall) {
+                                    returner.variadic = true;
+                                    if (parserInput.$char(";") && !isSemiColonSeparated) {
+                                        isSemiColonSeparated = true;
+                                    }
+                                    (isSemiColonSeparated ? argsSemiColon : argsComma)
+                                        .push({ name: arg.name, variadic: true });
+                                    break;
+                                } else {
+                                    expand = true;
+                                }
+                            } else if (!isCall) {
+                                name = nameLoop = val.name;
+                                value = null;
+                            }
+                        }
+
+                        if (value) {
+                            expressions.push(value);
+                        }
+
+                        argsComma.push({ name:nameLoop, value:value, expand:expand });
+
+                        if (parserInput.$char(',')) {
+                            continue;
+                        }
+
+                        if (parserInput.$char(';') || isSemiColonSeparated) {
+
+                            if (expressionContainsNamed) {
+                                error("Cannot mix ; and , as delimiter types");
+                            }
+
+                            isSemiColonSeparated = true;
+
+                            if (expressions.length > 1) {
+                                value = new(tree.Value)(expressions);
+                            }
+                            argsSemiColon.push({ name:name, value:value, expand:expand });
+
+                            name = null;
+                            expressions = [];
+                            expressionContainsNamed = false;
+                        }
+                    }
+
+                    parserInput.forget();
+                    returner.args = isSemiColonSeparated ? argsSemiColon : argsComma;
+                    return returner;
+                },
+                //
+                // A Mixin definition, with a list of parameters
+                //
+                //     .rounded (@radius: 2px, @color) {
+                //        ...
+                //     }
+                //
+                // Until we have a finer grained state-machine, we have to
+                // do a look-ahead, to make sure we don't have a mixin call.
+                // See the `rule` function for more information.
+                //
+                // We start by matching `.rounded (`, and then proceed on to
+                // the argument list, which has optional default values.
+                // We store the parameters in `params`, with a `value` key,
+                // if there is a value, such as in the case of `@radius`.
+                //
+                // Once we've got our params list, and a closing `)`, we parse
+                // the `{...}` block.
+                //
+                definition: function () {
+                    var name, params = [], match, ruleset, cond, variadic = false;
+                    if ((parserInput.currentChar() !== '.' && parserInput.currentChar() !== '#') ||
+                        parserInput.peek(/^[^{]*\}/)) {
+                        return;
+                    }
+
+                    parserInput.save();
+
+                    match = parserInput.$re(/^([#.](?:[\w-]|\\(?:[A-Fa-f0-9]{1,6} ?|[^A-Fa-f0-9]))+)\s*\(/);
+                    if (match) {
+                        name = match[1];
+
+                        var argInfo = this.args(false);
+                        params = argInfo.args;
+                        variadic = argInfo.variadic;
+
+                        // .mixincall("@{a}");
+                        // looks a bit like a mixin definition..
+                        // also
+                        // .mixincall(@a: {rule: set;});
+                        // so we have to be nice and restore
+                        if (!parserInput.$char(')')) {
+                            parserInput.restore("Missing closing ')'");
+                            return;
+                        }
+
+                        parserInput.commentStore.length = 0;
+
+                        if (parserInput.$str("when")) { // Guard
+                            cond = expect(parsers.conditions, 'expected condition');
+                        }
+
+                        ruleset = parsers.block();
+
+                        if (ruleset) {
+                            parserInput.forget();
+                            return new(tree.mixin.Definition)(name, params, ruleset, cond, variadic);
+                        } else {
+                            parserInput.restore();
+                        }
+                    } else {
+                        parserInput.forget();
+                    }
+                }
+            },
+
+            //
+            // Entities are the smallest recognized token,
+            // and can be found inside a rule's value.
+            //
+            entity: function () {
+                var entities = this.entities;
+
+                return this.comment() || entities.literal() || entities.variable() || entities.url() ||
+                       entities.call()    || entities.keyword()  || entities.javascript();
+            },
+
+            //
+            // A Rule terminator. Note that we use `peek()` to check for '}',
+            // because the `block` rule will be expecting it, but we still need to make sure
+            // it's there, if ';' was ommitted.
+            //
+            end: function () {
+                return parserInput.$char(';') || parserInput.peek('}');
+            },
+
+            //
+            // IE's alpha function
+            //
+            //     alpha(opacity=88)
+            //
+            alpha: function () {
+                var value;
+
+                // http://jsperf.com/case-insensitive-regex-vs-strtolower-then-regex/18
+                if (! parserInput.$re(/^opacity=/i)) { return; }
+                value = parserInput.$re(/^\d+/);
+                if (!value) {
+                    value = expect(this.entities.variable, "Could not parse alpha");
+                }
+                expectChar(')');
+                return new(tree.Alpha)(value);
+            },
+
+            //
+            // A Selector Element
+            //
+            //     div
+            //     + h1
+            //     #socks
+            //     input[type="text"]
+            //
+            // Elements are the building blocks for Selectors,
+            // they are made out of a `Combinator` (see combinator rule),
+            // and an element name, such as a tag a class, or `*`.
+            //
+            element: function () {
+                var e, c, v, index = parserInput.i;
+
+                c = this.combinator();
+
+                e = parserInput.$re(/^(?:\d+\.\d+|\d+)%/) ||
+                    parserInput.$re(/^(?:[.#]?|:*)(?:[\w-]|[^\x00-\x9f]|\\(?:[A-Fa-f0-9]{1,6} ?|[^A-Fa-f0-9]))+/) ||
+                    parserInput.$char('*') || parserInput.$char('&') || this.attribute() ||
+                    parserInput.$re(/^\([^&()@]+\)/) ||  parserInput.$re(/^[\.#:](?=@)/) ||
+                    this.entities.variableCurly();
+
+                if (! e) {
+                    parserInput.save();
+                    if (parserInput.$char('(')) {
+                        if ((v = this.selector()) && parserInput.$char(')')) {
+                            e = new(tree.Paren)(v);
+                            parserInput.forget();
+                        } else {
+                            parserInput.restore("Missing closing ')'");
+                        }
+                    } else {
+                        parserInput.forget();
+                    }
+                }
+
+                if (e) { return new(tree.Element)(c, e, index, fileInfo); }
+            },
+
+            //
+            // Combinators combine elements together, in a Selector.
+            //
+            // Because our parser isn't white-space sensitive, special care
+            // has to be taken, when parsing the descendant combinator, ` `,
+            // as it's an empty space. We have to check the previous character
+            // in the input, to see if it's a ` ` character. More info on how
+            // we deal with this in *combinator.js*.
+            //
+            combinator: function () {
+                var c = parserInput.currentChar();
+
+                if (c === '/') {
+                    parserInput.save();
+                    var slashedCombinator = parserInput.$re(/^\/[a-z]+\//i);
+                    if (slashedCombinator) {
+                        parserInput.forget();
+                        return new(tree.Combinator)(slashedCombinator);
+                    }
+                    parserInput.restore();
+                }
+
+                if (c === '>' || c === '+' || c === '~' || c === '|' || c === '^') {
+                    parserInput.i++;
+                    if (c === '^' && parserInput.currentChar() === '^') {
+                        c = '^^';
+                        parserInput.i++;
+                    }
+                    while (parserInput.isWhitespace()) { parserInput.i++; }
+                    return new(tree.Combinator)(c);
+                } else if (parserInput.isWhitespace(-1)) {
+                    return new(tree.Combinator)(" ");
+                } else {
+                    return new(tree.Combinator)(null);
+                }
+            },
+            //
+            // A CSS selector (see selector below)
+            // with less extensions e.g. the ability to extend and guard
+            //
+            lessSelector: function () {
+                return this.selector(true);
+            },
+            //
+            // A CSS Selector
+            //
+            //     .class > div + h1
+            //     li a:hover
+            //
+            // Selectors are made out of one or more Elements, see above.
+            //
+            selector: function (isLess) {
+                var index = parserInput.i, elements, extendList, c, e, allExtends, when, condition;
+
+                while ((isLess && (extendList = this.extend())) || (isLess && (when = parserInput.$str("when"))) || (e = this.element())) {
+                    if (when) {
+                        condition = expect(this.conditions, 'expected condition');
+                    } else if (condition) {
+                        error("CSS guard can only be used at the end of selector");
+                    } else if (extendList) {
+                        if (allExtends) {
+                            allExtends = allExtends.concat(extendList);
+                        } else {
+                            allExtends = extendList;
+                        }
+                    } else {
+                        if (allExtends) { error("Extend can only be used at the end of selector"); }
+                        c = parserInput.currentChar();
+                        if (elements) {
+                            elements.push(e);
+                        } else {
+                            elements = [ e ];
+                        }
+                        e = null;
+                    }
+                    if (c === '{' || c === '}' || c === ';' || c === ',' || c === ')') {
+                        break;
+                    }
+                }
+
+                if (elements) { return new(tree.Selector)(elements, allExtends, condition, index, fileInfo); }
+                if (allExtends) { error("Extend must be used to extend a selector, it cannot be used on its own"); }
+            },
+            attribute: function () {
+                if (! parserInput.$char('[')) { return; }
+
+                var entities = this.entities,
+                    key, val, op;
+
+                if (!(key = entities.variableCurly())) {
+                    key = expect(/^(?:[_A-Za-z0-9-\*]*\|)?(?:[_A-Za-z0-9-]|\\.)+/);
+                }
+
+                op = parserInput.$re(/^[|~*$^]?=/);
+                if (op) {
+                    val = entities.quoted() || parserInput.$re(/^[0-9]+%/) || parserInput.$re(/^[\w-]+/) || entities.variableCurly();
+                }
+
+                expectChar(']');
+
+                return new(tree.Attribute)(key, op, val);
+            },
+
+            //
+            // The `block` rule is used by `ruleset` and `mixin.definition`.
+            // It's a wrapper around the `primary` rule, with added `{}`.
+            //
+            block: function () {
+                var content;
+                if (parserInput.$char('{') && (content = this.primary()) && parserInput.$char('}')) {
+                    return content;
+                }
+            },
+
+            blockRuleset: function() {
+                var block = this.block();
+
+                if (block) {
+                    block = new tree.Ruleset(null, block);
+                }
+                return block;
+            },
+
+            detachedRuleset: function() {
+                var blockRuleset = this.blockRuleset();
+                if (blockRuleset) {
+                    return new tree.DetachedRuleset(blockRuleset);
+                }
+            },
+
+            //
+            // div, .class, body > p {...}
+            //
+            ruleset: function () {
+                var selectors, s, rules, debugInfo;
+
+                parserInput.save();
+
+                if (context.dumpLineNumbers) {
+                    debugInfo = getDebugInfo(parserInput.i);
+                }
+
+                while (true) {
+                    s = this.lessSelector();
+                    if (!s) {
+                        break;
+                    }
+                    if (selectors) {
+                        selectors.push(s);
+                    } else {
+                        selectors = [ s ];
+                    }
+                    parserInput.commentStore.length = 0;
+                    if (s.condition && selectors.length > 1) {
+                        error("Guards are only currently allowed on a single selector.");
+                    }
+                    if (! parserInput.$char(',')) { break; }
+                    if (s.condition) {
+                        error("Guards are only currently allowed on a single selector.");
+                    }
+                    parserInput.commentStore.length = 0;
+                }
+
+                if (selectors && (rules = this.block())) {
+                    parserInput.forget();
+                    var ruleset = new(tree.Ruleset)(selectors, rules, context.strictImports);
+                    if (context.dumpLineNumbers) {
+                        ruleset.debugInfo = debugInfo;
+                    }
+                    return ruleset;
+                } else {
+                    parserInput.restore();
+                }
+            },
+            rule: function (tryAnonymous) {
+                var name, value, startOfRule = parserInput.i, c = parserInput.currentChar(), important, merge, isVariable;
+
+                if (c === '.' || c === '#' || c === '&' || c === ':') { return; }
+
+                parserInput.save();
+
+                name = this.variable() || this.ruleProperty();
+                if (name) {
+                    isVariable = typeof name === "string";
+
+                    if (isVariable) {
+                        value = this.detachedRuleset();
+                    }
+
+                    parserInput.commentStore.length = 0;
+                    if (!value) {
+                        // a name returned by this.ruleProperty() is always an array of the form:
+                        // [string-1, ..., string-n, ""] or [string-1, ..., string-n, "+"]
+                        // where each item is a tree.Keyword or tree.Variable
+                        merge = !isVariable && name.length > 1 && name.pop().value;
+
+                        // prefer to try to parse first if its a variable or we are compressing
+                        // but always fallback on the other one
+                        var tryValueFirst = !tryAnonymous && (context.compress || isVariable);
+
+                        if (tryValueFirst) {
+                            value = this.value();
+                        }
+                        if (!value) {
+                            value = this.anonymousValue();
+                            if (value) {
+                                parserInput.forget();
+                                // anonymous values absorb the end ';' which is required for them to work
+                                return new (tree.Rule)(name, value, false, merge, startOfRule, fileInfo);
+                            }
+                        }
+                        if (!tryValueFirst && !value) {
+                            value = this.value();
+                        }
+
+                        important = this.important();
+                    }
+
+                    if (value && this.end()) {
+                        parserInput.forget();
+                        return new (tree.Rule)(name, value, important, merge, startOfRule, fileInfo);
+                    } else {
+                        parserInput.restore();
+                        if (value && !tryAnonymous) {
+                            return this.rule(true);
+                        }
+                    }
+                } else {
+                    parserInput.forget();
+                }
+            },
+            anonymousValue: function () {
+                var match = parserInput.$re(/^([^@+\/'"*`(;{}-]*);/);
+                if (match) {
+                    return new(tree.Anonymous)(match[1]);
+                }
+            },
+
+            //
+            // An @import directive
+            //
+            //     @import "lib";
+            //
+            // Depending on our environment, importing is done differently:
+            // In the browser, it's an XHR request, in Node, it would be a
+            // file-system operation. The function used for importing is
+            // stored in `import`, which we pass to the Import constructor.
+            //
+            "import": function () {
+                var path, features, index = parserInput.i;
+
+                var dir = parserInput.$re(/^@import?\s+/);
+
+                if (dir) {
+                    var options = (dir ? this.importOptions() : null) || {};
+
+                    if ((path = this.entities.quoted() || this.entities.url())) {
+                        features = this.mediaFeatures();
+
+                        if (!parserInput.$char(';')) {
+                            parserInput.i = index;
+                            error("missing semi-colon or unrecognised media features on import");
+                        }
+                        features = features && new(tree.Value)(features);
+                        return new(tree.Import)(path, features, options, index, fileInfo);
+                    }
+                    else {
+                        parserInput.i = index;
+                        error("malformed import statement");
+                    }
+                }
+            },
+
+            importOptions: function() {
+                var o, options = {}, optionName, value;
+
+                // list of options, surrounded by parens
+                if (! parserInput.$char('(')) { return null; }
+                do {
+                    o = this.importOption();
+                    if (o) {
+                        optionName = o;
+                        value = true;
+                        switch(optionName) {
+                            case "css":
+                                optionName = "less";
+                                value = false;
+                                break;
+                            case "once":
+                                optionName = "multiple";
+                                value = false;
+                                break;
+                        }
+                        options[optionName] = value;
+                        if (! parserInput.$char(',')) { break; }
+                    }
+                } while (o);
+                expectChar(')');
+                return options;
+            },
+
+            importOption: function() {
+                var opt = parserInput.$re(/^(less|css|multiple|once|inline|reference|optional)/);
+                if (opt) {
+                    return opt[1];
+                }
+            },
+
+            mediaFeature: function () {
+                var entities = this.entities, nodes = [], e, p;
+                parserInput.save();
+                do {
+                    e = entities.keyword() || entities.variable();
+                    if (e) {
+                        nodes.push(e);
+                    } else if (parserInput.$char('(')) {
+                        p = this.property();
+                        e = this.value();
+                        if (parserInput.$char(')')) {
+                            if (p && e) {
+                                nodes.push(new(tree.Paren)(new(tree.Rule)(p, e, null, null, parserInput.i, fileInfo, true)));
+                            } else if (e) {
+                                nodes.push(new(tree.Paren)(e));
+                            } else {
+                                parserInput.restore("badly formed media feature definition");
+                                return null;
+                            }
+                        } else {
+                            parserInput.restore("Missing closing ')'");
+                            return null;
+                        }
+                    }
+                } while (e);
+
+                parserInput.forget();
+                if (nodes.length > 0) {
+                    return new(tree.Expression)(nodes);
+                }
+            },
+
+            mediaFeatures: function () {
+                var entities = this.entities, features = [], e;
+                do {
+                    e = this.mediaFeature();
+                    if (e) {
+                        features.push(e);
+                        if (! parserInput.$char(',')) { break; }
+                    } else {
+                        e = entities.variable();
+                        if (e) {
+                            features.push(e);
+                            if (! parserInput.$char(',')) { break; }
+                        }
+                    }
+                } while (e);
+
+                return features.length > 0 ? features : null;
+            },
+
+            media: function () {
+                var features, rules, media, debugInfo;
+
+                if (context.dumpLineNumbers) {
+                    debugInfo = getDebugInfo(parserInput.i);
+                }
+
+                parserInput.save();
+
+                if (parserInput.$str("@media")) {
+                    features = this.mediaFeatures();
+
+                    rules = this.block();
+
+                    if (!rules) {
+                        parserInput.restore("media definitions require block statements after any features");
+                        return;
+                    }
+
+                    parserInput.forget();
+
+                    media = new(tree.Media)(rules, features, parserInput.i, fileInfo);
+                    if (context.dumpLineNumbers) {
+                        media.debugInfo = debugInfo;
+                    }
+
+                    return media;
+                }
+
+                parserInput.restore();
+            },
+
+            //
+            // A @plugin directive, used to import compiler extensions dynamically.
+            //
+            //     @plugin "lib";
+            //
+            // Depending on our environment, importing is done differently:
+            // In the browser, it's an XHR request, in Node, it would be a
+            // file-system operation. The function used for importing is
+            // stored in `import`, which we pass to the Import constructor.
+            //
+            plugin: function () {
+                var path,
+                    index = parserInput.i,
+                    dir   = parserInput.$re(/^@plugin?\s+/);
+
+                if (dir) {
+                    var options = { plugin : true };
+
+                    if ((path = this.entities.quoted() || this.entities.url())) {
+
+                        if (!parserInput.$char(';')) {
+                            parserInput.i = index;
+                            error("missing semi-colon on plugin");
+                        }
+
+                        return new(tree.Import)(path, null, options, index, fileInfo);
+                    }
+                    else {
+                        parserInput.i = index;
+                        error("malformed plugin statement");
+                    }
+                }
+            },
+
+            //
+            // A CSS Directive
+            //
+            //     @charset "utf-8";
+            //
+            directive: function () {
+                var index = parserInput.i, name, value, rules, nonVendorSpecificName,
+                    hasIdentifier, hasExpression, hasUnknown, hasBlock = true, isRooted = true;
+
+                if (parserInput.currentChar() !== '@') { return; }
+
+                value = this['import']() || this.plugin() || this.media();
+                if (value) {
+                    return value;
+                }
+
+                parserInput.save();
+
+                name = parserInput.$re(/^@[a-z-]+/);
+
+                if (!name) { return; }
+
+                nonVendorSpecificName = name;
+                if (name.charAt(1) == '-' && name.indexOf('-', 2) > 0) {
+                    nonVendorSpecificName = "@" + name.slice(name.indexOf('-', 2) + 1);
+                }
+
+                switch(nonVendorSpecificName) {
+                    /*
+                    case "@font-face":
+                    case "@viewport":
+                    case "@top-left":
+                    case "@top-left-corner":
+                    case "@top-center":
+                    case "@top-right":
+                    case "@top-right-corner":
+                    case "@bottom-left":
+                    case "@bottom-left-corner":
+                    case "@bottom-center":
+                    case "@bottom-right":
+                    case "@bottom-right-corner":
+                    case "@left-top":
+                    case "@left-middle":
+                    case "@left-bottom":
+                    case "@right-top":
+                    case "@right-middle":
+                    case "@right-bottom":
+                        hasBlock = true;
+                        isRooted = true;
+                        break;
+                    */
+                    case "@counter-style":
+                        hasIdentifier = true;
+                        hasBlock = true;
+                        break;
+                    case "@charset":
+                        hasIdentifier = true;
+                        hasBlock = false;
+                        break;
+                    case "@namespace":
+                        hasExpression = true;
+                        hasBlock = false;
+                        break;
+                    case "@keyframes":
+                        hasIdentifier = true;
+                        break;
+                    case "@host":
+                    case "@page":
+                        hasUnknown = true;
+                        break;
+                    case "@document":
+                    case "@supports":
+                        hasUnknown = true;
+                        isRooted = false;
+                        break;
+                }
+
+                parserInput.commentStore.length = 0;
+
+                if (hasIdentifier) {
+                    value = this.entity();
+                    if (!value) {
+                        error("expected " + name + " identifier");
+                    }
+                } else if (hasExpression) {
+                    value = this.expression();
+                    if (!value) {
+                        error("expected " + name + " expression");
+                    }
+                } else if (hasUnknown) {
+                    value = (parserInput.$re(/^[^{;]+/) || '').trim();
+                    if (value) {
+                        value = new(tree.Anonymous)(value);
+                    }
+                }
+
+                if (hasBlock) {
+                    rules = this.blockRuleset();
+                }
+
+                if (rules || (!hasBlock && value && parserInput.$char(';'))) {
+                    parserInput.forget();
+                    return new (tree.Directive)(name, value, rules, index, fileInfo,
+                        context.dumpLineNumbers ? getDebugInfo(index) : null,
+                        false,
+                        isRooted
+                    );
+                }
+
+                parserInput.restore("directive options not recognised");
+            },
+
+            //
+            // A Value is a comma-delimited list of Expressions
+            //
+            //     font-family: Baskerville, Georgia, serif;
+            //
+            // In a Rule, a Value represents everything after the `:`,
+            // and before the `;`.
+            //
+            value: function () {
+                var e, expressions = [];
+
+                do {
+                    e = this.expression();
+                    if (e) {
+                        expressions.push(e);
+                        if (! parserInput.$char(',')) { break; }
+                    }
+                } while (e);
+
+                if (expressions.length > 0) {
+                    return new(tree.Value)(expressions);
+                }
+            },
+            important: function () {
+                if (parserInput.currentChar() === '!') {
+                    return parserInput.$re(/^! *important/);
+                }
+            },
+            sub: function () {
+                var a, e;
+
+                parserInput.save();
+                if (parserInput.$char('(')) {
+                    a = this.addition();
+                    if (a && parserInput.$char(')')) {
+                        parserInput.forget();
+                        e = new(tree.Expression)([a]);
+                        e.parens = true;
+                        return e;
+                    }
+                    parserInput.restore("Expected ')'");
+                    return;
+                }
+                parserInput.restore();
+            },
+            multiplication: function () {
+                var m, a, op, operation, isSpaced;
+                m = this.operand();
+                if (m) {
+                    isSpaced = parserInput.isWhitespace(-1);
+                    while (true) {
+                        if (parserInput.peek(/^\/[*\/]/)) {
+                            break;
+                        }
+
+                        parserInput.save();
+
+                        op = parserInput.$char('/') || parserInput.$char('*');
+
+                        if (!op) { parserInput.forget(); break; }
+
+                        a = this.operand();
+
+                        if (!a) { parserInput.restore(); break; }
+                        parserInput.forget();
+
+                        m.parensInOp = true;
+                        a.parensInOp = true;
+                        operation = new(tree.Operation)(op, [operation || m, a], isSpaced);
+                        isSpaced = parserInput.isWhitespace(-1);
+                    }
+                    return operation || m;
+                }
+            },
+            addition: function () {
+                var m, a, op, operation, isSpaced;
+                m = this.multiplication();
+                if (m) {
+                    isSpaced = parserInput.isWhitespace(-1);
+                    while (true) {
+                        op = parserInput.$re(/^[-+]\s+/) || (!isSpaced && (parserInput.$char('+') || parserInput.$char('-')));
+                        if (!op) {
+                            break;
+                        }
+                        a = this.multiplication();
+                        if (!a) {
+                            break;
+                        }
+
+                        m.parensInOp = true;
+                        a.parensInOp = true;
+                        operation = new(tree.Operation)(op, [operation || m, a], isSpaced);
+                        isSpaced = parserInput.isWhitespace(-1);
+                    }
+                    return operation || m;
+                }
+            },
+            conditions: function () {
+                var a, b, index = parserInput.i, condition;
+
+                a = this.condition();
+                if (a) {
+                    while (true) {
+                        if (!parserInput.peek(/^,\s*(not\s*)?\(/) || !parserInput.$char(',')) {
+                            break;
+                        }
+                        b = this.condition();
+                        if (!b) {
+                            break;
+                        }
+                        condition = new(tree.Condition)('or', condition || a, b, index);
+                    }
+                    return condition || a;
+                }
+            },
+            condition: function () {
+                var entities = this.entities, index = parserInput.i, negate = false,
+                    a, b, c, op;
+
+                if (parserInput.$str("not")) { negate = true; }
+                expectChar('(');
+                a = this.addition() || entities.keyword() || entities.quoted();
+                if (a) {
+                    if (parserInput.$char('>')) {
+                        if (parserInput.$char('=')) {
+                            op = ">=";
+                        } else {
+                            op = '>';
+                        }
+                    } else
+                    if (parserInput.$char('<')) {
+                        if (parserInput.$char('=')) {
+                            op = "<=";
+                        } else {
+                            op = '<';
+                        }
+                    } else
+                    if (parserInput.$char('=')) {
+                        if (parserInput.$char('>')) {
+                            op = "=>";
+                        } else if (parserInput.$char('<')) {
+                            op = '=<';
+                        } else {
+                            op = '=';
+                        }
+                    }
+                    if (op) {
+                        b = this.addition() || entities.keyword() || entities.quoted();
+                        if (b) {
+                            c = new(tree.Condition)(op, a, b, index, negate);
+                        } else {
+                            error('expected expression');
+                        }
+                    } else {
+                        c = new(tree.Condition)('=', a, new(tree.Keyword)('true'), index, negate);
+                    }
+                    expectChar(')');
+                    return parserInput.$str("and") ? new(tree.Condition)('and', c, this.condition()) : c;
+                }
+            },
+
+            //
+            // An operand is anything that can be part of an operation,
+            // such as a Color, or a Variable
+            //
+            operand: function () {
+                var entities = this.entities, negate;
+
+                if (parserInput.peek(/^-[@\(]/)) {
+                    negate = parserInput.$char('-');
+                }
+
+                var o = this.sub() || entities.dimension() ||
+                        entities.color() || entities.variable() ||
+                        entities.call();
+
+                if (negate) {
+                    o.parensInOp = true;
+                    o = new(tree.Negative)(o);
+                }
+
+                return o;
+            },
+
+            //
+            // Expressions either represent mathematical operations,
+            // or white-space delimited Entities.
+            //
+            //     1px solid black
+            //     @var * 2
+            //
+            expression: function () {
+                var entities = [], e, delim;
+
+                do {
+                    e = this.comment();
+                    if (e) {
+                        entities.push(e);
+                        continue;
+                    }
+                    e = this.addition() || this.entity();
+                    if (e) {
+                        entities.push(e);
+                        // operations do not allow keyword "/" dimension (e.g. small/20px) so we support that here
+                        if (!parserInput.peek(/^\/[\/*]/)) {
+                            delim = parserInput.$char('/');
+                            if (delim) {
+                                entities.push(new(tree.Anonymous)(delim));
+                            }
+                        }
+                    }
+                } while (e);
+                if (entities.length > 0) {
+                    return new(tree.Expression)(entities);
+                }
+            },
+            property: function () {
+                var name = parserInput.$re(/^(\*?-?[_a-zA-Z0-9-]+)\s*:/);
+                if (name) {
+                    return name[1];
+                }
+            },
+            ruleProperty: function () {
+                var name = [], index = [], s, k;
+
+                parserInput.save();
+
+                var simpleProperty = parserInput.$re(/^([_a-zA-Z0-9-]+)\s*:/);
+                if (simpleProperty) {
+                    name = [new(tree.Keyword)(simpleProperty[1])];
+                    parserInput.forget();
+                    return name;
+                }
+
+                function match(re) {
+                    var i = parserInput.i,
+                        chunk = parserInput.$re(re);
+                    if (chunk) {
+                        index.push(i);
+                        return name.push(chunk[1]);
+                    }
+                }
+
+                match(/^(\*?)/);
+                while (true) {
+                    if (!match(/^((?:[\w-]+)|(?:@\{[\w-]+\}))/)) {
+                        break;
+                    }
+                }
+
+                if ((name.length > 1) && match(/^((?:\+_|\+)?)\s*:/)) {
+                    parserInput.forget();
+
+                    // at last, we have the complete match now. move forward,
+                    // convert name particles to tree objects and return:
+                    if (name[0] === '') {
+                        name.shift();
+                        index.shift();
+                    }
+                    for (k = 0; k < name.length; k++) {
+                        s = name[k];
+                        name[k] = (s.charAt(0) !== '@') ?
+                            new(tree.Keyword)(s) :
+                            new(tree.Variable)('@' + s.slice(2, -1),
+                                index[k], fileInfo);
+                    }
+                    return name;
+                }
+                parserInput.restore();
+            }
+        }
+    };
+};
+Parser.serializeVars = function(vars) {
+    var s = '';
+
+    for (var name in vars) {
+        if (Object.hasOwnProperty.call(vars, name)) {
+            var value = vars[name];
+            s += ((name[0] === '@') ? '' : '@') + name + ': ' + value +
+                ((String(value).slice(-1) === ';') ? '' : ';');
+        }
+    }
+
+    return s;
+};
+
+module.exports = Parser;
+
+},{"../less-error":31,"../tree":61,"../utils":82,"../visitors":86,"./parser-input":36}],38:[function(require,module,exports){
+/**
+ * Plugin Manager
+ */
+var PluginManager = function(less) {
+    this.less = less;
+    this.visitors = [];
+    this.preProcessors = [];
+    this.postProcessors = [];
+    this.installedPlugins = [];
+    this.fileManagers = [];
+};
+/**
+ * Adds all the plugins in the array
+ * @param {Array} plugins
+ */
+PluginManager.prototype.addPlugins = function(plugins) {
+    if (plugins) {
+        for (var i = 0; i < plugins.length; i++) {
+            this.addPlugin(plugins[i]);
+        }
+    }
+};
+/**
+ *
+ * @param plugin
+ */
+PluginManager.prototype.addPlugin = function(plugin) {
+    this.installedPlugins.push(plugin);
+    plugin.install(this.less, this);
+};
+/**
+ * Adds a visitor. The visitor object has options on itself to determine
+ * when it should run.
+ * @param visitor
+ */
+PluginManager.prototype.addVisitor = function(visitor) {
+    this.visitors.push(visitor);
+};
+/**
+ * Adds a pre processor object
+ * @param {object} preProcessor
+ * @param {number} priority - guidelines 1 = before import, 1000 = import, 2000 = after import
+ */
+PluginManager.prototype.addPreProcessor = function(preProcessor, priority) {
+    var indexToInsertAt;
+    for (indexToInsertAt = 0; indexToInsertAt < this.preProcessors.length; indexToInsertAt++) {
+        if (this.preProcessors[indexToInsertAt].priority >= priority) {
+            break;
+        }
+    }
+    this.preProcessors.splice(indexToInsertAt, 0, {preProcessor: preProcessor, priority: priority});
+};
+/**
+ * Adds a post processor object
+ * @param {object} postProcessor
+ * @param {number} priority - guidelines 1 = before compression, 1000 = compression, 2000 = after compression
+ */
+PluginManager.prototype.addPostProcessor = function(postProcessor, priority) {
+    var indexToInsertAt;
+    for (indexToInsertAt = 0; indexToInsertAt < this.postProcessors.length; indexToInsertAt++) {
+        if (this.postProcessors[indexToInsertAt].priority >= priority) {
+            break;
+        }
+    }
+    this.postProcessors.splice(indexToInsertAt, 0, {postProcessor: postProcessor, priority: priority});
+};
+/**
+ *
+ * @param manager
+ */
+PluginManager.prototype.addFileManager = function(manager) {
+    this.fileManagers.push(manager);
+};
+/**
+ *
+ * @returns {Array}
+ * @private
+ */
+PluginManager.prototype.getPreProcessors = function() {
+    var preProcessors = [];
+    for (var i = 0; i < this.preProcessors.length; i++) {
+        preProcessors.push(this.preProcessors[i].preProcessor);
+    }
+    return preProcessors;
+};
+/**
+ *
+ * @returns {Array}
+ * @private
+ */
+PluginManager.prototype.getPostProcessors = function() {
+    var postProcessors = [];
+    for (var i = 0; i < this.postProcessors.length; i++) {
+        postProcessors.push(this.postProcessors[i].postProcessor);
+    }
+    return postProcessors;
+};
+/**
+ *
+ * @returns {Array}
+ * @private
+ */
+PluginManager.prototype.getVisitors = function() {
+    return this.visitors;
+};
+/**
+ *
+ * @returns {Array}
+ * @private
+ */
+PluginManager.prototype.getFileManagers = function() {
+    return this.fileManagers;
+};
+module.exports = PluginManager;
+
+},{}],39:[function(require,module,exports){
+var LessError = require('../less-error'),
+    tree = require("../tree");
+
+var FunctionImporter = module.exports = function FunctionImporter(context, fileInfo) {
+    this.fileInfo = fileInfo;
+};
+
+FunctionImporter.prototype.eval = function(contents, callback) {
+    var loaded = {},
+        loader,
+        registry;
+
+    registry = {
+        add: function(name, func) {
+            loaded[name] = func;
+        },
+        addMultiple: function(functions) {
+            Object.keys(functions).forEach(function(name) {
+                loaded[name] = functions[name];
+            });
+        }
+    };
+
+    try {
+        loader = new Function("functions", "tree", "fileInfo", contents);
+        loader(registry, tree, this.fileInfo);
+    } catch(e) {
+        callback(new LessError({
+            message: "Plugin evaluation error: '" + e.name + ': ' + e.message.replace(/["]/g, "'") + "'" ,
+            filename: this.fileInfo.filename
+        }), null );
+    }
+
+    callback(null, { functions: loaded });
+};
+
+},{"../less-error":31,"../tree":61}],40:[function(require,module,exports){
+var PromiseConstructor;
+
+module.exports = function(environment, ParseTree, ImportManager) {
+    var render = function (input, options, callback) {
+        if (typeof options === 'function') {
+            callback = options;
+            options = {};
+        }
+
+        if (!callback) {
+            if (!PromiseConstructor) {
+                PromiseConstructor = typeof Promise === 'undefined' ? require('promise') : Promise;
+            }
+            var self = this;
+            return new PromiseConstructor(function (resolve, reject) {
+                render.call(self, input, options, function(err, output) {
+                    if (err) {
+                        reject(err);
+                    } else {
+                        resolve(output);
+                    }
+                });
+            });
+        } else {
+            this.parse(input, options, function(err, root, imports, options) {
+                if (err) { return callback(err); }
+
+                var result;
+                try {
+                    var parseTree = new ParseTree(root, imports);
+                    result = parseTree.toCSS(options);
+                }
+                catch (err) { return callback(err); }
+
+                callback(null, result);
+            });
+        }
+    };
+
+    return render;
+};
+
+},{"promise":undefined}],41:[function(require,module,exports){
+module.exports = function (SourceMapOutput, environment) {
+
+    var SourceMapBuilder = function (options) {
+        this.options = options;
+    };
+
+    SourceMapBuilder.prototype.toCSS = function(rootNode, options, imports) {
+        var sourceMapOutput = new SourceMapOutput(
+            {
+                contentsIgnoredCharsMap: imports.contentsIgnoredChars,
+                rootNode: rootNode,
+                contentsMap: imports.contents,
+                sourceMapFilename: this.options.sourceMapFilename,
+                sourceMapURL: this.options.sourceMapURL,
+                outputFilename: this.options.sourceMapOutputFilename,
+                sourceMapBasepath: this.options.sourceMapBasepath,
+                sourceMapRootpath: this.options.sourceMapRootpath,
+                outputSourceFiles: this.options.outputSourceFiles,
+                sourceMapGenerator: this.options.sourceMapGenerator,
+                sourceMapFileInline: this.options.sourceMapFileInline
+            });
+
+        var css = sourceMapOutput.toCSS(options);
+        this.sourceMap = sourceMapOutput.sourceMap;
+        this.sourceMapURL = sourceMapOutput.sourceMapURL;
+        if (this.options.sourceMapInputFilename) {
+            this.sourceMapInputFilename = sourceMapOutput.normalizeFilename(this.options.sourceMapInputFilename);
+        }
+        return css + this.getCSSAppendage();
+    };
+
+    SourceMapBuilder.prototype.getCSSAppendage = function() {
+
+        var sourceMapURL = this.sourceMapURL;
+        if (this.options.sourceMapFileInline) {
+            if (this.sourceMap === undefined) {
+                return "";
+            }
+            sourceMapURL = "data:application/json;base64," + environment.encodeBase64(this.sourceMap);
+        }
+
+        if (sourceMapURL) {
+            return "/*# sourceMappingURL=" + sourceMapURL + " */";
+        }
+        return "";
+    };
+
+    SourceMapBuilder.prototype.getExternalSourceMap = function() {
+        return this.sourceMap;
+    };
+    SourceMapBuilder.prototype.setExternalSourceMap = function(sourceMap) {
+        this.sourceMap = sourceMap;
+    };
+
+    SourceMapBuilder.prototype.isInline = function() {
+        return this.options.sourceMapFileInline;
+    };
+    SourceMapBuilder.prototype.getSourceMapURL = function() {
+        return this.sourceMapURL;
+    };
+    SourceMapBuilder.prototype.getOutputFilename = function() {
+        return this.options.sourceMapOutputFilename;
+    };
+    SourceMapBuilder.prototype.getInputFilename = function() {
+        return this.sourceMapInputFilename;
+    };
+
+    return SourceMapBuilder;
+};
+
+},{}],42:[function(require,module,exports){
+module.exports = function (environment) {
+
+    var SourceMapOutput = function (options) {
+        this._css = [];
+        this._rootNode = options.rootNode;
+        this._contentsMap = options.contentsMap;
+        this._contentsIgnoredCharsMap = options.contentsIgnoredCharsMap;
+        if (options.sourceMapFilename) {
+            this._sourceMapFilename = options.sourceMapFilename.replace(/\\/g, '/');
+        }
+        this._outputFilename = options.outputFilename;
+        this.sourceMapURL = options.sourceMapURL;
+        if (options.sourceMapBasepath) {
+            this._sourceMapBasepath = options.sourceMapBasepath.replace(/\\/g, '/');
+        }
+        if (options.sourceMapRootpath) {
+            this._sourceMapRootpath = options.sourceMapRootpath.replace(/\\/g, '/');
+            if (this._sourceMapRootpath.charAt(this._sourceMapRootpath.length - 1) !== '/') {
+                this._sourceMapRootpath += '/';
+            }
+        } else {
+            this._sourceMapRootpath = "";
+        }
+        this._outputSourceFiles = options.outputSourceFiles;
+        this._sourceMapGeneratorConstructor = environment.getSourceMapGenerator();
+
+        this._lineNumber = 0;
+        this._column = 0;
+    };
+
+    SourceMapOutput.prototype.normalizeFilename = function(filename) {
+        filename = filename.replace(/\\/g, '/');
+
+        if (this._sourceMapBasepath && filename.indexOf(this._sourceMapBasepath) === 0) {
+            filename = filename.substring(this._sourceMapBasepath.length);
+            if (filename.charAt(0) === '\\' || filename.charAt(0) === '/') {
+                filename = filename.substring(1);
+            }
+        }
+        return (this._sourceMapRootpath || "") + filename;
+    };
+
+    SourceMapOutput.prototype.add = function(chunk, fileInfo, index, mapLines) {
+
+        //ignore adding empty strings
+        if (!chunk) {
+            return;
+        }
+
+        var lines,
+            sourceLines,
+            columns,
+            sourceColumns,
+            i;
+
+        if (fileInfo) {
+            var inputSource = this._contentsMap[fileInfo.filename];
+
+            // remove vars/banner added to the top of the file
+            if (this._contentsIgnoredCharsMap[fileInfo.filename]) {
+                // adjust the index
+                index -= this._contentsIgnoredCharsMap[fileInfo.filename];
+                if (index < 0) { index = 0; }
+                // adjust the source
+                inputSource = inputSource.slice(this._contentsIgnoredCharsMap[fileInfo.filename]);
+            }
+            inputSource = inputSource.substring(0, index);
+            sourceLines = inputSource.split("\n");
+            sourceColumns = sourceLines[sourceLines.length - 1];
+        }
+
+        lines = chunk.split("\n");
+        columns = lines[lines.length - 1];
+
+        if (fileInfo) {
+            if (!mapLines) {
+                this._sourceMapGenerator.addMapping({ generated: { line: this._lineNumber + 1, column: this._column},
+                    original: { line: sourceLines.length, column: sourceColumns.length},
+                    source: this.normalizeFilename(fileInfo.filename)});
+            } else {
+                for (i = 0; i < lines.length; i++) {
+                    this._sourceMapGenerator.addMapping({ generated: { line: this._lineNumber + i + 1, column: i === 0 ? this._column : 0},
+                        original: { line: sourceLines.length + i, column: i === 0 ? sourceColumns.length : 0},
+                        source: this.normalizeFilename(fileInfo.filename)});
+                }
+            }
+        }
+
+        if (lines.length === 1) {
+            this._column += columns.length;
+        } else {
+            this._lineNumber += lines.length - 1;
+            this._column = columns.length;
+        }
+
+        this._css.push(chunk);
+    };
+
+    SourceMapOutput.prototype.isEmpty = function() {
+        return this._css.length === 0;
+    };
+
+    SourceMapOutput.prototype.toCSS = function(context) {
+        this._sourceMapGenerator = new this._sourceMapGeneratorConstructor({ file: this._outputFilename, sourceRoot: null });
+
+        if (this._outputSourceFiles) {
+            for (var filename in this._contentsMap) {
+                if (this._contentsMap.hasOwnProperty(filename)) {
+                    var source = this._contentsMap[filename];
+                    if (this._contentsIgnoredCharsMap[filename]) {
+                        source = source.slice(this._contentsIgnoredCharsMap[filename]);
+                    }
+                    this._sourceMapGenerator.setSourceContent(this.normalizeFilename(filename), source);
+                }
+            }
+        }
+
+        this._rootNode.genCSS(context, this);
+
+        if (this._css.length > 0) {
+            var sourceMapURL,
+                sourceMapContent = JSON.stringify(this._sourceMapGenerator.toJSON());
+
+            if (this.sourceMapURL) {
+                sourceMapURL = this.sourceMapURL;
+            } else if (this._sourceMapFilename) {
+                sourceMapURL = this._sourceMapFilename;
+            }
+            this.sourceMapURL = sourceMapURL;
+
+            this.sourceMap = sourceMapContent;
+        }
+
+        return this._css.join('');
+    };
+
+    return SourceMapOutput;
+};
+
+},{}],43:[function(require,module,exports){
+var contexts = require("./contexts"),
+    visitor = require("./visitors"),
+    tree = require("./tree");
+
+module.exports = function(root, options) {
+    options = options || {};
+    var evaldRoot,
+        variables = options.variables,
+        evalEnv = new contexts.Eval(options);
+
+    //
+    // Allows setting variables with a hash, so:
+    //
+    //   `{ color: new tree.Color('#f01') }` will become:
+    //
+    //   new tree.Rule('@color',
+    //     new tree.Value([
+    //       new tree.Expression([
+    //         new tree.Color('#f01')
+    //       ])
+    //     ])
+    //   )
+    //
+    if (typeof variables === 'object' && !Array.isArray(variables)) {
+        variables = Object.keys(variables).map(function (k) {
+            var value = variables[k];
+
+            if (! (value instanceof tree.Value)) {
+                if (! (value instanceof tree.Expression)) {
+                    value = new tree.Expression([value]);
+                }
+                value = new tree.Value([value]);
+            }
+            return new tree.Rule('@' + k, value, false, null, 0);
+        });
+        evalEnv.frames = [new tree.Ruleset(null, variables)];
+    }
+
+    var preEvalVisitors = [],
+        visitors = [
+            new visitor.JoinSelectorVisitor(),
+            new visitor.ExtendVisitor(),
+            new visitor.ToCSSVisitor({compress: Boolean(options.compress)})
+        ], i;
+
+    if (options.pluginManager) {
+        var pluginVisitors = options.pluginManager.getVisitors();
+        for (i = 0; i < pluginVisitors.length; i++) {
+            var pluginVisitor = pluginVisitors[i];
+            if (pluginVisitor.isPreEvalVisitor) {
+                preEvalVisitors.push(pluginVisitor);
+            } else {
+                if (pluginVisitor.isPreVisitor) {
+                    visitors.splice(0, 0, pluginVisitor);
+                } else {
+                    visitors.push(pluginVisitor);
+                }
+            }
+        }
+    }
+
+    for (i = 0; i < preEvalVisitors.length; i++) {
+        preEvalVisitors[i].run(root);
+    }
+
+    evaldRoot = root.eval(evalEnv);
+
+    for (i = 0; i < visitors.length; i++) {
+        visitors[i].run(evaldRoot);
+    }
+
+    return evaldRoot;
+};
+
+},{"./contexts":10,"./tree":61,"./visitors":86}],44:[function(require,module,exports){
+var Node = require("./node");
+
+var Alpha = function (val) {
+    this.value = val;
+};
+Alpha.prototype = new Node();
+Alpha.prototype.type = "Alpha";
+
+Alpha.prototype.accept = function (visitor) {
+    this.value = visitor.visit(this.value);
+};
+Alpha.prototype.eval = function (context) {
+    if (this.value.eval) { return new Alpha(this.value.eval(context)); }
+    return this;
+};
+Alpha.prototype.genCSS = function (context, output) {
+    output.add("alpha(opacity=");
+
+    if (this.value.genCSS) {
+        this.value.genCSS(context, output);
+    } else {
+        output.add(this.value);
+    }
+
+    output.add(")");
+};
+
+module.exports = Alpha;
+
+},{"./node":69}],45:[function(require,module,exports){
+var Node = require("./node");
+
+var Anonymous = function (value, index, currentFileInfo, mapLines, rulesetLike, referenced) {
+    this.value = value;
+    this.index = index;
+    this.mapLines = mapLines;
+    this.currentFileInfo = currentFileInfo;
+    this.rulesetLike = (typeof rulesetLike === 'undefined') ? false : rulesetLike;
+    this.isReferenced = referenced || false;
+};
+Anonymous.prototype = new Node();
+Anonymous.prototype.type = "Anonymous";
+Anonymous.prototype.eval = function () {
+    return new Anonymous(this.value, this.index, this.currentFileInfo, this.mapLines, this.rulesetLike, this.isReferenced);
+};
+Anonymous.prototype.compare = function (other) {
+    return other.toCSS && this.toCSS() === other.toCSS() ? 0 : undefined;
+};
+Anonymous.prototype.isRulesetLike = function() {
+    return this.rulesetLike;
+};
+Anonymous.prototype.genCSS = function (context, output) {
+    output.add(this.value, this.currentFileInfo, this.index, this.mapLines);
+};
+Anonymous.prototype.markReferenced = function () {
+    this.isReferenced = true;
+};
+Anonymous.prototype.getIsReferenced = function () {
+    return !this.currentFileInfo || !this.currentFileInfo.reference || this.isReferenced;
+};
+
+module.exports = Anonymous;
+
+},{"./node":69}],46:[function(require,module,exports){
+var Node = require("./node");
+
+var Assignment = function (key, val) {
+    this.key = key;
+    this.value = val;
+};
+
+Assignment.prototype = new Node();
+Assignment.prototype.type = "Assignment";
+Assignment.prototype.accept = function (visitor) {
+    this.value = visitor.visit(this.value);
+};
+Assignment.prototype.eval = function (context) {
+    if (this.value.eval) {
+        return new Assignment(this.key, this.value.eval(context));
+    }
+    return this;
+};
+Assignment.prototype.genCSS = function (context, output) {
+    output.add(this.key + '=');
+    if (this.value.genCSS) {
+        this.value.genCSS(context, output);
+    } else {
+        output.add(this.value);
+    }
+};
+module.exports = Assignment;
+
+},{"./node":69}],47:[function(require,module,exports){
+var Node = require("./node");
+
+var Attribute = function (key, op, value) {
+    this.key = key;
+    this.op = op;
+    this.value = value;
+};
+Attribute.prototype = new Node();
+Attribute.prototype.type = "Attribute";
+Attribute.prototype.eval = function (context) {
+    return new Attribute(this.key.eval ? this.key.eval(context) : this.key,
+        this.op, (this.value && this.value.eval) ? this.value.eval(context) : this.value);
+};
+Attribute.prototype.genCSS = function (context, output) {
+    output.add(this.toCSS(context));
+};
+Attribute.prototype.toCSS = function (context) {
+    var value = this.key.toCSS ? this.key.toCSS(context) : this.key;
+
+    if (this.op) {
+        value += this.op;
+        value += (this.value.toCSS ? this.value.toCSS(context) : this.value);
+    }
+
+    return '[' + value + ']';
+};
+module.exports = Attribute;
+
+},{"./node":69}],48:[function(require,module,exports){
+var Node = require("./node"),
+    FunctionCaller = require("../functions/function-caller");
+//
+// A function call node.
+//
+var Call = function (name, args, index, currentFileInfo) {
+    this.name = name;
+    this.args = args;
+    this.index = index;
+    this.currentFileInfo = currentFileInfo;
+};
+Call.prototype = new Node();
+Call.prototype.type = "Call";
+Call.prototype.accept = function (visitor) {
+    if (this.args) {
+        this.args = visitor.visitArray(this.args);
+    }
+};
+//
+// When evaluating a function call,
+// we either find the function in the functionRegistry,
+// in which case we call it, passing the  evaluated arguments,
+// if this returns null or we cannot find the function, we
+// simply print it out as it appeared originally [2].
+//
+// The reason why we evaluate the arguments, is in the case where
+// we try to pass a variable to a function, like: `saturate(@color)`.
+// The function should receive the value, not the variable.
+//
+Call.prototype.eval = function (context) {
+    var args = this.args.map(function (a) { return a.eval(context); }),
+        result, funcCaller = new FunctionCaller(this.name, context, this.index, this.currentFileInfo);
+
+    if (funcCaller.isValid()) { // 1.
+        try {
+            result = funcCaller.call(args);
+            if (result != null) {
+                return result;
+            }
+        } catch (e) {
+            throw { type: e.type || "Runtime",
+                    message: "error evaluating function `" + this.name + "`" +
+                             (e.message ? ': ' + e.message : ''),
+                    index: this.index, filename: this.currentFileInfo.filename };
+        }
+    }
+
+    return new Call(this.name, args, this.index, this.currentFileInfo);
+};
+Call.prototype.genCSS = function (context, output) {
+    output.add(this.name + "(", this.currentFileInfo, this.index);
+
+    for (var i = 0; i < this.args.length; i++) {
+        this.args[i].genCSS(context, output);
+        if (i + 1 < this.args.length) {
+            output.add(", ");
+        }
+    }
+
+    output.add(")");
+};
+module.exports = Call;
+
+},{"../functions/function-caller":20,"./node":69}],49:[function(require,module,exports){
+var Node = require("./node"),
+    colors = require("../data/colors");
+
+//
+// RGB Colors - #ff0014, #eee
+//
+var Color = function (rgb, a, originalForm) {
+    //
+    // The end goal here, is to parse the arguments
+    // into an integer triplet, such as `128, 255, 0`
+    //
+    // This facilitates operations and conversions.
+    //
+    if (Array.isArray(rgb)) {
+        this.rgb = rgb;
+    } else if (rgb.length == 6) {
+        this.rgb = rgb.match(/.{2}/g).map(function (c) {
+            return parseInt(c, 16);
+        });
+    } else {
+        this.rgb = rgb.split('').map(function (c) {
+            return parseInt(c + c, 16);
+        });
+    }
+    this.alpha = typeof a === 'number' ? a : 1;
+    if (typeof originalForm !== 'undefined') {
+        this.value = originalForm;
+    }
+};
+
+Color.prototype = new Node();
+Color.prototype.type = "Color";
+
+function clamp(v, max) {
+    return Math.min(Math.max(v, 0), max);
+}
+
+function toHex(v) {
+    return '#' + v.map(function (c) {
+        c = clamp(Math.round(c), 255);
+        return (c < 16 ? '0' : '') + c.toString(16);
+    }).join('');
+}
+
+Color.prototype.luma = function () {
+    var r = this.rgb[0] / 255,
+        g = this.rgb[1] / 255,
+        b = this.rgb[2] / 255;
+
+    r = (r <= 0.03928) ? r / 12.92 : Math.pow(((r + 0.055) / 1.055), 2.4);
+    g = (g <= 0.03928) ? g / 12.92 : Math.pow(((g + 0.055) / 1.055), 2.4);
+    b = (b <= 0.03928) ? b / 12.92 : Math.pow(((b + 0.055) / 1.055), 2.4);
+
+    return 0.2126 * r + 0.7152 * g + 0.0722 * b;
+};
+Color.prototype.genCSS = function (context, output) {
+    output.add(this.toCSS(context));
+};
+Color.prototype.toCSS = function (context, doNotCompress) {
+    var compress = context && context.compress && !doNotCompress, color, alpha;
+
+    // `value` is set if this color was originally
+    // converted from a named color string so we need
+    // to respect this and try to output named color too.
+    if (this.value) {
+        return this.value;
+    }
+
+    // If we have some transparency, the only way to represent it
+    // is via `rgba`. Otherwise, we use the hex representation,
+    // which has better compatibility with older browsers.
+    // Values are capped between `0` and `255`, rounded and zero-padded.
+    alpha = this.fround(context, this.alpha);
+    if (alpha < 1) {
+        return "rgba(" + this.rgb.map(function (c) {
+            return clamp(Math.round(c), 255);
+        }).concat(clamp(alpha, 1))
+            .join(',' + (compress ? '' : ' ')) + ")";
+    }
+
+    color = this.toRGB();
+
+    if (compress) {
+        var splitcolor = color.split('');
+
+        // Convert color to short format
+        if (splitcolor[1] === splitcolor[2] && splitcolor[3] === splitcolor[4] && splitcolor[5] === splitcolor[6]) {
+            color = '#' + splitcolor[1] + splitcolor[3] + splitcolor[5];
+        }
+    }
+
+    return color;
+};
+
+//
+// Operations have to be done per-channel, if not,
+// channels will spill onto each other. Once we have
+// our result, in the form of an integer triplet,
+// we create a new Color node to hold the result.
+//
+Color.prototype.operate = function (context, op, other) {
+    var rgb = [];
+    var alpha = this.alpha * (1 - other.alpha) + other.alpha;
+    for (var c = 0; c < 3; c++) {
+        rgb[c] = this._operate(context, op, this.rgb[c], other.rgb[c]);
+    }
+    return new Color(rgb, alpha);
+};
+Color.prototype.toRGB = function () {
+    return toHex(this.rgb);
+};
+Color.prototype.toHSL = function () {
+    var r = this.rgb[0] / 255,
+        g = this.rgb[1] / 255,
+        b = this.rgb[2] / 255,
+        a = this.alpha;
+
+    var max = Math.max(r, g, b), min = Math.min(r, g, b);
+    var h, s, l = (max + min) / 2, d = max - min;
+
+    if (max === min) {
+        h = s = 0;
+    } else {
+        s = l > 0.5 ? d / (2 - max - min) : d / (max + min);
+
+        switch (max) {
+            case r: h = (g - b) / d + (g < b ? 6 : 0); break;
+            case g: h = (b - r) / d + 2;               break;
+            case b: h = (r - g) / d + 4;               break;
+        }
+        h /= 6;
+    }
+    return { h: h * 360, s: s, l: l, a: a };
+};
+//Adapted from http://mjijackson.com/2008/02/rgb-to-hsl-and-rgb-to-hsv-color-model-conversion-algorithms-in-javascript
+Color.prototype.toHSV = function () {
+    var r = this.rgb[0] / 255,
+        g = this.rgb[1] / 255,
+        b = this.rgb[2] / 255,
+        a = this.alpha;
+
+    var max = Math.max(r, g, b), min = Math.min(r, g, b);
+    var h, s, v = max;
+
+    var d = max - min;
+    if (max === 0) {
+        s = 0;
+    } else {
+        s = d / max;
+    }
+
+    if (max === min) {
+        h = 0;
+    } else {
+        switch(max) {
+            case r: h = (g - b) / d + (g < b ? 6 : 0); break;
+            case g: h = (b - r) / d + 2; break;
+            case b: h = (r - g) / d + 4; break;
+        }
+        h /= 6;
+    }
+    return { h: h * 360, s: s, v: v, a: a };
+};
+Color.prototype.toARGB = function () {
+    return toHex([this.alpha * 255].concat(this.rgb));
+};
+Color.prototype.compare = function (x) {
+    return (x.rgb &&
+        x.rgb[0] === this.rgb[0] &&
+        x.rgb[1] === this.rgb[1] &&
+        x.rgb[2] === this.rgb[2] &&
+        x.alpha  === this.alpha) ? 0 : undefined;
+};
+
+Color.fromKeyword = function(keyword) {
+    var c, key = keyword.toLowerCase();
+    if (colors.hasOwnProperty(key)) {
+        c = new Color(colors[key].slice(1));
+    }
+    else if (key === "transparent") {
+        c = new Color([0, 0, 0], 0);
+    }
+
+    if (c) {
+        c.value = keyword;
+        return c;
+    }
+};
+module.exports = Color;
+
+},{"../data/colors":11,"./node":69}],50:[function(require,module,exports){
+var Node = require("./node");
+
+var Combinator = function (value) {
+    if (value === ' ') {
+        this.value = ' ';
+        this.emptyOrWhitespace = true;
+    } else {
+        this.value = value ? value.trim() : "";
+        this.emptyOrWhitespace = this.value === "";
+    }
+};
+Combinator.prototype = new Node();
+Combinator.prototype.type = "Combinator";
+var _noSpaceCombinators = {
+    '': true,
+    ' ': true,
+    '|': true
+};
+Combinator.prototype.genCSS = function (context, output) {
+    var spaceOrEmpty = (context.compress || _noSpaceCombinators[this.value]) ? '' : ' ';
+    output.add(spaceOrEmpty + this.value + spaceOrEmpty);
+};
+module.exports = Combinator;
+
+},{"./node":69}],51:[function(require,module,exports){
+var Node = require("./node"),
+    getDebugInfo = require("./debug-info");
+
+var Comment = function (value, isLineComment, index, currentFileInfo) {
+    this.value = value;
+    this.isLineComment = isLineComment;
+    this.currentFileInfo = currentFileInfo;
+};
+Comment.prototype = new Node();
+Comment.prototype.type = "Comment";
+Comment.prototype.genCSS = function (context, output) {
+    if (this.debugInfo) {
+        output.add(getDebugInfo(context, this), this.currentFileInfo, this.index);
+    }
+    output.add(this.value);
+};
+Comment.prototype.isSilent = function(context) {
+    var isReference = (this.currentFileInfo && this.currentFileInfo.reference && !this.isReferenced),
+        isCompressed = context.compress && this.value[2] !== "!";
+    return this.isLineComment || isReference || isCompressed;
+};
+Comment.prototype.markReferenced = function () {
+    this.isReferenced = true;
+};
+module.exports = Comment;
+
+},{"./debug-info":53,"./node":69}],52:[function(require,module,exports){
+var Node = require("./node");
+
+var Condition = function (op, l, r, i, negate) {
+    this.op = op.trim();
+    this.lvalue = l;
+    this.rvalue = r;
+    this.index = i;
+    this.negate = negate;
+};
+Condition.prototype = new Node();
+Condition.prototype.type = "Condition";
+Condition.prototype.accept = function (visitor) {
+    this.lvalue = visitor.visit(this.lvalue);
+    this.rvalue = visitor.visit(this.rvalue);
+};
+Condition.prototype.eval = function (context) {
+    var result = (function (op, a, b) {
+        switch (op) {
+            case 'and': return a && b;
+            case 'or':  return a || b;
+            default:
+                switch (Node.compare(a, b)) {
+                    case -1:
+                        return op === '<' || op === '=<' || op === '<=';
+                    case 0:
+                        return op === '=' || op === '>=' || op === '=<' || op === '<=';
+                    case 1:
+                        return op === '>' || op === '>=';
+                    default:
+                        return false;
+                }
+        }
+    })(this.op, this.lvalue.eval(context), this.rvalue.eval(context));
+
+    return this.negate ? !result : result;
+};
+module.exports = Condition;
+
+},{"./node":69}],53:[function(require,module,exports){
+var debugInfo = function(context, ctx, lineSeparator) {
+    var result = "";
+    if (context.dumpLineNumbers && !context.compress) {
+        switch(context.dumpLineNumbers) {
+            case 'comments':
+                result = debugInfo.asComment(ctx);
+                break;
+            case 'mediaquery':
+                result = debugInfo.asMediaQuery(ctx);
+                break;
+            case 'all':
+                result = debugInfo.asComment(ctx) + (lineSeparator || "") + debugInfo.asMediaQuery(ctx);
+                break;
+        }
+    }
+    return result;
+};
+
+debugInfo.asComment = function(ctx) {
+    return '/* line ' + ctx.debugInfo.lineNumber + ', ' + ctx.debugInfo.fileName + ' */\n';
+};
+
+debugInfo.asMediaQuery = function(ctx) {
+    var filenameWithProtocol = ctx.debugInfo.fileName;
+    if (!/^[a-z]+:\/\//i.test(filenameWithProtocol)) {
+        filenameWithProtocol = 'file://' + filenameWithProtocol;
+    }
+    return '@media -sass-debug-info{filename{font-family:' +
+        filenameWithProtocol.replace(/([.:\/\\])/g, function (a) {
+            if (a == '\\') {
+                a = '\/';
+            }
+            return '\\' + a;
+        }) +
+        '}line{font-family:\\00003' + ctx.debugInfo.lineNumber + '}}\n';
+};
+
+module.exports = debugInfo;
+
+},{}],54:[function(require,module,exports){
+var Node = require("./node"),
+    contexts = require("../contexts");
+
+var DetachedRuleset = function (ruleset, frames) {
+    this.ruleset = ruleset;
+    this.frames = frames;
+};
+DetachedRuleset.prototype = new Node();
+DetachedRuleset.prototype.type = "DetachedRuleset";
+DetachedRuleset.prototype.evalFirst = true;
+DetachedRuleset.prototype.accept = function (visitor) {
+    this.ruleset = visitor.visit(this.ruleset);
+};
+DetachedRuleset.prototype.eval = function (context) {
+    var frames = this.frames || context.frames.slice(0);
+    return new DetachedRuleset(this.ruleset, frames);
+};
+DetachedRuleset.prototype.callEval = function (context) {
+    return this.ruleset.eval(this.frames ? new contexts.Eval(context, this.frames.concat(context.frames)) : context);
+};
+module.exports = DetachedRuleset;
+
+},{"../contexts":10,"./node":69}],55:[function(require,module,exports){
+var Node = require("./node"),
+    unitConversions = require("../data/unit-conversions"),
+    Unit = require("./unit"),
+    Color = require("./color");
+
+//
+// A number with a unit
+//
+var Dimension = function (value, unit) {
+    this.value = parseFloat(value);
+    this.unit = (unit && unit instanceof Unit) ? unit :
+      new Unit(unit ? [unit] : undefined);
+};
+
+Dimension.prototype = new Node();
+Dimension.prototype.type = "Dimension";
+Dimension.prototype.accept = function (visitor) {
+    this.unit = visitor.visit(this.unit);
+};
+Dimension.prototype.eval = function (context) {
+    return this;
+};
+Dimension.prototype.toColor = function () {
+    return new Color([this.value, this.value, this.value]);
+};
+Dimension.prototype.genCSS = function (context, output) {
+    if ((context && context.strictUnits) && !this.unit.isSingular()) {
+        throw new Error("Multiple units in dimension. Correct the units or use the unit function. Bad unit: " + this.unit.toString());
+    }
+
+    var value = this.fround(context, this.value),
+        strValue = String(value);
+
+    if (value !== 0 && value < 0.000001 && value > -0.000001) {
+        // would be output 1e-6 etc.
+        strValue = value.toFixed(20).replace(/0+$/, "");
+    }
+
+    if (context && context.compress) {
+        // Zero values doesn't need a unit
+        if (value === 0 && this.unit.isLength()) {
+            output.add(strValue);
+            return;
+        }
+
+        // Float values doesn't need a leading zero
+        if (value > 0 && value < 1) {
+            strValue = (strValue).substr(1);
+        }
+    }
+
+    output.add(strValue);
+    this.unit.genCSS(context, output);
+};
+
+// In an operation between two Dimensions,
+// we default to the first Dimension's unit,
+// so `1px + 2` will yield `3px`.
+Dimension.prototype.operate = function (context, op, other) {
+    /*jshint noempty:false */
+    var value = this._operate(context, op, this.value, other.value),
+        unit = this.unit.clone();
+
+    if (op === '+' || op === '-') {
+        if (unit.numerator.length === 0 && unit.denominator.length === 0) {
+            unit = other.unit.clone();
+            if (this.unit.backupUnit) {
+                unit.backupUnit = this.unit.backupUnit;
+            }
+        } else if (other.unit.numerator.length === 0 && unit.denominator.length === 0) {
+            // do nothing
+        } else {
+            other = other.convertTo(this.unit.usedUnits());
+
+            if (context.strictUnits && other.unit.toString() !== unit.toString()) {
+                throw new Error("Incompatible units. Change the units or use the unit function. Bad units: '" + unit.toString() +
+                    "' and '" + other.unit.toString() + "'.");
+            }
+
+            value = this._operate(context, op, this.value, other.value);
+        }
+    } else if (op === '*') {
+        unit.numerator = unit.numerator.concat(other.unit.numerator).sort();
+        unit.denominator = unit.denominator.concat(other.unit.denominator).sort();
+        unit.cancel();
+    } else if (op === '/') {
+        unit.numerator = unit.numerator.concat(other.unit.denominator).sort();
+        unit.denominator = unit.denominator.concat(other.unit.numerator).sort();
+        unit.cancel();
+    }
+    return new Dimension(value, unit);
+};
+Dimension.prototype.compare = function (other) {
+    var a, b;
+
+    if (!(other instanceof Dimension)) {
+        return undefined;
+    }
+
+    if (this.unit.isEmpty() || other.unit.isEmpty()) {
+        a = this;
+        b = other;
+    } else {
+        a = this.unify();
+        b = other.unify();
+        if (a.unit.compare(b.unit) !== 0) {
+            return undefined;
+        }
+    }
+
+    return Node.numericCompare(a.value, b.value);
+};
+Dimension.prototype.unify = function () {
+    return this.convertTo({ length: 'px', duration: 's', angle: 'rad' });
+};
+Dimension.prototype.convertTo = function (conversions) {
+    var value = this.value, unit = this.unit.clone(),
+        i, groupName, group, targetUnit, derivedConversions = {}, applyUnit;
+
+    if (typeof conversions === 'string') {
+        for (i in unitConversions) {
+            if (unitConversions[i].hasOwnProperty(conversions)) {
+                derivedConversions = {};
+                derivedConversions[i] = conversions;
+            }
+        }
+        conversions = derivedConversions;
+    }
+    applyUnit = function (atomicUnit, denominator) {
+        /* jshint loopfunc:true */
+        if (group.hasOwnProperty(atomicUnit)) {
+            if (denominator) {
+                value = value / (group[atomicUnit] / group[targetUnit]);
+            } else {
+                value = value * (group[atomicUnit] / group[targetUnit]);
+            }
+
+            return targetUnit;
+        }
+
+        return atomicUnit;
+    };
+
+    for (groupName in conversions) {
+        if (conversions.hasOwnProperty(groupName)) {
+            targetUnit = conversions[groupName];
+            group = unitConversions[groupName];
+
+            unit.map(applyUnit);
+        }
+    }
+
+    unit.cancel();
+
+    return new Dimension(value, unit);
+};
+module.exports = Dimension;
+
+},{"../data/unit-conversions":13,"./color":49,"./node":69,"./unit":78}],56:[function(require,module,exports){
+var Node = require("./node"),
+    Selector = require("./selector"),
+    Ruleset = require("./ruleset");
+
+var Directive = function (name, value, rules, index, currentFileInfo, debugInfo, isReferenced, isRooted) {
+    var i;
+
+    this.name  = name;
+    this.value = value;
+    if (rules) {
+        if (Array.isArray(rules)) {
+            this.rules = rules;
+        } else {
+            this.rules = [rules];
+            this.rules[0].selectors = (new Selector([], null, null, this.index, currentFileInfo)).createEmptySelectors();
+        }
+        for (i = 0; i < this.rules.length; i++) {
+            this.rules[i].allowImports = true;
+        }
+    }
+    this.index = index;
+    this.currentFileInfo = currentFileInfo;
+    this.debugInfo = debugInfo;
+    this.isReferenced = isReferenced;
+    this.isRooted = isRooted || false;
+};
+
+Directive.prototype = new Node();
+Directive.prototype.type = "Directive";
+Directive.prototype.accept = function (visitor) {
+    var value = this.value, rules = this.rules;
+    if (rules) {
+        this.rules = visitor.visitArray(rules);
+    }
+    if (value) {
+        this.value = visitor.visit(value);
+    }
+};
+Directive.prototype.isRulesetLike = function() {
+    return this.rules || !this.isCharset();
+};
+Directive.prototype.isCharset = function() {
+    return "@charset" === this.name;
+};
+Directive.prototype.genCSS = function (context, output) {
+    var value = this.value, rules = this.rules;
+    output.add(this.name, this.currentFileInfo, this.index);
+    if (value) {
+        output.add(' ');
+        value.genCSS(context, output);
+    }
+    if (rules) {
+        this.outputRuleset(context, output, rules);
+    } else {
+        output.add(';');
+    }
+};
+Directive.prototype.eval = function (context) {
+    var mediaPathBackup, mediaBlocksBackup, value = this.value, rules = this.rules;
+
+    //media stored inside other directive should not bubble over it
+    //backpup media bubbling information
+    mediaPathBackup = context.mediaPath;
+    mediaBlocksBackup = context.mediaBlocks;
+    //deleted media bubbling information
+    context.mediaPath = [];
+    context.mediaBlocks = [];
+
+    if (value) {
+        value = value.eval(context);
+    }
+    if (rules) {
+        // assuming that there is only one rule at this point - that is how parser constructs the rule
+        rules = [rules[0].eval(context)];
+        rules[0].root = true;
+    }
+    //restore media bubbling information
+    context.mediaPath = mediaPathBackup;
+    context.mediaBlocks = mediaBlocksBackup;
+
+    return new Directive(this.name, value, rules,
+        this.index, this.currentFileInfo, this.debugInfo, this.isReferenced, this.isRooted);
+};
+Directive.prototype.variable = function (name) {
+    if (this.rules) {
+        // assuming that there is only one rule at this point - that is how parser constructs the rule
+        return Ruleset.prototype.variable.call(this.rules[0], name);
+    }
+};
+Directive.prototype.find = function () {
+    if (this.rules) {
+        // assuming that there is only one rule at this point - that is how parser constructs the rule
+        return Ruleset.prototype.find.apply(this.rules[0], arguments);
+    }
+};
+Directive.prototype.rulesets = function () {
+    if (this.rules) {
+        // assuming that there is only one rule at this point - that is how parser constructs the rule
+        return Ruleset.prototype.rulesets.apply(this.rules[0]);
+    }
+};
+Directive.prototype.markReferenced = function () {
+    var i, rules;
+    this.isReferenced = true;
+    if (this.rules) {
+        rules = this.rules;
+        for (i = 0; i < rules.length; i++) {
+            if (rules[i].markReferenced) {
+                rules[i].markReferenced();
+            }
+        }
+    }
+};
+Directive.prototype.getIsReferenced = function () {
+    return !this.currentFileInfo || !this.currentFileInfo.reference || this.isReferenced;
+};
+Directive.prototype.outputRuleset = function (context, output, rules) {
+    var ruleCnt = rules.length, i;
+    context.tabLevel = (context.tabLevel | 0) + 1;
+
+    // Compressed
+    if (context.compress) {
+        output.add('{');
+        for (i = 0; i < ruleCnt; i++) {
+            rules[i].genCSS(context, output);
+        }
+        output.add('}');
+        context.tabLevel--;
+        return;
+    }
+
+    // Non-compressed
+    var tabSetStr = '\n' + Array(context.tabLevel).join("  "), tabRuleStr = tabSetStr + "  ";
+    if (!ruleCnt) {
+        output.add(" {" + tabSetStr + '}');
+    } else {
+        output.add(" {" + tabRuleStr);
+        rules[0].genCSS(context, output);
+        for (i = 1; i < ruleCnt; i++) {
+            output.add(tabRuleStr);
+            rules[i].genCSS(context, output);
+        }
+        output.add(tabSetStr + '}');
+    }
+
+    context.tabLevel--;
+};
+module.exports = Directive;
+
+},{"./node":69,"./ruleset":75,"./selector":76}],57:[function(require,module,exports){
+var Node = require("./node"),
+    Paren = require("./paren"),
+    Combinator = require("./combinator");
+
+var Element = function (combinator, value, index, currentFileInfo) {
+    this.combinator = combinator instanceof Combinator ?
+                      combinator : new Combinator(combinator);
+
+    if (typeof value === 'string') {
+        this.value = value.trim();
+    } else if (value) {
+        this.value = value;
+    } else {
+        this.value = "";
+    }
+    this.index = index;
+    this.currentFileInfo = currentFileInfo;
+};
+Element.prototype = new Node();
+Element.prototype.type = "Element";
+Element.prototype.accept = function (visitor) {
+    var value = this.value;
+    this.combinator = visitor.visit(this.combinator);
+    if (typeof value === "object") {
+        this.value = visitor.visit(value);
+    }
+};
+Element.prototype.eval = function (context) {
+    return new Element(this.combinator,
+                             this.value.eval ? this.value.eval(context) : this.value,
+                             this.index,
+                             this.currentFileInfo);
+};
+Element.prototype.genCSS = function (context, output) {
+    output.add(this.toCSS(context), this.currentFileInfo, this.index);
+};
+Element.prototype.toCSS = function (context) {
+    context = context || {};
+    var value = this.value, firstSelector = context.firstSelector;
+    if (value instanceof Paren) {
+        // selector in parens should not be affected by outer selector
+        // flags (breaks only interpolated selectors - see #1973)
+        context.firstSelector = true;
+    }
+    value = value.toCSS ? value.toCSS(context) : value;
+    context.firstSelector = firstSelector;
+    if (value === '' && this.combinator.value.charAt(0) === '&') {
+        return '';
+    } else {
+        return this.combinator.toCSS(context) + value;
+    }
+};
+module.exports = Element;
+
+},{"./combinator":50,"./node":69,"./paren":71}],58:[function(require,module,exports){
+var Node = require("./node"),
+    Paren = require("./paren"),
+    Comment = require("./comment");
+
+var Expression = function (value) {
+    this.value = value;
+    if (!value) {
+        throw new Error("Expression requires an array parameter");
+    }
+};
+Expression.prototype = new Node();
+Expression.prototype.type = "Expression";
+Expression.prototype.accept = function (visitor) {
+    this.value = visitor.visitArray(this.value);
+};
+Expression.prototype.eval = function (context) {
+    var returnValue,
+        inParenthesis = this.parens && !this.parensInOp,
+        doubleParen = false;
+    if (inParenthesis) {
+        context.inParenthesis();
+    }
+    if (this.value.length > 1) {
+        returnValue = new Expression(this.value.map(function (e) {
+            return e.eval(context);
+        }));
+    } else if (this.value.length === 1) {
+        if (this.value[0].parens && !this.value[0].parensInOp) {
+            doubleParen = true;
+        }
+        returnValue = this.value[0].eval(context);
+    } else {
+        returnValue = this;
+    }
+    if (inParenthesis) {
+        context.outOfParenthesis();
+    }
+    if (this.parens && this.parensInOp && !(context.isMathOn()) && !doubleParen) {
+        returnValue = new Paren(returnValue);
+    }
+    return returnValue;
+};
+Expression.prototype.genCSS = function (context, output) {
+    for (var i = 0; i < this.value.length; i++) {
+        this.value[i].genCSS(context, output);
+        if (i + 1 < this.value.length) {
+            output.add(" ");
+        }
+    }
+};
+Expression.prototype.throwAwayComments = function () {
+    this.value = this.value.filter(function(v) {
+        return !(v instanceof Comment);
+    });
+};
+Expression.prototype.markReferenced = function () {
+    this.value.forEach(function (value) {
+        if (value.markReferenced) { value.markReferenced(); }
+    });
+};
+module.exports = Expression;
+
+},{"./comment":51,"./node":69,"./paren":71}],59:[function(require,module,exports){
+var Node = require("./node");
+
+var Extend = function Extend(selector, option, index) {
+    this.selector = selector;
+    this.option = option;
+    this.index = index;
+    this.object_id = Extend.next_id++;
+    this.parent_ids = [this.object_id];
+
+    switch(option) {
+        case "all":
+            this.allowBefore = true;
+            this.allowAfter = true;
+            break;
+        default:
+            this.allowBefore = false;
+            this.allowAfter = false;
+            break;
+    }
+};
+Extend.next_id = 0;
+
+Extend.prototype = new Node();
+Extend.prototype.type = "Extend";
+Extend.prototype.accept = function (visitor) {
+    this.selector = visitor.visit(this.selector);
+};
+Extend.prototype.eval = function (context) {
+    return new Extend(this.selector.eval(context), this.option, this.index);
+};
+Extend.prototype.clone = function (context) {
+    return new Extend(this.selector, this.option, this.index);
+};
+Extend.prototype.findSelfSelectors = function (selectors) {
+    var selfElements = [],
+        i,
+        selectorElements;
+
+    for (i = 0; i < selectors.length; i++) {
+        selectorElements = selectors[i].elements;
+        // duplicate the logic in genCSS function inside the selector node.
+        // future TODO - move both logics into the selector joiner visitor
+        if (i > 0 && selectorElements.length && selectorElements[0].combinator.value === "") {
+            selectorElements[0].combinator.value = ' ';
+        }
+        selfElements = selfElements.concat(selectors[i].elements);
+    }
+
+    this.selfSelectors = [{ elements: selfElements }];
+};
+module.exports = Extend;
+
+},{"./node":69}],60:[function(require,module,exports){
+var Node = require("./node"),
+    Media = require("./media"),
+    URL = require("./url"),
+    Quoted = require("./quoted"),
+    Ruleset = require("./ruleset"),
+    Anonymous = require("./anonymous");
+
+//
+// CSS @import node
+//
+// The general strategy here is that we don't want to wait
+// for the parsing to be completed, before we start importing
+// the file. That's because in the context of a browser,
+// most of the time will be spent waiting for the server to respond.
+//
+// On creation, we push the import path to our import queue, though
+// `import,push`, we also pass it a callback, which it'll call once
+// the file has been fetched, and parsed.
+//
+var Import = function (path, features, options, index, currentFileInfo) {
+    this.options = options;
+    this.index = index;
+    this.path = path;
+    this.features = features;
+    this.currentFileInfo = currentFileInfo;
+
+    if (this.options.less !== undefined || this.options.inline) {
+        this.css = !this.options.less || this.options.inline;
+    } else {
+        var pathValue = this.getPath();
+        if (pathValue && /[#\.\&\?\/]css([\?;].*)?$/.test(pathValue)) {
+            this.css = true;
+        }
+    }
+};
+
+//
+// The actual import node doesn't return anything, when converted to CSS.
+// The reason is that it's used at the evaluation stage, so that the rules
+// it imports can be treated like any other rules.
+//
+// In `eval`, we make sure all Import nodes get evaluated, recursively, so
+// we end up with a flat structure, which can easily be imported in the parent
+// ruleset.
+//
+Import.prototype = new Node();
+Import.prototype.type = "Import";
+Import.prototype.accept = function (visitor) {
+    if (this.features) {
+        this.features = visitor.visit(this.features);
+    }
+    this.path = visitor.visit(this.path);
+    if (!this.options.plugin && !this.options.inline && this.root) {
+        this.root = visitor.visit(this.root);
+    }
+};
+Import.prototype.genCSS = function (context, output) {
+    if (this.css && this.path.currentFileInfo.reference === undefined) {
+        output.add("@import ", this.currentFileInfo, this.index);
+        this.path.genCSS(context, output);
+        if (this.features) {
+            output.add(" ");
+            this.features.genCSS(context, output);
+        }
+        output.add(';');
+    }
+};
+Import.prototype.getPath = function () {
+    return (this.path instanceof URL) ?
+        this.path.value.value : this.path.value;
+};
+Import.prototype.isVariableImport = function () {
+    var path = this.path;
+    if (path instanceof URL) {
+        path = path.value;
+    }
+    if (path instanceof Quoted) {
+        return path.containsVariables();
+    }
+
+    return true;
+};
+Import.prototype.evalForImport = function (context) {
+    var path = this.path;
+
+    if (path instanceof URL) {
+        path = path.value;
+    }
+
+    return new Import(path.eval(context), this.features, this.options, this.index, this.currentFileInfo);
+};
+Import.prototype.evalPath = function (context) {
+    var path = this.path.eval(context);
+    var rootpath = this.currentFileInfo && this.currentFileInfo.rootpath;
+
+    if (!(path instanceof URL)) {
+        if (rootpath) {
+            var pathValue = path.value;
+            // Add the base path if the import is relative
+            if (pathValue && context.isPathRelative(pathValue)) {
+                path.value = rootpath + pathValue;
+            }
+        }
+        path.value = context.normalizePath(path.value);
+    }
+
+    return path;
+};
+Import.prototype.eval = function (context) {
+    var ruleset, registry,
+        features = this.features && this.features.eval(context);
+
+    if (this.options.plugin) {
+        registry = context.frames[0] && context.frames[0].functionRegistry;
+        if ( registry && this.root && this.root.functions ) {
+            registry.addMultiple( this.root.functions );
+        }
+        return [];
+    }
+
+    if (this.skip) {
+        if (typeof this.skip === "function") {
+            this.skip = this.skip();
+        }
+        if (this.skip) {
+            return [];
+        }
+    }
+
+    if (this.options.inline) {
+        var contents = new Anonymous(this.root, 0,
+          {
+              filename: this.importedFilename,
+              reference: this.path.currentFileInfo && this.path.currentFileInfo.reference
+          }, true, true, false);
+
+        return this.features ? new Media([contents], this.features.value) : [contents];
+    } else if (this.css) {
+        var newImport = new Import(this.evalPath(context), features, this.options, this.index);
+        if (!newImport.css && this.error) {
+            throw this.error;
+        }
+        return newImport;
+    } else {
+        ruleset = new Ruleset(null, this.root.rules.slice(0));
+
+        ruleset.evalImports(context);
+
+        return this.features ? new Media(ruleset.rules, this.features.value) : ruleset.rules;
+    }
+};
+module.exports = Import;
+
+},{"./anonymous":45,"./media":65,"./node":69,"./quoted":72,"./ruleset":75,"./url":79}],61:[function(require,module,exports){
+var tree = {};
+
+tree.Node = require('./node');
+tree.Alpha = require('./alpha');
+tree.Color = require('./color');
+tree.Directive = require('./directive');
+tree.DetachedRuleset = require('./detached-ruleset');
+tree.Operation = require('./operation');
+tree.Dimension = require('./dimension');
+tree.Unit = require('./unit');
+tree.Keyword = require('./keyword');
+tree.Variable = require('./variable');
+tree.Ruleset = require('./ruleset');
+tree.Element = require('./element');
+tree.Attribute = require('./attribute');
+tree.Combinator = require('./combinator');
+tree.Selector = require('./selector');
+tree.Quoted = require('./quoted');
+tree.Expression = require('./expression');
+tree.Rule = require('./rule');
+tree.Call = require('./call');
+tree.URL = require('./url');
+tree.Import = require('./import');
+tree.mixin = {
+    Call: require('./mixin-call'),
+    Definition: require('./mixin-definition')
+};
+tree.Comment = require('./comment');
+tree.Anonymous = require('./anonymous');
+tree.Value = require('./value');
+tree.JavaScript = require('./javascript');
+tree.Assignment = require('./assignment');
+tree.Condition = require('./condition');
+tree.Paren = require('./paren');
+tree.Media = require('./media');
+tree.UnicodeDescriptor = require('./unicode-descriptor');
+tree.Negative = require('./negative');
+tree.Extend = require('./extend');
+tree.RulesetCall = require('./ruleset-call');
+
+module.exports = tree;
+
+},{"./alpha":44,"./anonymous":45,"./assignment":46,"./attribute":47,"./call":48,"./color":49,"./combinator":50,"./comment":51,"./condition":52,"./detached-ruleset":54,"./dimension":55,"./directive":56,"./element":57,"./expression":58,"./extend":59,"./import":60,"./javascript":62,"./keyword":64,"./media":65,"./mixin-call":66,"./mixin-definition":67,"./negative":68,"./node":69,"./operation":70,"./paren":71,"./quoted":72,"./rule":73,"./ruleset":75,"./ruleset-call":74,"./selector":76,"./unicode-descriptor":77,"./unit":78,"./url":79,"./value":80,"./variable":81}],62:[function(require,module,exports){
+var JsEvalNode = require("./js-eval-node"),
+    Dimension = require("./dimension"),
+    Quoted = require("./quoted"),
+    Anonymous = require("./anonymous");
+
+var JavaScript = function (string, escaped, index, currentFileInfo) {
+    this.escaped = escaped;
+    this.expression = string;
+    this.index = index;
+    this.currentFileInfo = currentFileInfo;
+};
+JavaScript.prototype = new JsEvalNode();
+JavaScript.prototype.type = "JavaScript";
+JavaScript.prototype.eval = function(context) {
+    var result = this.evaluateJavaScript(this.expression, context);
+
+    if (typeof result === 'number') {
+        return new Dimension(result);
+    } else if (typeof result === 'string') {
+        return new Quoted('"' + result + '"', result, this.escaped, this.index);
+    } else if (Array.isArray(result)) {
+        return new Anonymous(result.join(', '));
+    } else {
+        return new Anonymous(result);
+    }
+};
+
+module.exports = JavaScript;
+
+},{"./anonymous":45,"./dimension":55,"./js-eval-node":63,"./quoted":72}],63:[function(require,module,exports){
+var Node = require("./node"),
+    Variable = require("./variable");
+
+var JsEvalNode = function() {
+};
+JsEvalNode.prototype = new Node();
+
+JsEvalNode.prototype.evaluateJavaScript = function (expression, context) {
+    var result,
+        that = this,
+        evalContext = {};
+
+    if (context.javascriptEnabled !== undefined && !context.javascriptEnabled) {
+        throw { message: "You are using JavaScript, which has been disabled.",
+            filename: this.currentFileInfo.filename,
+            index: this.index };
+    }
+
+    expression = expression.replace(/@\{([\w-]+)\}/g, function (_, name) {
+        return that.jsify(new Variable('@' + name, that.index, that.currentFileInfo).eval(context));
+    });
+
+    try {
+        expression = new Function('return (' + expression + ')');
+    } catch (e) {
+        throw { message: "JavaScript evaluation error: " + e.message + " from `" + expression + "`" ,
+            filename: this.currentFileInfo.filename,
+            index: this.index };
+    }
+
+    var variables = context.frames[0].variables();
+    for (var k in variables) {
+        if (variables.hasOwnProperty(k)) {
+            /*jshint loopfunc:true */
+            evalContext[k.slice(1)] = {
+                value: variables[k].value,
+                toJS: function () {
+                    return this.value.eval(context).toCSS();
+                }
+            };
+        }
+    }
+
+    try {
+        result = expression.call(evalContext);
+    } catch (e) {
+        throw { message: "JavaScript evaluation error: '" + e.name + ': ' + e.message.replace(/["]/g, "'") + "'" ,
+            filename: this.currentFileInfo.filename,
+            index: this.index };
+    }
+    return result;
+};
+JsEvalNode.prototype.jsify = function (obj) {
+    if (Array.isArray(obj.value) && (obj.value.length > 1)) {
+        return '[' + obj.value.map(function (v) { return v.toCSS(); }).join(', ') + ']';
+    } else {
+        return obj.toCSS();
+    }
+};
+
+module.exports = JsEvalNode;
+
+},{"./node":69,"./variable":81}],64:[function(require,module,exports){
+var Node = require("./node");
+
+var Keyword = function (value) { this.value = value; };
+Keyword.prototype = new Node();
+Keyword.prototype.type = "Keyword";
+Keyword.prototype.genCSS = function (context, output) {
+    if (this.value === '%') { throw { type: "Syntax", message: "Invalid % without number" }; }
+    output.add(this.value);
+};
+
+Keyword.True = new Keyword('true');
+Keyword.False = new Keyword('false');
+
+module.exports = Keyword;
+
+},{"./node":69}],65:[function(require,module,exports){
+var Ruleset = require("./ruleset"),
+    Value = require("./value"),
+    Selector = require("./selector"),
+    Anonymous = require("./anonymous"),
+    Expression = require("./expression"),
+    Directive = require("./directive");
+
+var Media = function (value, features, index, currentFileInfo) {
+    this.index = index;
+    this.currentFileInfo = currentFileInfo;
+
+    var selectors = (new Selector([], null, null, this.index, this.currentFileInfo)).createEmptySelectors();
+
+    this.features = new Value(features);
+    this.rules = [new Ruleset(selectors, value)];
+    this.rules[0].allowImports = true;
+};
+Media.prototype = new Directive();
+Media.prototype.type = "Media";
+Media.prototype.isRulesetLike = true;
+Media.prototype.accept = function (visitor) {
+    if (this.features) {
+        this.features = visitor.visit(this.features);
+    }
+    if (this.rules) {
+        this.rules = visitor.visitArray(this.rules);
+    }
+};
+Media.prototype.genCSS = function (context, output) {
+    output.add('@media ', this.currentFileInfo, this.index);
+    this.features.genCSS(context, output);
+    this.outputRuleset(context, output, this.rules);
+};
+Media.prototype.eval = function (context) {
+    if (!context.mediaBlocks) {
+        context.mediaBlocks = [];
+        context.mediaPath = [];
+    }
+
+    var media = new Media(null, [], this.index, this.currentFileInfo);
+    if (this.debugInfo) {
+        this.rules[0].debugInfo = this.debugInfo;
+        media.debugInfo = this.debugInfo;
+    }
+    var strictMathBypass = false;
+    if (!context.strictMath) {
+        strictMathBypass = true;
+        context.strictMath = true;
+    }
+    try {
+        media.features = this.features.eval(context);
+    }
+    finally {
+        if (strictMathBypass) {
+            context.strictMath = false;
+        }
+    }
+
+    context.mediaPath.push(media);
+    context.mediaBlocks.push(media);
+
+    this.rules[0].functionRegistry = context.frames[0].functionRegistry.inherit();
+    context.frames.unshift(this.rules[0]);
+    media.rules = [this.rules[0].eval(context)];
+    context.frames.shift();
+
+    context.mediaPath.pop();
+
+    return context.mediaPath.length === 0 ? media.evalTop(context) :
+                media.evalNested(context);
+};
+Media.prototype.evalTop = function (context) {
+    var result = this;
+
+    // Render all dependent Media blocks.
+    if (context.mediaBlocks.length > 1) {
+        var selectors = (new Selector([], null, null, this.index, this.currentFileInfo)).createEmptySelectors();
+        result = new Ruleset(selectors, context.mediaBlocks);
+        result.multiMedia = true;
+    }
+
+    delete context.mediaBlocks;
+    delete context.mediaPath;
+
+    return result;
+};
+Media.prototype.evalNested = function (context) {
+    var i, value,
+        path = context.mediaPath.concat([this]);
+
+    // Extract the media-query conditions separated with `,` (OR).
+    for (i = 0; i < path.length; i++) {
+        value = path[i].features instanceof Value ?
+                    path[i].features.value : path[i].features;
+        path[i] = Array.isArray(value) ? value : [value];
+    }
+
+    // Trace all permutations to generate the resulting media-query.
+    //
+    // (a, b and c) with nested (d, e) ->
+    //    a and d
+    //    a and e
+    //    b and c and d
+    //    b and c and e
+    this.features = new Value(this.permute(path).map(function (path) {
+        path = path.map(function (fragment) {
+            return fragment.toCSS ? fragment : new Anonymous(fragment);
+        });
+
+        for (i = path.length - 1; i > 0; i--) {
+            path.splice(i, 0, new Anonymous("and"));
+        }
+
+        return new Expression(path);
+    }));
+
+    // Fake a tree-node that doesn't output anything.
+    return new Ruleset([], []);
+};
+Media.prototype.permute = function (arr) {
+    if (arr.length === 0) {
+        return [];
+    } else if (arr.length === 1) {
+        return arr[0];
+    } else {
+        var result = [];
+        var rest = this.permute(arr.slice(1));
+        for (var i = 0; i < rest.length; i++) {
+            for (var j = 0; j < arr[0].length; j++) {
+                result.push([arr[0][j]].concat(rest[i]));
+            }
+        }
+        return result;
+    }
+};
+Media.prototype.bubbleSelectors = function (selectors) {
+    if (!selectors) {
+        return;
+    }
+    this.rules = [new Ruleset(selectors.slice(0), [this.rules[0]])];
+};
+module.exports = Media;
+
+},{"./anonymous":45,"./directive":56,"./expression":58,"./ruleset":75,"./selector":76,"./value":80}],66:[function(require,module,exports){
+var Node = require("./node"),
+    Selector = require("./selector"),
+    MixinDefinition = require("./mixin-definition"),
+    defaultFunc = require("../functions/default");
+
+var MixinCall = function (elements, args, index, currentFileInfo, important) {
+    this.selector = new Selector(elements);
+    this.arguments = args || [];
+    this.index = index;
+    this.currentFileInfo = currentFileInfo;
+    this.important = important;
+};
+MixinCall.prototype = new Node();
+MixinCall.prototype.type = "MixinCall";
+MixinCall.prototype.accept = function (visitor) {
+    if (this.selector) {
+        this.selector = visitor.visit(this.selector);
+    }
+    if (this.arguments.length) {
+        this.arguments = visitor.visitArray(this.arguments);
+    }
+};
+MixinCall.prototype.eval = function (context) {
+    var mixins, mixin, mixinPath, args = [], arg, argValue,
+        rules = [], rule, match = false, i, m, f, isRecursive, isOneFound,
+        candidates = [], candidate, conditionResult = [], defaultResult, defFalseEitherCase = -1,
+        defNone = 0, defTrue = 1, defFalse = 2, count, originalRuleset, noArgumentsFilter;
+
+    function calcDefGroup(mixin, mixinPath) {
+        var f, p, namespace;
+
+        for (f = 0; f < 2; f++) {
+            conditionResult[f] = true;
+            defaultFunc.value(f);
+            for (p = 0; p < mixinPath.length && conditionResult[f]; p++) {
+                namespace = mixinPath[p];
+                if (namespace.matchCondition) {
+                    conditionResult[f] = conditionResult[f] && namespace.matchCondition(null, context);
+                }
+            }
+            if (mixin.matchCondition) {
+                conditionResult[f] = conditionResult[f] && mixin.matchCondition(args, context);
+            }
+        }
+        if (conditionResult[0] || conditionResult[1]) {
+            if (conditionResult[0] != conditionResult[1]) {
+                return conditionResult[1] ?
+                    defTrue : defFalse;
+            }
+
+            return defNone;
+        }
+        return defFalseEitherCase;
+    }
+
+    for (i = 0; i < this.arguments.length; i++) {
+        arg = this.arguments[i];
+        argValue = arg.value.eval(context);
+        if (arg.expand && Array.isArray(argValue.value)) {
+            argValue = argValue.value;
+            for (m = 0; m < argValue.length; m++) {
+                args.push({value: argValue[m]});
+            }
+        } else {
+            args.push({name: arg.name, value: argValue});
+        }
+    }
+
+    noArgumentsFilter = function(rule) {return rule.matchArgs(null, context);};
+
+    for (i = 0; i < context.frames.length; i++) {
+        if ((mixins = context.frames[i].find(this.selector, null, noArgumentsFilter)).length > 0) {
+            isOneFound = true;
+
+            // To make `default()` function independent of definition order we have two "subpasses" here.
+            // At first we evaluate each guard *twice* (with `default() == true` and `default() == false`),
+            // and build candidate list with corresponding flags. Then, when we know all possible matches,
+            // we make a final decision.
+
+            for (m = 0; m < mixins.length; m++) {
+                mixin = mixins[m].rule;
+                mixinPath = mixins[m].path;
+                isRecursive = false;
+                for (f = 0; f < context.frames.length; f++) {
+                    if ((!(mixin instanceof MixinDefinition)) && mixin === (context.frames[f].originalRuleset || context.frames[f])) {
+                        isRecursive = true;
+                        break;
+                    }
+                }
+                if (isRecursive) {
+                    continue;
+                }
+
+                if (mixin.matchArgs(args, context)) {
+                    candidate = {mixin: mixin, group: calcDefGroup(mixin, mixinPath)};
+
+                    if (candidate.group !== defFalseEitherCase) {
+                        candidates.push(candidate);
+                    }
+
+                    match = true;
+                }
+            }
+
+            defaultFunc.reset();
+
+            count = [0, 0, 0];
+            for (m = 0; m < candidates.length; m++) {
+                count[candidates[m].group]++;
+            }
+
+            if (count[defNone] > 0) {
+                defaultResult = defFalse;
+            } else {
+                defaultResult = defTrue;
+                if ((count[defTrue] + count[defFalse]) > 1) {
+                    throw { type: 'Runtime',
+                        message: 'Ambiguous use of `default()` found when matching for `' + this.format(args) + '`',
+                        index: this.index, filename: this.currentFileInfo.filename };
+                }
+            }
+
+            for (m = 0; m < candidates.length; m++) {
+                candidate = candidates[m].group;
+                if ((candidate === defNone) || (candidate === defaultResult)) {
+                    try {
+                        mixin = candidates[m].mixin;
+                        if (!(mixin instanceof MixinDefinition)) {
+                            originalRuleset = mixin.originalRuleset || mixin;
+                            mixin = new MixinDefinition("", [], mixin.rules, null, false);
+                            mixin.originalRuleset = originalRuleset;
+                        }
+                        Array.prototype.push.apply(
+                            rules, mixin.evalCall(context, args, this.important).rules);
+                    } catch (e) {
+                        throw { message: e.message, index: this.index, filename: this.currentFileInfo.filename, stack: e.stack };
+                    }
+                }
+            }
+
+            if (match) {
+                if (!this.currentFileInfo || !this.currentFileInfo.reference) {
+                    for (i = 0; i < rules.length; i++) {
+                        rule = rules[i];
+                        if (rule.markReferenced) {
+                            rule.markReferenced();
+                        }
+                    }
+                }
+                return rules;
+            }
+        }
+    }
+    if (isOneFound) {
+        throw { type:    'Runtime',
+            message: 'No matching definition was found for `' + this.format(args) + '`',
+            index:   this.index, filename: this.currentFileInfo.filename };
+    } else {
+        throw { type:    'Name',
+            message: this.selector.toCSS().trim() + " is undefined",
+            index:   this.index, filename: this.currentFileInfo.filename };
+    }
+};
+MixinCall.prototype.format = function (args) {
+    return this.selector.toCSS().trim() + '(' +
+        (args ? args.map(function (a) {
+            var argValue = "";
+            if (a.name) {
+                argValue += a.name + ":";
+            }
+            if (a.value.toCSS) {
+                argValue += a.value.toCSS();
+            } else {
+                argValue += "???";
+            }
+            return argValue;
+        }).join(', ') : "") + ")";
+};
+module.exports = MixinCall;
+
+},{"../functions/default":19,"./mixin-definition":67,"./node":69,"./selector":76}],67:[function(require,module,exports){
+var Selector = require("./selector"),
+    Element = require("./element"),
+    Ruleset = require("./ruleset"),
+    Rule = require("./rule"),
+    Expression = require("./expression"),
+    contexts = require("../contexts");
+
+var Definition = function (name, params, rules, condition, variadic, frames) {
+    this.name = name;
+    this.selectors = [new Selector([new Element(null, name, this.index, this.currentFileInfo)])];
+    this.params = params;
+    this.condition = condition;
+    this.variadic = variadic;
+    this.arity = params.length;
+    this.rules = rules;
+    this._lookups = {};
+    var optionalParameters = [];
+    this.required = params.reduce(function (count, p) {
+        if (!p.name || (p.name && !p.value)) {
+            return count + 1;
+        }
+        else {
+            optionalParameters.push(p.name);
+            return count;
+        }
+    }, 0);
+    this.optionalParameters = optionalParameters;
+    this.frames = frames;
+};
+Definition.prototype = new Ruleset();
+Definition.prototype.type = "MixinDefinition";
+Definition.prototype.evalFirst = true;
+Definition.prototype.accept = function (visitor) {
+    if (this.params && this.params.length) {
+        this.params = visitor.visitArray(this.params);
+    }
+    this.rules = visitor.visitArray(this.rules);
+    if (this.condition) {
+        this.condition = visitor.visit(this.condition);
+    }
+};
+Definition.prototype.evalParams = function (context, mixinEnv, args, evaldArguments) {
+    /*jshint boss:true */
+    var frame = new Ruleset(null, null),
+        varargs, arg,
+        params = this.params.slice(0),
+        i, j, val, name, isNamedFound, argIndex, argsLength = 0;
+
+    if (mixinEnv.frames && mixinEnv.frames[0] && mixinEnv.frames[0].functionRegistry) {
+        frame.functionRegistry = mixinEnv.frames[0].functionRegistry.inherit();
+    }
+    mixinEnv = new contexts.Eval(mixinEnv, [frame].concat(mixinEnv.frames));
+
+    if (args) {
+        args = args.slice(0);
+        argsLength = args.length;
+
+        for (i = 0; i < argsLength; i++) {
+            arg = args[i];
+            if (name = (arg && arg.name)) {
+                isNamedFound = false;
+                for (j = 0; j < params.length; j++) {
+                    if (!evaldArguments[j] && name === params[j].name) {
+                        evaldArguments[j] = arg.value.eval(context);
+                        frame.prependRule(new Rule(name, arg.value.eval(context)));
+                        isNamedFound = true;
+                        break;
+                    }
+                }
+                if (isNamedFound) {
+                    args.splice(i, 1);
+                    i--;
+                    continue;
+                } else {
+                    throw { type: 'Runtime', message: "Named argument for " + this.name +
+                        ' ' + args[i].name + ' not found' };
+                }
+            }
+        }
+    }
+    argIndex = 0;
+    for (i = 0; i < params.length; i++) {
+        if (evaldArguments[i]) { continue; }
+
+        arg = args && args[argIndex];
+
+        if (name = params[i].name) {
+            if (params[i].variadic) {
+                varargs = [];
+                for (j = argIndex; j < argsLength; j++) {
+                    varargs.push(args[j].value.eval(context));
+                }
+                frame.prependRule(new Rule(name, new Expression(varargs).eval(context)));
+            } else {
+                val = arg && arg.value;
+                if (val) {
+                    val = val.eval(context);
+                } else if (params[i].value) {
+                    val = params[i].value.eval(mixinEnv);
+                    frame.resetCache();
+                } else {
+                    throw { type: 'Runtime', message: "wrong number of arguments for " + this.name +
+                        ' (' + argsLength + ' for ' + this.arity + ')' };
+                }
+
+                frame.prependRule(new Rule(name, val));
+                evaldArguments[i] = val;
+            }
+        }
+
+        if (params[i].variadic && args) {
+            for (j = argIndex; j < argsLength; j++) {
+                evaldArguments[j] = args[j].value.eval(context);
+            }
+        }
+        argIndex++;
+    }
+
+    return frame;
+};
+Definition.prototype.makeImportant = function() {
+    var rules = !this.rules ? this.rules : this.rules.map(function (r) {
+        if (r.makeImportant) {
+            return r.makeImportant(true);
+        } else {
+            return r;
+        }
+    });
+    var result = new Definition (this.name, this.params, rules, this.condition, this.variadic, this.frames);
+    return result;
+};
+Definition.prototype.eval = function (context) {
+    return new Definition(this.name, this.params, this.rules, this.condition, this.variadic, this.frames || context.frames.slice(0));
+};
+Definition.prototype.evalCall = function (context, args, important) {
+    var _arguments = [],
+        mixinFrames = this.frames ? this.frames.concat(context.frames) : context.frames,
+        frame = this.evalParams(context, new contexts.Eval(context, mixinFrames), args, _arguments),
+        rules, ruleset;
+
+    frame.prependRule(new Rule('@arguments', new Expression(_arguments).eval(context)));
+
+    rules = this.rules.slice(0);
+
+    ruleset = new Ruleset(null, rules);
+    ruleset.originalRuleset = this;
+    ruleset = ruleset.eval(new contexts.Eval(context, [this, frame].concat(mixinFrames)));
+    if (important) {
+        ruleset = ruleset.makeImportant();
+    }
+    return ruleset;
+};
+Definition.prototype.matchCondition = function (args, context) {
+    if (this.condition && !this.condition.eval(
+        new contexts.Eval(context,
+            [this.evalParams(context, /* the parameter variables*/
+                new contexts.Eval(context, this.frames ? this.frames.concat(context.frames) : context.frames), args, [])]
+            .concat(this.frames || []) // the parent namespace/mixin frames
+            .concat(context.frames)))) { // the current environment frames
+        return false;
+    }
+    return true;
+};
+Definition.prototype.matchArgs = function (args, context) {
+    var allArgsCnt = (args && args.length) || 0, len, optionalParameters = this.optionalParameters;
+    var requiredArgsCnt = !args ? 0 : args.reduce(function (count, p) {
+        if (optionalParameters.indexOf(p.name) < 0) {
+            return count + 1;
+        } else {
+            return count;
+        }
+    }, 0);
+
+    if (! this.variadic) {
+        if (requiredArgsCnt < this.required) {
+            return false;
+        }
+        if (allArgsCnt > this.params.length) {
+            return false;
+        }
+    } else {
+        if (requiredArgsCnt < (this.required - 1)) {
+            return false;
+        }
+    }
+
+    // check patterns
+    len = Math.min(requiredArgsCnt, this.arity);
+
+    for (var i = 0; i < len; i++) {
+        if (!this.params[i].name && !this.params[i].variadic) {
+            if (args[i].value.eval(context).toCSS() != this.params[i].value.eval(context).toCSS()) {
+                return false;
+            }
+        }
+    }
+    return true;
+};
+module.exports = Definition;
+
+},{"../contexts":10,"./element":57,"./expression":58,"./rule":73,"./ruleset":75,"./selector":76}],68:[function(require,module,exports){
+var Node = require("./node"),
+    Operation = require("./operation"),
+    Dimension = require("./dimension");
+
+var Negative = function (node) {
+    this.value = node;
+};
+Negative.prototype = new Node();
+Negative.prototype.type = "Negative";
+Negative.prototype.genCSS = function (context, output) {
+    output.add('-');
+    this.value.genCSS(context, output);
+};
+Negative.prototype.eval = function (context) {
+    if (context.isMathOn()) {
+        return (new Operation('*', [new Dimension(-1), this.value])).eval(context);
+    }
+    return new Negative(this.value.eval(context));
+};
+module.exports = Negative;
+
+},{"./dimension":55,"./node":69,"./operation":70}],69:[function(require,module,exports){
+var Node = function() {
+};
+Node.prototype.toCSS = function (context) {
+    var strs = [];
+    this.genCSS(context, {
+        add: function(chunk, fileInfo, index) {
+            strs.push(chunk);
+        },
+        isEmpty: function () {
+            return strs.length === 0;
+        }
+    });
+    return strs.join('');
+};
+Node.prototype.genCSS = function (context, output) {
+    output.add(this.value);
+};
+Node.prototype.accept = function (visitor) {
+    this.value = visitor.visit(this.value);
+};
+Node.prototype.eval = function () { return this; };
+Node.prototype._operate = function (context, op, a, b) {
+    switch (op) {
+        case '+': return a + b;
+        case '-': return a - b;
+        case '*': return a * b;
+        case '/': return a / b;
+    }
+};
+Node.prototype.fround = function(context, value) {
+    var precision = context && context.numPrecision;
+    //add "epsilon" to ensure numbers like 1.000000005 (represented as 1.000000004999....) are properly rounded...
+    return (precision == null) ? value : Number((value + 2e-16).toFixed(precision));
+};
+Node.compare = function (a, b) {
+    /* returns:
+     -1: a < b
+     0: a = b
+     1: a > b
+     and *any* other value for a != b (e.g. undefined, NaN, -2 etc.) */
+
+    if ((a.compare) &&
+        // for "symmetric results" force toCSS-based comparison
+        // of Quoted or Anonymous if either value is one of those
+        !(b.type === "Quoted" || b.type === "Anonymous")) {
+        return a.compare(b);
+    } else if (b.compare) {
+        return -b.compare(a);
+    } else if (a.type !== b.type) {
+        return undefined;
+    }
+
+    a = a.value;
+    b = b.value;
+    if (!Array.isArray(a)) {
+        return a === b ? 0 : undefined;
+    }
+    if (a.length !== b.length) {
+        return undefined;
+    }
+    for (var i = 0; i < a.length; i++) {
+        if (Node.compare(a[i], b[i]) !== 0) {
+            return undefined;
+        }
+    }
+    return 0;
+};
+
+Node.numericCompare = function (a, b) {
+    return a  <  b ? -1
+        : a === b ?  0
+        : a  >  b ?  1 : undefined;
+};
+module.exports = Node;
+
+},{}],70:[function(require,module,exports){
+var Node = require("./node"),
+    Color = require("./color"),
+    Dimension = require("./dimension");
+
+var Operation = function (op, operands, isSpaced) {
+    this.op = op.trim();
+    this.operands = operands;
+    this.isSpaced = isSpaced;
+};
+Operation.prototype = new Node();
+Operation.prototype.type = "Operation";
+Operation.prototype.accept = function (visitor) {
+    this.operands = visitor.visit(this.operands);
+};
+Operation.prototype.eval = function (context) {
+    var a = this.operands[0].eval(context),
+        b = this.operands[1].eval(context);
+
+    if (context.isMathOn()) {
+        if (a instanceof Dimension && b instanceof Color) {
+            a = a.toColor();
+        }
+        if (b instanceof Dimension && a instanceof Color) {
+            b = b.toColor();
+        }
+        if (!a.operate) {
+            throw { type: "Operation",
+                    message: "Operation on an invalid type" };
+        }
+
+        return a.operate(context, this.op, b);
+    } else {
+        return new Operation(this.op, [a, b], this.isSpaced);
+    }
+};
+Operation.prototype.genCSS = function (context, output) {
+    this.operands[0].genCSS(context, output);
+    if (this.isSpaced) {
+        output.add(" ");
+    }
+    output.add(this.op);
+    if (this.isSpaced) {
+        output.add(" ");
+    }
+    this.operands[1].genCSS(context, output);
+};
+
+module.exports = Operation;
+
+},{"./color":49,"./dimension":55,"./node":69}],71:[function(require,module,exports){
+var Node = require("./node");
+
+var Paren = function (node) {
+    this.value = node;
+};
+Paren.prototype = new Node();
+Paren.prototype.type = "Paren";
+Paren.prototype.genCSS = function (context, output) {
+    output.add('(');
+    this.value.genCSS(context, output);
+    output.add(')');
+};
+Paren.prototype.eval = function (context) {
+    return new Paren(this.value.eval(context));
+};
+module.exports = Paren;
+
+},{"./node":69}],72:[function(require,module,exports){
+var Node = require("./node"),
+    JsEvalNode = require("./js-eval-node"),
+    Variable = require("./variable");
+
+var Quoted = function (str, content, escaped, index, currentFileInfo) {
+    this.escaped = (escaped == null) ? true : escaped;
+    this.value = content || '';
+    this.quote = str.charAt(0);
+    this.index = index;
+    this.currentFileInfo = currentFileInfo;
+};
+Quoted.prototype = new JsEvalNode();
+Quoted.prototype.type = "Quoted";
+Quoted.prototype.genCSS = function (context, output) {
+    if (!this.escaped) {
+        output.add(this.quote, this.currentFileInfo, this.index);
+    }
+    output.add(this.value);
+    if (!this.escaped) {
+        output.add(this.quote);
+    }
+};
+Quoted.prototype.containsVariables = function() {
+    return this.value.match(/(`([^`]+)`)|@\{([\w-]+)\}/);
+};
+Quoted.prototype.eval = function (context) {
+    var that = this, value = this.value;
+    var javascriptReplacement = function (_, exp) {
+        return String(that.evaluateJavaScript(exp, context));
+    };
+    var interpolationReplacement = function (_, name) {
+        var v = new Variable('@' + name, that.index, that.currentFileInfo).eval(context, true);
+        return (v instanceof Quoted) ? v.value : v.toCSS();
+    };
+    function iterativeReplace(value, regexp, replacementFnc) {
+        var evaluatedValue = value;
+        do {
+            value = evaluatedValue;
+            evaluatedValue = value.replace(regexp, replacementFnc);
+        } while (value !== evaluatedValue);
+        return evaluatedValue;
+    }
+    value = iterativeReplace(value, /`([^`]+)`/g, javascriptReplacement);
+    value = iterativeReplace(value, /@\{([\w-]+)\}/g, interpolationReplacement);
+    return new Quoted(this.quote + value + this.quote, value, this.escaped, this.index, this.currentFileInfo);
+};
+Quoted.prototype.compare = function (other) {
+    // when comparing quoted strings allow the quote to differ
+    if (other.type === "Quoted" && !this.escaped && !other.escaped) {
+        return Node.numericCompare(this.value, other.value);
+    } else {
+        return other.toCSS && this.toCSS() === other.toCSS() ? 0 : undefined;
+    }
+};
+module.exports = Quoted;
+
+},{"./js-eval-node":63,"./node":69,"./variable":81}],73:[function(require,module,exports){
+var Node = require("./node"),
+    Value = require("./value"),
+    Keyword = require("./keyword");
+
+var Rule = function (name, value, important, merge, index, currentFileInfo, inline, variable) {
+    this.name = name;
+    this.value = (value instanceof Node) ? value : new Value([value]); //value instanceof tree.Value || value instanceof tree.Ruleset ??
+    this.important = important ? ' ' + important.trim() : '';
+    this.merge = merge;
+    this.index = index;
+    this.currentFileInfo = currentFileInfo;
+    this.inline = inline || false;
+    this.variable = (variable !== undefined) ? variable
+        : (name.charAt && (name.charAt(0) === '@'));
+};
+
+function evalName(context, name) {
+    var value = "", i, n = name.length,
+        output = {add: function (s) {value += s;}};
+    for (i = 0; i < n; i++) {
+        name[i].eval(context).genCSS(context, output);
+    }
+    return value;
+}
+
+Rule.prototype = new Node();
+Rule.prototype.type = "Rule";
+Rule.prototype.genCSS = function (context, output) {
+    output.add(this.name + (context.compress ? ':' : ': '), this.currentFileInfo, this.index);
+    try {
+        this.value.genCSS(context, output);
+    }
+    catch(e) {
+        e.index = this.index;
+        e.filename = this.currentFileInfo.filename;
+        throw e;
+    }
+    output.add(this.important + ((this.inline || (context.lastRule && context.compress)) ? "" : ";"), this.currentFileInfo, this.index);
+};
+Rule.prototype.eval = function (context) {
+    var strictMathBypass = false, name = this.name, evaldValue, variable = this.variable;
+    if (typeof name !== "string") {
+        // expand 'primitive' name directly to get
+        // things faster (~10% for benchmark.less):
+        name = (name.length === 1) && (name[0] instanceof Keyword) ?
+                name[0].value : evalName(context, name);
+        variable = false; // never treat expanded interpolation as new variable name
+    }
+    if (name === "font" && !context.strictMath) {
+        strictMathBypass = true;
+        context.strictMath = true;
+    }
+    try {
+        context.importantScope.push({});
+        evaldValue = this.value.eval(context);
+
+        if (!this.variable && evaldValue.type === "DetachedRuleset") {
+            throw { message: "Rulesets cannot be evaluated on a property.",
+                    index: this.index, filename: this.currentFileInfo.filename };
+        }
+        var important = this.important,
+            importantResult = context.importantScope.pop();
+        if (!important && importantResult.important) {
+            important = importantResult.important;
+        }
+
+        return new Rule(name,
+                          evaldValue,
+                          important,
+                          this.merge,
+                          this.index, this.currentFileInfo, this.inline,
+                              variable);
+    }
+    catch(e) {
+        if (typeof e.index !== 'number') {
+            e.index = this.index;
+            e.filename = this.currentFileInfo.filename;
+        }
+        throw e;
+    }
+    finally {
+        if (strictMathBypass) {
+            context.strictMath = false;
+        }
+    }
+};
+Rule.prototype.makeImportant = function () {
+    return new Rule(this.name,
+                          this.value,
+                          "!important",
+                          this.merge,
+                          this.index, this.currentFileInfo, this.inline);
+};
+
+// Recursive marking for rules
+var mark = function(value) {
+    if (!Array.isArray(value)) {
+        if (value.markReferenced) {
+            value.markReferenced();
+        }
+    } else {
+        value.forEach(function (ar) {
+            mark(ar);
+        });
+    }
+};
+Rule.prototype.markReferenced = function () {
+    if (this.value) {
+        mark(this.value);
+    }
+};
+
+module.exports = Rule;
+},{"./keyword":64,"./node":69,"./value":80}],74:[function(require,module,exports){
+var Node = require("./node"),
+    Variable = require("./variable");
+
+var RulesetCall = function (variable) {
+    this.variable = variable;
+};
+RulesetCall.prototype = new Node();
+RulesetCall.prototype.type = "RulesetCall";
+RulesetCall.prototype.eval = function (context) {
+    var detachedRuleset = new Variable(this.variable).eval(context);
+    return detachedRuleset.callEval(context);
+};
+module.exports = RulesetCall;
+
+},{"./node":69,"./variable":81}],75:[function(require,module,exports){
+var Node = require("./node"),
+    Rule = require("./rule"),
+    Selector = require("./selector"),
+    Element = require("./element"),
+    Paren = require("./paren"),
+    contexts = require("../contexts"),
+    globalFunctionRegistry = require("../functions/function-registry"),
+    defaultFunc = require("../functions/default"),
+    getDebugInfo = require("./debug-info");
+
+var Ruleset = function (selectors, rules, strictImports) {
+    this.selectors = selectors;
+    this.rules = rules;
+    this._lookups = {};
+    this.strictImports = strictImports;
+};
+Ruleset.prototype = new Node();
+Ruleset.prototype.type = "Ruleset";
+Ruleset.prototype.isRuleset = true;
+Ruleset.prototype.isRulesetLike = true;
+Ruleset.prototype.accept = function (visitor) {
+    if (this.paths) {
+        visitor.visitArray(this.paths, true);
+    } else if (this.selectors) {
+        this.selectors = visitor.visitArray(this.selectors);
+    }
+    if (this.rules && this.rules.length) {
+        this.rules = visitor.visitArray(this.rules);
+    }
+};
+Ruleset.prototype.eval = function (context) {
+    var thisSelectors = this.selectors, selectors,
+        selCnt, selector, i, hasOnePassingSelector = false;
+
+    if (thisSelectors && (selCnt = thisSelectors.length)) {
+        selectors = [];
+        defaultFunc.error({
+            type: "Syntax",
+            message: "it is currently only allowed in parametric mixin guards,"
+        });
+        for (i = 0; i < selCnt; i++) {
+            selector = thisSelectors[i].eval(context);
+            selectors.push(selector);
+            if (selector.evaldCondition) {
+                hasOnePassingSelector = true;
+            }
+        }
+        defaultFunc.reset();
+    } else {
+        hasOnePassingSelector = true;
+    }
+
+    var rules = this.rules ? this.rules.slice(0) : null,
+        ruleset = new Ruleset(selectors, rules, this.strictImports),
+        rule, subRule;
+
+    ruleset.originalRuleset = this;
+    ruleset.root = this.root;
+    ruleset.firstRoot = this.firstRoot;
+    ruleset.allowImports = this.allowImports;
+
+    if (this.debugInfo) {
+        ruleset.debugInfo = this.debugInfo;
+    }
+
+    if (!hasOnePassingSelector) {
+        rules.length = 0;
+    }
+
+    // inherit a function registry from the frames stack when possible;
+    // otherwise from the global registry
+    ruleset.functionRegistry = (function (frames) {
+        var i = 0,
+            n = frames.length,
+            found;
+        for ( ; i !== n ; ++i ) {
+            found = frames[ i ].functionRegistry;
+            if ( found ) { return found; }
+        }
+        return globalFunctionRegistry;
+    }(context.frames)).inherit();
+
+    // push the current ruleset to the frames stack
+    var ctxFrames = context.frames;
+    ctxFrames.unshift(ruleset);
+
+    // currrent selectors
+    var ctxSelectors = context.selectors;
+    if (!ctxSelectors) {
+        context.selectors = ctxSelectors = [];
+    }
+    ctxSelectors.unshift(this.selectors);
+
+    // Evaluate imports
+    if (ruleset.root || ruleset.allowImports || !ruleset.strictImports) {
+        ruleset.evalImports(context);
+    }
+
+    // Store the frames around mixin definitions,
+    // so they can be evaluated like closures when the time comes.
+    var rsRules = ruleset.rules, rsRuleCnt = rsRules ? rsRules.length : 0;
+    for (i = 0; i < rsRuleCnt; i++) {
+        if (rsRules[i].evalFirst) {
+            rsRules[i] = rsRules[i].eval(context);
+        }
+    }
+
+    var mediaBlockCount = (context.mediaBlocks && context.mediaBlocks.length) || 0;
+
+    // Evaluate mixin calls.
+    for (i = 0; i < rsRuleCnt; i++) {
+        if (rsRules[i].type === "MixinCall") {
+            /*jshint loopfunc:true */
+            rules = rsRules[i].eval(context).filter(function(r) {
+                if ((r instanceof Rule) && r.variable) {
+                    // do not pollute the scope if the variable is
+                    // already there. consider returning false here
+                    // but we need a way to "return" variable from mixins
+                    return !(ruleset.variable(r.name));
+                }
+                return true;
+            });
+            rsRules.splice.apply(rsRules, [i, 1].concat(rules));
+            rsRuleCnt += rules.length - 1;
+            i += rules.length - 1;
+            ruleset.resetCache();
+        } else if (rsRules[i].type === "RulesetCall") {
+            /*jshint loopfunc:true */
+            rules = rsRules[i].eval(context).rules.filter(function(r) {
+                if ((r instanceof Rule) && r.variable) {
+                    // do not pollute the scope at all
+                    return false;
+                }
+                return true;
+            });
+            rsRules.splice.apply(rsRules, [i, 1].concat(rules));
+            rsRuleCnt += rules.length - 1;
+            i += rules.length - 1;
+            ruleset.resetCache();
+        }
+    }
+
+    // Evaluate everything else
+    for (i = 0; i < rsRules.length; i++) {
+        rule = rsRules[i];
+        if (!rule.evalFirst) {
+            rsRules[i] = rule = rule.eval ? rule.eval(context) : rule;
+        }
+    }
+
+    // Evaluate everything else
+    for (i = 0; i < rsRules.length; i++) {
+        rule = rsRules[i];
+        // for rulesets, check if it is a css guard and can be removed
+        if (rule instanceof Ruleset && rule.selectors && rule.selectors.length === 1) {
+            // check if it can be folded in (e.g. & where)
+            if (rule.selectors[0].isJustParentSelector()) {
+                rsRules.splice(i--, 1);
+
+                for (var j = 0; j < rule.rules.length; j++) {
+                    subRule = rule.rules[j];
+                    if (!(subRule instanceof Rule) || !subRule.variable) {
+                        rsRules.splice(++i, 0, subRule);
+                    }
+                }
+            }
+        }
+    }
+
+    // Pop the stack
+    ctxFrames.shift();
+    ctxSelectors.shift();
+
+    if (context.mediaBlocks) {
+        for (i = mediaBlockCount; i < context.mediaBlocks.length; i++) {
+            context.mediaBlocks[i].bubbleSelectors(selectors);
+        }
+    }
+
+    return ruleset;
+};
+Ruleset.prototype.evalImports = function(context) {
+    var rules = this.rules, i, importRules;
+    if (!rules) { return; }
+
+    for (i = 0; i < rules.length; i++) {
+        if (rules[i].type === "Import") {
+            importRules = rules[i].eval(context);
+            if (importRules && importRules.length) {
+                rules.splice.apply(rules, [i, 1].concat(importRules));
+                i+= importRules.length - 1;
+            } else {
+                rules.splice(i, 1, importRules);
+            }
+            this.resetCache();
+        }
+    }
+};
+Ruleset.prototype.makeImportant = function() {
+    var result = new Ruleset(this.selectors, this.rules.map(function (r) {
+        if (r.makeImportant) {
+            return r.makeImportant();
+        } else {
+            return r;
+        }
+    }), this.strictImports);
+
+    return result;
+};
+Ruleset.prototype.matchArgs = function (args) {
+    return !args || args.length === 0;
+};
+// lets you call a css selector with a guard
+Ruleset.prototype.matchCondition = function (args, context) {
+    var lastSelector = this.selectors[this.selectors.length - 1];
+    if (!lastSelector.evaldCondition) {
+        return false;
+    }
+    if (lastSelector.condition &&
+        !lastSelector.condition.eval(
+            new contexts.Eval(context,
+                context.frames))) {
+        return false;
+    }
+    return true;
+};
+Ruleset.prototype.resetCache = function () {
+    this._rulesets = null;
+    this._variables = null;
+    this._lookups = {};
+};
+Ruleset.prototype.variables = function () {
+    if (!this._variables) {
+        this._variables = !this.rules ? {} : this.rules.reduce(function (hash, r) {
+            if (r instanceof Rule && r.variable === true) {
+                hash[r.name] = r;
+            }
+            // when evaluating variables in an import statement, imports have not been eval'd
+            // so we need to go inside import statements.
+            // guard against root being a string (in the case of inlined less)
+            if (r.type === "Import" && r.root && r.root.variables) {
+                var vars = r.root.variables();
+                for (var name in vars) {
+                    if (vars.hasOwnProperty(name)) {
+                        hash[name] = vars[name];
+                    }
+                }
+            }
+            return hash;
+        }, {});
+    }
+    return this._variables;
+};
+Ruleset.prototype.variable = function (name) {
+    return this.variables()[name];
+};
+Ruleset.prototype.rulesets = function () {
+    if (!this.rules) { return []; }
+
+    var filtRules = [], rules = this.rules, cnt = rules.length,
+        i, rule;
+
+    for (i = 0; i < cnt; i++) {
+        rule = rules[i];
+        if (rule.isRuleset) {
+            filtRules.push(rule);
+        }
+    }
+
+    return filtRules;
+};
+Ruleset.prototype.prependRule = function (rule) {
+    var rules = this.rules;
+    if (rules) {
+        rules.unshift(rule);
+    } else {
+        this.rules = [ rule ];
+    }
+};
+Ruleset.prototype.find = function (selector, self, filter) {
+    self = self || this;
+    var rules = [], match, foundMixins,
+        key = selector.toCSS();
+
+    if (key in this._lookups) { return this._lookups[key]; }
+
+    this.rulesets().forEach(function (rule) {
+        if (rule !== self) {
+            for (var j = 0; j < rule.selectors.length; j++) {
+                match = selector.match(rule.selectors[j]);
+                if (match) {
+                    if (selector.elements.length > match) {
+                        if (!filter || filter(rule)) {
+                            foundMixins = rule.find(new Selector(selector.elements.slice(match)), self, filter);
+                            for (var i = 0; i < foundMixins.length; ++i) {
+                                foundMixins[i].path.push(rule);
+                            }
+                            Array.prototype.push.apply(rules, foundMixins);
+                        }
+                    } else {
+                        rules.push({ rule: rule, path: []});
+                    }
+                    break;
+                }
+            }
+        }
+    });
+    this._lookups[key] = rules;
+    return rules;
+};
+Ruleset.prototype.genCSS = function (context, output) {
+    var i, j,
+        charsetRuleNodes = [],
+        ruleNodes = [],
+        debugInfo,     // Line number debugging
+        rule,
+        path;
+
+    context.tabLevel = (context.tabLevel || 0);
+
+    if (!this.root) {
+        context.tabLevel++;
+    }
+
+    var tabRuleStr = context.compress ? '' : Array(context.tabLevel + 1).join("  "),
+        tabSetStr = context.compress ? '' : Array(context.tabLevel).join("  "),
+        sep;
+
+    function isRulesetLikeNode(rule) {
+        // if it has nested rules, then it should be treated like a ruleset
+        // medias and comments do not have nested rules, but should be treated like rulesets anyway
+        // some directives and anonymous nodes are ruleset like, others are not
+        if (typeof rule.isRulesetLike === "boolean") {
+            return rule.isRulesetLike;
+        } else if (typeof rule.isRulesetLike === "function") {
+            return rule.isRulesetLike();
+        }
+
+        //anything else is assumed to be a rule
+        return false;
+    }
+
+    var charsetNodeIndex = 0;
+    var importNodeIndex = 0;
+    for (i = 0; i < this.rules.length; i++) {
+        rule = this.rules[i];
+        if (rule.type === "Comment") {
+            if (importNodeIndex === i) {
+                importNodeIndex++;
+            }
+            ruleNodes.push(rule);
+        } else if (rule.isCharset && rule.isCharset()) {
+            ruleNodes.splice(charsetNodeIndex, 0, rule);
+            charsetNodeIndex++;
+            importNodeIndex++;
+        } else if (rule.type === "Import") {
+            ruleNodes.splice(importNodeIndex, 0, rule);
+            importNodeIndex++;
+        } else {
+            ruleNodes.push(rule);
+        }
+    }
+    ruleNodes = charsetRuleNodes.concat(ruleNodes);
+
+    // If this is the root node, we don't render
+    // a selector, or {}.
+    if (!this.root) {
+        debugInfo = getDebugInfo(context, this, tabSetStr);
+
+        if (debugInfo) {
+            output.add(debugInfo);
+            output.add(tabSetStr);
+        }
+
+        var paths = this.paths, pathCnt = paths.length,
+            pathSubCnt;
+
+        sep = context.compress ? ',' : (',\n' + tabSetStr);
+
+        for (i = 0; i < pathCnt; i++) {
+            path = paths[i];
+            if (!(pathSubCnt = path.length)) { continue; }
+            if (i > 0) { output.add(sep); }
+
+            context.firstSelector = true;
+            path[0].genCSS(context, output);
+
+            context.firstSelector = false;
+            for (j = 1; j < pathSubCnt; j++) {
+                path[j].genCSS(context, output);
+            }
+        }
+
+        output.add((context.compress ? '{' : ' {\n') + tabRuleStr);
+    }
+
+    // Compile rules and rulesets
+    for (i = 0; i < ruleNodes.length; i++) {
+        rule = ruleNodes[i];
+
+        if (i + 1 === ruleNodes.length) {
+            context.lastRule = true;
+        }
+
+        var currentLastRule = context.lastRule;
+        if (isRulesetLikeNode(rule)) {
+            context.lastRule = false;
+        }
+
+        if (rule.genCSS) {
+            rule.genCSS(context, output);
+        } else if (rule.value) {
+            output.add(rule.value.toString());
+        }
+
+        context.lastRule = currentLastRule;
+
+        if (!context.lastRule) {
+            output.add(context.compress ? '' : ('\n' + tabRuleStr));
+        } else {
+            context.lastRule = false;
+        }
+    }
+
+    if (!this.root) {
+        output.add((context.compress ? '}' : '\n' + tabSetStr + '}'));
+        context.tabLevel--;
+    }
+
+    if (!output.isEmpty() && !context.compress && this.firstRoot) {
+        output.add('\n');
+    }
+};
+Ruleset.prototype.markReferenced = function () {
+    var s;
+    if (this.selectors) {
+        for (s = 0; s < this.selectors.length; s++) {
+            this.selectors[s].markReferenced();
+        }
+    }
+
+    if (this.rules) {
+        for (s = 0; s < this.rules.length; s++) {
+            if (this.rules[s].markReferenced) {
+                this.rules[s].markReferenced();
+            }
+        }
+    }
+};
+Ruleset.prototype.getIsReferenced = function() {
+    var i, j, path, selector;
+
+    if (this.paths) {
+        for (i = 0; i < this.paths.length; i++) {
+            path = this.paths[i];
+            for (j = 0; j < path.length; j++) {
+                if (path[j].getIsReferenced && path[j].getIsReferenced()) {
+                    return true;
+                }
+            }
+        }
+    }
+
+    if (this.selectors) {
+        for (i = 0; i < this.selectors.length; i++) {
+            selector = this.selectors[i];
+            if (selector.getIsReferenced && selector.getIsReferenced()) {
+                return true;
+            }
+        }
+    }
+    return false;
+};
+
+Ruleset.prototype.joinSelectors = function (paths, context, selectors) {
+    for (var s = 0; s < selectors.length; s++) {
+        this.joinSelector(paths, context, selectors[s]);
+    }
+};
+
+Ruleset.prototype.joinSelector = function (paths, context, selector) {
+
+    function createParenthesis(elementsToPak, originalElement) {
+        var replacementParen, j;
+        if (elementsToPak.length === 0) {
+            replacementParen = new Paren(elementsToPak[0]);
+        } else {
+            var insideParent = [];
+            for (j = 0; j < elementsToPak.length; j++) {
+                insideParent.push(new Element(null, elementsToPak[j], originalElement.index, originalElement.currentFileInfo));
+            }
+            replacementParen = new Paren(new Selector(insideParent));
+        }
+        return replacementParen;
+    }
+
+    function createSelector(containedElement, originalElement) {
+        var element, selector;
+        element = new Element(null, containedElement, originalElement.index, originalElement.currentFileInfo);
+        selector = new Selector([element]);
+        return selector;
+    }
+
+    // replace all parent selectors inside `inSelector` by content of `context` array
+    // resulting selectors are returned inside `paths` array
+    // returns true if `inSelector` contained at least one parent selector
+    function replaceParentSelector(paths, context, inSelector) {
+        // The paths are [[Selector]]
+        // The first list is a list of comma separated selectors
+        // The inner list is a list of inheritance separated selectors
+        // e.g.
+        // .a, .b {
+        //   .c {
+        //   }
+        // }
+        // == [[.a] [.c]] [[.b] [.c]]
+        //
+        var i, j, k, currentElements, newSelectors, selectorsMultiplied, sel, el, hadParentSelector = false, length, lastSelector;
+        function findNestedSelector(element) {
+            var maybeSelector;
+            if (element.value.type !== 'Paren') {
+                return null;
+            }
+
+            maybeSelector = element.value.value;
+            if (maybeSelector.type !== 'Selector') {
+                return null;
+            }
+
+            return maybeSelector;
+        }
+
+        // the elements from the current selector so far
+        currentElements = [];
+        // the current list of new selectors to add to the path.
+        // We will build it up. We initiate it with one empty selector as we "multiply" the new selectors
+        // by the parents
+        newSelectors = [
+            []
+        ];
+
+        for (i = 0; i < inSelector.elements.length; i++) {
+            el = inSelector.elements[i];
+            // non parent reference elements just get added
+            if (el.value !== "&") {
+                var nestedSelector = findNestedSelector(el);
+                if (nestedSelector != null) {
+                    // merge the current list of non parent selector elements
+                    // on to the current list of selectors to add
+                    mergeElementsOnToSelectors(currentElements, newSelectors);
+
+                    var nestedPaths = [], replaced, replacedNewSelectors = [];
+                    replaced = replaceParentSelector(nestedPaths, context, nestedSelector);
+                    hadParentSelector = hadParentSelector || replaced;
+                    //the nestedPaths array should have only one member - replaceParentSelector does not multiply selectors
+                    for (k = 0; k < nestedPaths.length; k++) {
+                        var replacementSelector = createSelector(createParenthesis(nestedPaths[k], el), el);
+                        addAllReplacementsIntoPath(newSelectors, [replacementSelector], el, inSelector, replacedNewSelectors);
+                    }
+                    newSelectors = replacedNewSelectors;
+                    currentElements = [];
+
+                } else {
+                    currentElements.push(el);
+                }
+
+            } else {
+                hadParentSelector = true;
+                // the new list of selectors to add
+                selectorsMultiplied = [];
+
+                // merge the current list of non parent selector elements
+                // on to the current list of selectors to add
+                mergeElementsOnToSelectors(currentElements, newSelectors);
+
+                // loop through our current selectors
+                for (j = 0; j < newSelectors.length; j++) {
+                    sel = newSelectors[j];
+                    // if we don't have any parent paths, the & might be in a mixin so that it can be used
+                    // whether there are parents or not
+                    if (context.length === 0) {
+                        // the combinator used on el should now be applied to the next element instead so that
+                        // it is not lost
+                        if (sel.length > 0) {
+                            sel[0].elements.push(new Element(el.combinator, '', el.index, el.currentFileInfo));
+                        }
+                        selectorsMultiplied.push(sel);
+                    }
+                    else {
+                        // and the parent selectors
+                        for (k = 0; k < context.length; k++) {
+                            // We need to put the current selectors
+                            // then join the last selector's elements on to the parents selectors
+                            var newSelectorPath = addReplacementIntoPath(sel, context[k], el, inSelector);
+                            // add that to our new set of selectors
+                            selectorsMultiplied.push(newSelectorPath);
+                        }
+                    }
+                }
+
+                // our new selectors has been multiplied, so reset the state
+                newSelectors = selectorsMultiplied;
+                currentElements = [];
+            }
+        }
+
+        // if we have any elements left over (e.g. .a& .b == .b)
+        // add them on to all the current selectors
+        mergeElementsOnToSelectors(currentElements, newSelectors);
+
+        for (i = 0; i < newSelectors.length; i++) {
+            length = newSelectors[i].length;
+            if (length > 0) {
+                paths.push(newSelectors[i]);
+                lastSelector = newSelectors[i][length - 1];
+                newSelectors[i][length - 1] = lastSelector.createDerived(lastSelector.elements, inSelector.extendList);
+            }
+        }
+
+        return hadParentSelector;
+    }
+
+    // joins selector path from `beginningPath` with selector path in `addPath`
+    // `replacedElement` contains element that is being replaced by `addPath`
+    // returns concatenated path
+    function addReplacementIntoPath(beginningPath, addPath, replacedElement, originalSelector) {
+        var newSelectorPath, lastSelector, newJoinedSelector;
+        // our new selector path
+        newSelectorPath = [];
+
+        //construct the joined selector - if & is the first thing this will be empty,
+        // if not newJoinedSelector will be the last set of elements in the selector
+        if (beginningPath.length > 0) {
+            newSelectorPath = beginningPath.slice(0);
+            lastSelector = newSelectorPath.pop();
+            newJoinedSelector = originalSelector.createDerived(lastSelector.elements.slice(0));
+        }
+        else {
+            newJoinedSelector = originalSelector.createDerived([]);
+        }
+
+        if (addPath.length > 0) {
+            // /deep/ is a combinator that is valid without anything in front of it
+            // so if the & does not have a combinator that is "" or " " then
+            // and there is a combinator on the parent, then grab that.
+            // this also allows + a { & .b { .a & { ... though not sure why you would want to do that
+            var combinator = replacedElement.combinator, parentEl = addPath[0].elements[0];
+            if (combinator.emptyOrWhitespace && !parentEl.combinator.emptyOrWhitespace) {
+                combinator = parentEl.combinator;
+            }
+            // join the elements so far with the first part of the parent
+            newJoinedSelector.elements.push(new Element(combinator, parentEl.value, replacedElement.index, replacedElement.currentFileInfo));
+            newJoinedSelector.elements = newJoinedSelector.elements.concat(addPath[0].elements.slice(1));
+        }
+
+        // now add the joined selector - but only if it is not empty
+        if (newJoinedSelector.elements.length !== 0) {
+            newSelectorPath.push(newJoinedSelector);
+        }
+
+        //put together the parent selectors after the join (e.g. the rest of the parent)
+        if (addPath.length > 1) {
+            newSelectorPath = newSelectorPath.concat(addPath.slice(1));
+        }
+        return newSelectorPath;
+    }
+
+    // joins selector path from `beginningPath` with every selector path in `addPaths` array
+    // `replacedElement` contains element that is being replaced by `addPath`
+    // returns array with all concatenated paths
+    function addAllReplacementsIntoPath( beginningPath, addPaths, replacedElement, originalSelector, result) {
+        var j;
+        for (j = 0; j < beginningPath.length; j++) {
+            var newSelectorPath = addReplacementIntoPath(beginningPath[j], addPaths, replacedElement, originalSelector);
+            result.push(newSelectorPath);
+        }
+        return result;
+    }
+
+    function mergeElementsOnToSelectors(elements, selectors) {
+        var i, sel;
+
+        if (elements.length === 0) {
+            return ;
+        }
+        if (selectors.length === 0) {
+            selectors.push([ new Selector(elements) ]);
+            return;
+        }
+
+        for (i = 0; i < selectors.length; i++) {
+            sel = selectors[i];
+
+            // if the previous thing in sel is a parent this needs to join on to it
+            if (sel.length > 0) {
+                sel[sel.length - 1] = sel[sel.length - 1].createDerived(sel[sel.length - 1].elements.concat(elements));
+            }
+            else {
+                sel.push(new Selector(elements));
+            }
+        }
+    }
+
+    // joinSelector code follows
+    var i, newPaths, hadParentSelector;
+
+    newPaths = [];
+    hadParentSelector = replaceParentSelector(newPaths, context, selector);
+
+    if (!hadParentSelector) {
+        if (context.length > 0) {
+            newPaths = [];
+            for (i = 0; i < context.length; i++) {
+                newPaths.push(context[i].concat(selector));
+            }
+        }
+        else {
+            newPaths = [[selector]];
+        }
+    }
+
+    for (i = 0; i < newPaths.length; i++) {
+        paths.push(newPaths[i]);
+    }
+
+};
+module.exports = Ruleset;
+
+},{"../contexts":10,"../functions/default":19,"../functions/function-registry":21,"./debug-info":53,"./element":57,"./node":69,"./paren":71,"./rule":73,"./selector":76}],76:[function(require,module,exports){
+var Node = require("./node"),
+    Element = require("./element");
+
+var Selector = function (elements, extendList, condition, index, currentFileInfo, isReferenced) {
+    this.elements = elements;
+    this.extendList = extendList;
+    this.condition = condition;
+    this.currentFileInfo = currentFileInfo || {};
+    this.isReferenced = isReferenced;
+    if (!condition) {
+        this.evaldCondition = true;
+    }
+};
+Selector.prototype = new Node();
+Selector.prototype.type = "Selector";
+Selector.prototype.accept = function (visitor) {
+    if (this.elements) {
+        this.elements = visitor.visitArray(this.elements);
+    }
+    if (this.extendList) {
+        this.extendList = visitor.visitArray(this.extendList);
+    }
+    if (this.condition) {
+        this.condition = visitor.visit(this.condition);
+    }
+};
+Selector.prototype.createDerived = function(elements, extendList, evaldCondition) {
+    evaldCondition = (evaldCondition != null) ? evaldCondition : this.evaldCondition;
+    var newSelector = new Selector(elements, extendList || this.extendList, null, this.index, this.currentFileInfo, this.isReferenced);
+    newSelector.evaldCondition = evaldCondition;
+    newSelector.mediaEmpty = this.mediaEmpty;
+    return newSelector;
+};
+Selector.prototype.createEmptySelectors = function() {
+    var el = new Element('', '&', this.index, this.currentFileInfo),
+        sels = [new Selector([el], null, null, this.index, this.currentFileInfo)];
+    sels[0].mediaEmpty = true;
+    return sels;
+};
+Selector.prototype.match = function (other) {
+    var elements = this.elements,
+        len = elements.length,
+        olen, i;
+
+    other.CacheElements();
+
+    olen = other._elements.length;
+    if (olen === 0 || len < olen) {
+        return 0;
+    } else {
+        for (i = 0; i < olen; i++) {
+            if (elements[i].value !== other._elements[i]) {
+                return 0;
+            }
+        }
+    }
+
+    return olen; // return number of matched elements
+};
+Selector.prototype.CacheElements = function() {
+    if (this._elements) {
+        return;
+    }
+
+    var elements = this.elements.map( function(v) {
+        return v.combinator.value + (v.value.value || v.value);
+    }).join("").match(/[,&#\*\.\w-]([\w-]|(\\.))*/g);
+
+    if (elements) {
+        if (elements[0] === "&") {
+            elements.shift();
+        }
+    } else {
+        elements = [];
+    }
+
+    this._elements = elements;
+};
+Selector.prototype.isJustParentSelector = function() {
+    return !this.mediaEmpty &&
+        this.elements.length === 1 &&
+        this.elements[0].value === '&' &&
+        (this.elements[0].combinator.value === ' ' || this.elements[0].combinator.value === '');
+};
+Selector.prototype.eval = function (context) {
+    var evaldCondition = this.condition && this.condition.eval(context),
+        elements = this.elements, extendList = this.extendList;
+
+    elements = elements && elements.map(function (e) { return e.eval(context); });
+    extendList = extendList && extendList.map(function(extend) { return extend.eval(context); });
+
+    return this.createDerived(elements, extendList, evaldCondition);
+};
+Selector.prototype.genCSS = function (context, output) {
+    var i, element;
+    if ((!context || !context.firstSelector) && this.elements[0].combinator.value === "") {
+        output.add(' ', this.currentFileInfo, this.index);
+    }
+    if (!this._css) {
+        //TODO caching? speed comparison?
+        for (i = 0; i < this.elements.length; i++) {
+            element = this.elements[i];
+            element.genCSS(context, output);
+        }
+    }
+};
+Selector.prototype.markReferenced = function () {
+    this.isReferenced = true;
+};
+Selector.prototype.getIsReferenced = function() {
+    return !this.currentFileInfo.reference || this.isReferenced;
+};
+Selector.prototype.getIsOutput = function() {
+    return this.evaldCondition;
+};
+module.exports = Selector;
+
+},{"./element":57,"./node":69}],77:[function(require,module,exports){
+var Node = require("./node");
+
+var UnicodeDescriptor = function (value) {
+    this.value = value;
+};
+UnicodeDescriptor.prototype = new Node();
+UnicodeDescriptor.prototype.type = "UnicodeDescriptor";
+
+module.exports = UnicodeDescriptor;
+
+},{"./node":69}],78:[function(require,module,exports){
+var Node = require("./node"),
+    unitConversions = require("../data/unit-conversions");
+
+var Unit = function (numerator, denominator, backupUnit) {
+    this.numerator = numerator ? numerator.slice(0).sort() : [];
+    this.denominator = denominator ? denominator.slice(0).sort() : [];
+    if (backupUnit) {
+        this.backupUnit = backupUnit;
+    } else if (numerator && numerator.length) {
+        this.backupUnit = numerator[0];
+    }
+};
+
+Unit.prototype = new Node();
+Unit.prototype.type = "Unit";
+Unit.prototype.clone = function () {
+    return new Unit(this.numerator.slice(0), this.denominator.slice(0), this.backupUnit);
+};
+Unit.prototype.genCSS = function (context, output) {
+    // Dimension checks the unit is singular and throws an error if in strict math mode.
+    var strictUnits = context && context.strictUnits;
+    if (this.numerator.length === 1) {
+        output.add(this.numerator[0]); // the ideal situation
+    } else if (!strictUnits && this.backupUnit) {
+        output.add(this.backupUnit);
+    } else if (!strictUnits && this.denominator.length) {
+        output.add(this.denominator[0]);
+    }
+};
+Unit.prototype.toString = function () {
+    var i, returnStr = this.numerator.join("*");
+    for (i = 0; i < this.denominator.length; i++) {
+        returnStr += "/" + this.denominator[i];
+    }
+    return returnStr;
+};
+Unit.prototype.compare = function (other) {
+    return this.is(other.toString()) ? 0 : undefined;
+};
+Unit.prototype.is = function (unitString) {
+    return this.toString().toUpperCase() === unitString.toUpperCase();
+};
+Unit.prototype.isLength = function () {
+    return Boolean(this.toCSS().match(/px|em|%|in|cm|mm|pc|pt|ex/));
+};
+Unit.prototype.isEmpty = function () {
+    return this.numerator.length === 0 && this.denominator.length === 0;
+};
+Unit.prototype.isSingular = function() {
+    return this.numerator.length <= 1 && this.denominator.length === 0;
+};
+Unit.prototype.map = function(callback) {
+    var i;
+
+    for (i = 0; i < this.numerator.length; i++) {
+        this.numerator[i] = callback(this.numerator[i], false);
+    }
+
+    for (i = 0; i < this.denominator.length; i++) {
+        this.denominator[i] = callback(this.denominator[i], true);
+    }
+};
+Unit.prototype.usedUnits = function() {
+    var group, result = {}, mapUnit;
+
+    mapUnit = function (atomicUnit) {
+        /*jshint loopfunc:true */
+        if (group.hasOwnProperty(atomicUnit) && !result[groupName]) {
+            result[groupName] = atomicUnit;
+        }
+
+        return atomicUnit;
+    };
+
+    for (var groupName in unitConversions) {
+        if (unitConversions.hasOwnProperty(groupName)) {
+            group = unitConversions[groupName];
+
+            this.map(mapUnit);
+        }
+    }
+
+    return result;
+};
+Unit.prototype.cancel = function () {
+    var counter = {}, atomicUnit, i;
+
+    for (i = 0; i < this.numerator.length; i++) {
+        atomicUnit = this.numerator[i];
+        counter[atomicUnit] = (counter[atomicUnit] || 0) + 1;
+    }
+
+    for (i = 0; i < this.denominator.length; i++) {
+        atomicUnit = this.denominator[i];
+        counter[atomicUnit] = (counter[atomicUnit] || 0) - 1;
+    }
+
+    this.numerator = [];
+    this.denominator = [];
+
+    for (atomicUnit in counter) {
+        if (counter.hasOwnProperty(atomicUnit)) {
+            var count = counter[atomicUnit];
+
+            if (count > 0) {
+                for (i = 0; i < count; i++) {
+                    this.numerator.push(atomicUnit);
+                }
+            } else if (count < 0) {
+                for (i = 0; i < -count; i++) {
+                    this.denominator.push(atomicUnit);
+                }
+            }
+        }
+    }
+
+    this.numerator.sort();
+    this.denominator.sort();
+};
+module.exports = Unit;
+
+},{"../data/unit-conversions":13,"./node":69}],79:[function(require,module,exports){
+var Node = require("./node");
+
+var URL = function (val, index, currentFileInfo, isEvald) {
+    this.value = val;
+    this.currentFileInfo = currentFileInfo;
+    this.index = index;
+    this.isEvald = isEvald;
+};
+URL.prototype = new Node();
+URL.prototype.type = "Url";
+URL.prototype.accept = function (visitor) {
+    this.value = visitor.visit(this.value);
+};
+URL.prototype.genCSS = function (context, output) {
+    output.add("url(");
+    this.value.genCSS(context, output);
+    output.add(")");
+};
+URL.prototype.eval = function (context) {
+    var val = this.value.eval(context),
+        rootpath;
+
+    if (!this.isEvald) {
+        // Add the base path if the URL is relative
+        rootpath = this.currentFileInfo && this.currentFileInfo.rootpath;
+        if (rootpath &&
+            typeof val.value === "string" &&
+            context.isPathRelative(val.value)) {
+
+            if (!val.quote) {
+                rootpath = rootpath.replace(/[\(\)'"\s]/g, function(match) { return "\\" + match; });
+            }
+            val.value = rootpath + val.value;
+        }
+
+        val.value = context.normalizePath(val.value);
+
+        // Add url args if enabled
+        if (context.urlArgs) {
+            if (!val.value.match(/^\s*data:/)) {
+                var delimiter = val.value.indexOf('?') === -1 ? '?' : '&';
+                var urlArgs = delimiter + context.urlArgs;
+                if (val.value.indexOf('#') !== -1) {
+                    val.value = val.value.replace('#', urlArgs + '#');
+                } else {
+                    val.value += urlArgs;
+                }
+            }
+        }
+    }
+
+    return new URL(val, this.index, this.currentFileInfo, true);
+};
+module.exports = URL;
+
+},{"./node":69}],80:[function(require,module,exports){
+var Node = require("./node");
+
+var Value = function (value) {
+    this.value = value;
+    if (!value) {
+        throw new Error("Value requires an array argument");
+    }
+};
+Value.prototype = new Node();
+Value.prototype.type = "Value";
+Value.prototype.accept = function (visitor) {
+    if (this.value) {
+        this.value = visitor.visitArray(this.value);
+    }
+};
+Value.prototype.eval = function (context) {
+    if (this.value.length === 1) {
+        return this.value[0].eval(context);
+    } else {
+        return new Value(this.value.map(function (v) {
+            return v.eval(context);
+        }));
+    }
+};
+Value.prototype.genCSS = function (context, output) {
+    var i;
+    for (i = 0; i < this.value.length; i++) {
+        this.value[i].genCSS(context, output);
+        if (i + 1 < this.value.length) {
+            output.add((context && context.compress) ? ',' : ', ');
+        }
+    }
+};
+module.exports = Value;
+
+},{"./node":69}],81:[function(require,module,exports){
+var Node = require("./node");
+
+var Variable = function (name, index, currentFileInfo) {
+    this.name = name;
+    this.index = index;
+    this.currentFileInfo = currentFileInfo || {};
+};
+Variable.prototype = new Node();
+Variable.prototype.type = "Variable";
+Variable.prototype.eval = function (context) {
+    var variable, name = this.name;
+
+    if (name.indexOf('@@') === 0) {
+        name = '@' + new Variable(name.slice(1), this.index, this.currentFileInfo).eval(context).value;
+    }
+
+    if (this.evaluating) {
+        throw { type: 'Name',
+                message: "Recursive variable definition for " + name,
+                filename: this.currentFileInfo.filename,
+                index: this.index };
+    }
+
+    this.evaluating = true;
+
+    variable = this.find(context.frames, function (frame) {
+        var v = frame.variable(name);
+        if (v) {
+            if (v.important) {
+                var importantScope = context.importantScope[context.importantScope.length - 1];
+                importantScope.important = v.important;
+            }
+            return v.value.eval(context);
+        }
+    });
+    if (variable) {
+        this.evaluating = false;
+        return variable;
+    } else {
+        throw { type: 'Name',
+                message: "variable " + name + " is undefined",
+                filename: this.currentFileInfo.filename,
+                index: this.index };
+    }
+};
+Variable.prototype.find = function (obj, fun) {
+    for (var i = 0, r; i < obj.length; i++) {
+        r = fun.call(obj, obj[i]);
+        if (r) { return r; }
+    }
+    return null;
+};
+module.exports = Variable;
+
+},{"./node":69}],82:[function(require,module,exports){
+module.exports = {
+    getLocation: function(index, inputStream) {
+        var n = index + 1,
+            line = null,
+            column = -1;
+
+        while (--n >= 0 && inputStream.charAt(n) !== '\n') {
+            column++;
+        }
+
+        if (typeof index === 'number') {
+            line = (inputStream.slice(0, index).match(/\n/g) || "").length;
+        }
+
+        return {
+            line: line,
+            column: column
+        };
+    }
+};
+
+},{}],83:[function(require,module,exports){
+var tree = require("../tree"),
+    Visitor = require("./visitor"),
+    logger = require("../logger");
+
+/*jshint loopfunc:true */
+
+var ExtendFinderVisitor = function() {
+    this._visitor = new Visitor(this);
+    this.contexts = [];
+    this.allExtendsStack = [[]];
+};
+
+ExtendFinderVisitor.prototype = {
+    run: function (root) {
+        root = this._visitor.visit(root);
+        root.allExtends = this.allExtendsStack[0];
+        return root;
+    },
+    visitRule: function (ruleNode, visitArgs) {
+        visitArgs.visitDeeper = false;
+    },
+    visitMixinDefinition: function (mixinDefinitionNode, visitArgs) {
+        visitArgs.visitDeeper = false;
+    },
+    visitRuleset: function (rulesetNode, visitArgs) {
+        if (rulesetNode.root) {
+            return;
+        }
+
+        var i, j, extend, allSelectorsExtendList = [], extendList;
+
+        // get &:extend(.a); rules which apply to all selectors in this ruleset
+        var rules = rulesetNode.rules, ruleCnt = rules ? rules.length : 0;
+        for (i = 0; i < ruleCnt; i++) {
+            if (rulesetNode.rules[i] instanceof tree.Extend) {
+                allSelectorsExtendList.push(rules[i]);
+                rulesetNode.extendOnEveryPath = true;
+            }
+        }
+
+        // now find every selector and apply the extends that apply to all extends
+        // and the ones which apply to an individual extend
+        var paths = rulesetNode.paths;
+        for (i = 0; i < paths.length; i++) {
+            var selectorPath = paths[i],
+                selector = selectorPath[selectorPath.length - 1],
+                selExtendList = selector.extendList;
+
+            extendList = selExtendList ? selExtendList.slice(0).concat(allSelectorsExtendList)
+                                       : allSelectorsExtendList;
+
+            if (extendList) {
+                extendList = extendList.map(function(allSelectorsExtend) {
+                    return allSelectorsExtend.clone();
+                });
+            }
+
+            for (j = 0; j < extendList.length; j++) {
+                this.foundExtends = true;
+                extend = extendList[j];
+                extend.findSelfSelectors(selectorPath);
+                extend.ruleset = rulesetNode;
+                if (j === 0) { extend.firstExtendOnThisSelectorPath = true; }
+                this.allExtendsStack[this.allExtendsStack.length - 1].push(extend);
+            }
+        }
+
+        this.contexts.push(rulesetNode.selectors);
+    },
+    visitRulesetOut: function (rulesetNode) {
+        if (!rulesetNode.root) {
+            this.contexts.length = this.contexts.length - 1;
+        }
+    },
+    visitMedia: function (mediaNode, visitArgs) {
+        mediaNode.allExtends = [];
+        this.allExtendsStack.push(mediaNode.allExtends);
+    },
+    visitMediaOut: function (mediaNode) {
+        this.allExtendsStack.length = this.allExtendsStack.length - 1;
+    },
+    visitDirective: function (directiveNode, visitArgs) {
+        directiveNode.allExtends = [];
+        this.allExtendsStack.push(directiveNode.allExtends);
+    },
+    visitDirectiveOut: function (directiveNode) {
+        this.allExtendsStack.length = this.allExtendsStack.length - 1;
+    }
+};
+
+var ProcessExtendsVisitor = function() {
+    this._visitor = new Visitor(this);
+};
+
+ProcessExtendsVisitor.prototype = {
+    run: function(root) {
+        var extendFinder = new ExtendFinderVisitor();
+        this.extendIndicies = {};
+        extendFinder.run(root);
+        if (!extendFinder.foundExtends) { return root; }
+        root.allExtends = root.allExtends.concat(this.doExtendChaining(root.allExtends, root.allExtends));
+        this.allExtendsStack = [root.allExtends];
+        var newRoot = this._visitor.visit(root);
+        this.checkExtendsForNonMatched(root.allExtends);
+        return newRoot;
+    },
+    checkExtendsForNonMatched: function(extendList) {
+        var indicies = this.extendIndicies;
+        extendList.filter(function(extend) {
+            return !extend.hasFoundMatches && extend.parent_ids.length == 1;
+        }).forEach(function(extend) {
+                var selector = "_unknown_";
+                try {
+                    selector = extend.selector.toCSS({});
+                }
+                catch(_) {}
+
+                if (!indicies[extend.index + ' ' + selector]) {
+                    indicies[extend.index + ' ' + selector] = true;
+                    logger.warn("extend '" + selector + "' has no matches");
+                }
+            });
+    },
+    doExtendChaining: function (extendsList, extendsListTarget, iterationCount) {
+        //
+        // chaining is different from normal extension.. if we extend an extend then we are not just copying, altering
+        // and pasting the selector we would do normally, but we are also adding an extend with the same target selector
+        // this means this new extend can then go and alter other extends
+        //
+        // this method deals with all the chaining work - without it, extend is flat and doesn't work on other extend selectors
+        // this is also the most expensive.. and a match on one selector can cause an extension of a selector we had already
+        // processed if we look at each selector at a time, as is done in visitRuleset
+
+        var extendIndex, targetExtendIndex, matches, extendsToAdd = [], newSelector, extendVisitor = this, selectorPath,
+            extend, targetExtend, newExtend;
+
+        iterationCount = iterationCount || 0;
+
+        //loop through comparing every extend with every target extend.
+        // a target extend is the one on the ruleset we are looking at copy/edit/pasting in place
+        // e.g.  .a:extend(.b) {}  and .b:extend(.c) {} then the first extend extends the second one
+        // and the second is the target.
+        // the seperation into two lists allows us to process a subset of chains with a bigger set, as is the
+        // case when processing media queries
+        for (extendIndex = 0; extendIndex < extendsList.length; extendIndex++) {
+            for (targetExtendIndex = 0; targetExtendIndex < extendsListTarget.length; targetExtendIndex++) {
+
+                extend = extendsList[extendIndex];
+                targetExtend = extendsListTarget[targetExtendIndex];
+
+                // look for circular references
+                if ( extend.parent_ids.indexOf( targetExtend.object_id ) >= 0 ) { continue; }
+
+                // find a match in the target extends self selector (the bit before :extend)
+                selectorPath = [targetExtend.selfSelectors[0]];
+                matches = extendVisitor.findMatch(extend, selectorPath);
+
+                if (matches.length) {
+
+                    extend.hasFoundMatches = true;
+
+                    // we found a match, so for each self selector..
+                    extend.selfSelectors.forEach(function(selfSelector) {
+
+                        // process the extend as usual
+                        newSelector = extendVisitor.extendSelector(matches, selectorPath, selfSelector);
+
+                        // but now we create a new extend from it
+                        newExtend = new(tree.Extend)(targetExtend.selector, targetExtend.option, 0);
+                        newExtend.selfSelectors = newSelector;
+
+                        // add the extend onto the list of extends for that selector
+                        newSelector[newSelector.length - 1].extendList = [newExtend];
+
+                        // record that we need to add it.
+                        extendsToAdd.push(newExtend);
+                        newExtend.ruleset = targetExtend.ruleset;
+
+                        //remember its parents for circular references
+                        newExtend.parent_ids = newExtend.parent_ids.concat(targetExtend.parent_ids, extend.parent_ids);
+
+                        // only process the selector once.. if we have :extend(.a,.b) then multiple
+                        // extends will look at the same selector path, so when extending
+                        // we know that any others will be duplicates in terms of what is added to the css
+                        if (targetExtend.firstExtendOnThisSelectorPath) {
+                            newExtend.firstExtendOnThisSelectorPath = true;
+                            targetExtend.ruleset.paths.push(newSelector);
+                        }
+                    });
+                }
+            }
+        }
+
+        if (extendsToAdd.length) {
+            // try to detect circular references to stop a stack overflow.
+            // may no longer be needed.
+            this.extendChainCount++;
+            if (iterationCount > 100) {
+                var selectorOne = "{unable to calculate}";
+                var selectorTwo = "{unable to calculate}";
+                try {
+                    selectorOne = extendsToAdd[0].selfSelectors[0].toCSS();
+                    selectorTwo = extendsToAdd[0].selector.toCSS();
+                }
+                catch(e) {}
+                throw { message: "extend circular reference detected. One of the circular extends is currently:" +
+                    selectorOne + ":extend(" + selectorTwo + ")"};
+            }
+
+            // now process the new extends on the existing rules so that we can handle a extending b extending c extending
+            // d extending e...
+            return extendsToAdd.concat(extendVisitor.doExtendChaining(extendsToAdd, extendsListTarget, iterationCount + 1));
+        } else {
+            return extendsToAdd;
+        }
+    },
+    visitRule: function (ruleNode, visitArgs) {
+        visitArgs.visitDeeper = false;
+    },
+    visitMixinDefinition: function (mixinDefinitionNode, visitArgs) {
+        visitArgs.visitDeeper = false;
+    },
+    visitSelector: function (selectorNode, visitArgs) {
+        visitArgs.visitDeeper = false;
+    },
+    visitRuleset: function (rulesetNode, visitArgs) {
+        if (rulesetNode.root) {
+            return;
+        }
+        var matches, pathIndex, extendIndex, allExtends = this.allExtendsStack[this.allExtendsStack.length - 1],
+            selectorsToAdd = [], extendVisitor = this, selectorPath;
+
+        // look at each selector path in the ruleset, find any extend matches and then copy, find and replace
+
+        for (extendIndex = 0; extendIndex < allExtends.length; extendIndex++) {
+            for (pathIndex = 0; pathIndex < rulesetNode.paths.length; pathIndex++) {
+                selectorPath = rulesetNode.paths[pathIndex];
+
+                // extending extends happens initially, before the main pass
+                if (rulesetNode.extendOnEveryPath) { continue; }
+                var extendList = selectorPath[selectorPath.length - 1].extendList;
+                if (extendList && extendList.length) { continue; }
+
+                matches = this.findMatch(allExtends[extendIndex], selectorPath);
+
+                if (matches.length) {
+                    allExtends[extendIndex].hasFoundMatches = true;
+
+                    allExtends[extendIndex].selfSelectors.forEach(function(selfSelector) {
+                        selectorsToAdd.push(extendVisitor.extendSelector(matches, selectorPath, selfSelector));
+                    });
+                }
+            }
+        }
+        rulesetNode.paths = rulesetNode.paths.concat(selectorsToAdd);
+    },
+    findMatch: function (extend, haystackSelectorPath) {
+        //
+        // look through the haystack selector path to try and find the needle - extend.selector
+        // returns an array of selector matches that can then be replaced
+        //
+        var haystackSelectorIndex, hackstackSelector, hackstackElementIndex, haystackElement,
+            targetCombinator, i,
+            extendVisitor = this,
+            needleElements = extend.selector.elements,
+            potentialMatches = [], potentialMatch, matches = [];
+
+        // loop through the haystack elements
+        for (haystackSelectorIndex = 0; haystackSelectorIndex < haystackSelectorPath.length; haystackSelectorIndex++) {
+            hackstackSelector = haystackSelectorPath[haystackSelectorIndex];
+
+            for (hackstackElementIndex = 0; hackstackElementIndex < hackstackSelector.elements.length; hackstackElementIndex++) {
+
+                haystackElement = hackstackSelector.elements[hackstackElementIndex];
+
+                // if we allow elements before our match we can add a potential match every time. otherwise only at the first element.
+                if (extend.allowBefore || (haystackSelectorIndex === 0 && hackstackElementIndex === 0)) {
+                    potentialMatches.push({pathIndex: haystackSelectorIndex, index: hackstackElementIndex, matched: 0,
+                        initialCombinator: haystackElement.combinator});
+                }
+
+                for (i = 0; i < potentialMatches.length; i++) {
+                    potentialMatch = potentialMatches[i];
+
+                    // selectors add " " onto the first element. When we use & it joins the selectors together, but if we don't
+                    // then each selector in haystackSelectorPath has a space before it added in the toCSS phase. so we need to
+                    // work out what the resulting combinator will be
+                    targetCombinator = haystackElement.combinator.value;
+                    if (targetCombinator === '' && hackstackElementIndex === 0) {
+                        targetCombinator = ' ';
+                    }
+
+                    // if we don't match, null our match to indicate failure
+                    if (!extendVisitor.isElementValuesEqual(needleElements[potentialMatch.matched].value, haystackElement.value) ||
+                        (potentialMatch.matched > 0 && needleElements[potentialMatch.matched].combinator.value !== targetCombinator)) {
+                        potentialMatch = null;
+                    } else {
+                        potentialMatch.matched++;
+                    }
+
+                    // if we are still valid and have finished, test whether we have elements after and whether these are allowed
+                    if (potentialMatch) {
+                        potentialMatch.finished = potentialMatch.matched === needleElements.length;
+                        if (potentialMatch.finished &&
+                            (!extend.allowAfter &&
+                                (hackstackElementIndex + 1 < hackstackSelector.elements.length || haystackSelectorIndex + 1 < haystackSelectorPath.length))) {
+                            potentialMatch = null;
+                        }
+                    }
+                    // if null we remove, if not, we are still valid, so either push as a valid match or continue
+                    if (potentialMatch) {
+                        if (potentialMatch.finished) {
+                            potentialMatch.length = needleElements.length;
+                            potentialMatch.endPathIndex = haystackSelectorIndex;
+                            potentialMatch.endPathElementIndex = hackstackElementIndex + 1; // index after end of match
+                            potentialMatches.length = 0; // we don't allow matches to overlap, so start matching again
+                            matches.push(potentialMatch);
+                        }
+                    } else {
+                        potentialMatches.splice(i, 1);
+                        i--;
+                    }
+                }
+            }
+        }
+        return matches;
+    },
+    isElementValuesEqual: function(elementValue1, elementValue2) {
+        if (typeof elementValue1 === "string" || typeof elementValue2 === "string") {
+            return elementValue1 === elementValue2;
+        }
+        if (elementValue1 instanceof tree.Attribute) {
+            if (elementValue1.op !== elementValue2.op || elementValue1.key !== elementValue2.key) {
+                return false;
+            }
+            if (!elementValue1.value || !elementValue2.value) {
+                if (elementValue1.value || elementValue2.value) {
+                    return false;
+                }
+                return true;
+            }
+            elementValue1 = elementValue1.value.value || elementValue1.value;
+            elementValue2 = elementValue2.value.value || elementValue2.value;
+            return elementValue1 === elementValue2;
+        }
+        elementValue1 = elementValue1.value;
+        elementValue2 = elementValue2.value;
+        if (elementValue1 instanceof tree.Selector) {
+            if (!(elementValue2 instanceof tree.Selector) || elementValue1.elements.length !== elementValue2.elements.length) {
+                return false;
+            }
+            for (var i = 0; i  < elementValue1.elements.length; i++) {
+                if (elementValue1.elements[i].combinator.value !== elementValue2.elements[i].combinator.value) {
+                    if (i !== 0 || (elementValue1.elements[i].combinator.value || ' ') !== (elementValue2.elements[i].combinator.value || ' ')) {
+                        return false;
+                    }
+                }
+                if (!this.isElementValuesEqual(elementValue1.elements[i].value, elementValue2.elements[i].value)) {
+                    return false;
+                }
+            }
+            return true;
+        }
+        return false;
+    },
+    extendSelector:function (matches, selectorPath, replacementSelector) {
+
+        //for a set of matches, replace each match with the replacement selector
+
+        var currentSelectorPathIndex = 0,
+            currentSelectorPathElementIndex = 0,
+            path = [],
+            matchIndex,
+            selector,
+            firstElement,
+            match,
+            newElements;
+
+        for (matchIndex = 0; matchIndex < matches.length; matchIndex++) {
+            match = matches[matchIndex];
+            selector = selectorPath[match.pathIndex];
+            firstElement = new tree.Element(
+                match.initialCombinator,
+                replacementSelector.elements[0].value,
+                replacementSelector.elements[0].index,
+                replacementSelector.elements[0].currentFileInfo
+            );
+
+            if (match.pathIndex > currentSelectorPathIndex && currentSelectorPathElementIndex > 0) {
+                path[path.length - 1].elements = path[path.length - 1]
+                    .elements.concat(selectorPath[currentSelectorPathIndex].elements.slice(currentSelectorPathElementIndex));
+                currentSelectorPathElementIndex = 0;
+                currentSelectorPathIndex++;
+            }
+
+            newElements = selector.elements
+                .slice(currentSelectorPathElementIndex, match.index)
+                .concat([firstElement])
+                .concat(replacementSelector.elements.slice(1));
+
+            if (currentSelectorPathIndex === match.pathIndex && matchIndex > 0) {
+                path[path.length - 1].elements =
+                    path[path.length - 1].elements.concat(newElements);
+            } else {
+                path = path.concat(selectorPath.slice(currentSelectorPathIndex, match.pathIndex));
+
+                path.push(new tree.Selector(
+                    newElements
+                ));
+            }
+            currentSelectorPathIndex = match.endPathIndex;
+            currentSelectorPathElementIndex = match.endPathElementIndex;
+            if (currentSelectorPathElementIndex >= selectorPath[currentSelectorPathIndex].elements.length) {
+                currentSelectorPathElementIndex = 0;
+                currentSelectorPathIndex++;
+            }
+        }
+
+        if (currentSelectorPathIndex < selectorPath.length && currentSelectorPathElementIndex > 0) {
+            path[path.length - 1].elements = path[path.length - 1]
+                .elements.concat(selectorPath[currentSelectorPathIndex].elements.slice(currentSelectorPathElementIndex));
+            currentSelectorPathIndex++;
+        }
+
+        path = path.concat(selectorPath.slice(currentSelectorPathIndex, selectorPath.length));
+
+        return path;
+    },
+    visitRulesetOut: function (rulesetNode) {
+    },
+    visitMedia: function (mediaNode, visitArgs) {
+        var newAllExtends = mediaNode.allExtends.concat(this.allExtendsStack[this.allExtendsStack.length - 1]);
+        newAllExtends = newAllExtends.concat(this.doExtendChaining(newAllExtends, mediaNode.allExtends));
+        this.allExtendsStack.push(newAllExtends);
+    },
+    visitMediaOut: function (mediaNode) {
+        var lastIndex = this.allExtendsStack.length - 1;
+        this.allExtendsStack.length = lastIndex;
+    },
+    visitDirective: function (directiveNode, visitArgs) {
+        var newAllExtends = directiveNode.allExtends.concat(this.allExtendsStack[this.allExtendsStack.length - 1]);
+        newAllExtends = newAllExtends.concat(this.doExtendChaining(newAllExtends, directiveNode.allExtends));
+        this.allExtendsStack.push(newAllExtends);
+    },
+    visitDirectiveOut: function (directiveNode) {
+        var lastIndex = this.allExtendsStack.length - 1;
+        this.allExtendsStack.length = lastIndex;
+    }
+};
+
+module.exports = ProcessExtendsVisitor;
+
+},{"../logger":32,"../tree":61,"./visitor":89}],84:[function(require,module,exports){
+function ImportSequencer(onSequencerEmpty) {
+    this.imports = [];
+    this.variableImports = [];
+    this._onSequencerEmpty = onSequencerEmpty;
+    this._currentDepth = 0;
+}
+
+ImportSequencer.prototype.addImport = function(callback) {
+    var importSequencer = this,
+        importItem = {
+            callback: callback,
+            args: null,
+            isReady: false
+        };
+    this.imports.push(importItem);
+    return function() {
+        importItem.args = Array.prototype.slice.call(arguments, 0);
+        importItem.isReady = true;
+        importSequencer.tryRun();
+    };
+};
+
+ImportSequencer.prototype.addVariableImport = function(callback) {
+    this.variableImports.push(callback);
+};
+
+ImportSequencer.prototype.tryRun = function() {
+    this._currentDepth++;
+    try {
+        while (true) {
+            while (this.imports.length > 0) {
+                var importItem = this.imports[0];
+                if (!importItem.isReady) {
+                    return;
+                }
+                this.imports = this.imports.slice(1);
+                importItem.callback.apply(null, importItem.args);
+            }
+            if (this.variableImports.length === 0) {
+                break;
+            }
+            var variableImport = this.variableImports[0];
+            this.variableImports = this.variableImports.slice(1);
+            variableImport();
+        }
+    } finally {
+        this._currentDepth--;
+    }
+    if (this._currentDepth === 0 && this._onSequencerEmpty) {
+        this._onSequencerEmpty();
+    }
+};
+
+module.exports = ImportSequencer;
+
+},{}],85:[function(require,module,exports){
+var contexts = require("../contexts"),
+    Visitor = require("./visitor"),
+    ImportSequencer = require("./import-sequencer");
+
+var ImportVisitor = function(importer, finish) {
+
+    this._visitor = new Visitor(this);
+    this._importer = importer;
+    this._finish = finish;
+    this.context = new contexts.Eval();
+    this.importCount = 0;
+    this.onceFileDetectionMap = {};
+    this.recursionDetector = {};
+    this._sequencer = new ImportSequencer(this._onSequencerEmpty.bind(this));
+};
+
+ImportVisitor.prototype = {
+    isReplacing: false,
+    run: function (root) {
+        try {
+            // process the contents
+            this._visitor.visit(root);
+        }
+        catch(e) {
+            this.error = e;
+        }
+
+        this.isFinished = true;
+        this._sequencer.tryRun();
+    },
+    _onSequencerEmpty: function() {
+        if (!this.isFinished) {
+            return;
+        }
+        this._finish(this.error);
+    },
+    visitImport: function (importNode, visitArgs) {
+        var inlineCSS = importNode.options.inline;
+
+        if (!importNode.css || inlineCSS) {
+
+            var context = new contexts.Eval(this.context, this.context.frames.slice(0));
+            var importParent = context.frames[0];
+
+            this.importCount++;
+            if (importNode.isVariableImport()) {
+                this._sequencer.addVariableImport(this.processImportNode.bind(this, importNode, context, importParent));
+            } else {
+                this.processImportNode(importNode, context, importParent);
+            }
+        }
+        visitArgs.visitDeeper = false;
+    },
+    processImportNode: function(importNode, context, importParent) {
+        var evaldImportNode,
+            inlineCSS = importNode.options.inline;
+
+        try {
+            evaldImportNode = importNode.evalForImport(context);
+        } catch(e) {
+            if (!e.filename) { e.index = importNode.index; e.filename = importNode.currentFileInfo.filename; }
+            // attempt to eval properly and treat as css
+            importNode.css = true;
+            // if that fails, this error will be thrown
+            importNode.error = e;
+        }
+
+        if (evaldImportNode && (!evaldImportNode.css || inlineCSS)) {
+
+            if (evaldImportNode.options.multiple) {
+                context.importMultiple = true;
+            }
+
+            // try appending if we haven't determined if it is css or not
+            var tryAppendLessExtension = evaldImportNode.css === undefined;
+
+            for (var i = 0; i < importParent.rules.length; i++) {
+                if (importParent.rules[i] === importNode) {
+                    importParent.rules[i] = evaldImportNode;
+                    break;
+                }
+            }
+
+            var onImported = this.onImported.bind(this, evaldImportNode, context),
+                sequencedOnImported = this._sequencer.addImport(onImported);
+
+            this._importer.push(evaldImportNode.getPath(), tryAppendLessExtension, evaldImportNode.currentFileInfo,
+                evaldImportNode.options, sequencedOnImported);
+        } else {
+            this.importCount--;
+            if (this.isFinished) {
+                this._sequencer.tryRun();
+            }
+        }
+    },
+    onImported: function (importNode, context, e, root, importedAtRoot, fullPath) {
+        if (e) {
+            if (!e.filename) {
+                e.index = importNode.index; e.filename = importNode.currentFileInfo.filename;
+            }
+            this.error = e;
+        }
+
+        var importVisitor = this,
+            inlineCSS = importNode.options.inline,
+            isPlugin = importNode.options.plugin,
+            isOptional = importNode.options.optional,
+            duplicateImport = importedAtRoot || fullPath in importVisitor.recursionDetector;
+
+        if (!context.importMultiple) {
+            if (duplicateImport) {
+                importNode.skip = true;
+            } else {
+                importNode.skip = function() {
+                    if (fullPath in importVisitor.onceFileDetectionMap) {
+                        return true;
+                    }
+                    importVisitor.onceFileDetectionMap[fullPath] = true;
+                    return false;
+                };
+            }
+        }
+
+        if (!fullPath && isOptional) {
+            importNode.skip = true;
+        }
+
+        if (root) {
+            importNode.root = root;
+            importNode.importedFilename = fullPath;
+
+            if (!inlineCSS && !isPlugin && (context.importMultiple || !duplicateImport)) {
+                importVisitor.recursionDetector[fullPath] = true;
+
+                var oldContext = this.context;
+                this.context = context;
+                try {
+                    this._visitor.visit(root);
+                } catch (e) {
+                    this.error = e;
+                }
+                this.context = oldContext;
+            }
+        }
+
+        importVisitor.importCount--;
+
+        if (importVisitor.isFinished) {
+            importVisitor._sequencer.tryRun();
+        }
+    },
+    visitRule: function (ruleNode, visitArgs) {
+        if (ruleNode.value.type === "DetachedRuleset") {
+            this.context.frames.unshift(ruleNode);
+        } else {
+            visitArgs.visitDeeper = false;
+        }
+    },
+    visitRuleOut : function(ruleNode) {
+        if (ruleNode.value.type === "DetachedRuleset") {
+            this.context.frames.shift();
+        }
+    },
+    visitDirective: function (directiveNode, visitArgs) {
+        this.context.frames.unshift(directiveNode);
+    },
+    visitDirectiveOut: function (directiveNode) {
+        this.context.frames.shift();
+    },
+    visitMixinDefinition: function (mixinDefinitionNode, visitArgs) {
+        this.context.frames.unshift(mixinDefinitionNode);
+    },
+    visitMixinDefinitionOut: function (mixinDefinitionNode) {
+        this.context.frames.shift();
+    },
+    visitRuleset: function (rulesetNode, visitArgs) {
+        this.context.frames.unshift(rulesetNode);
+    },
+    visitRulesetOut: function (rulesetNode) {
+        this.context.frames.shift();
+    },
+    visitMedia: function (mediaNode, visitArgs) {
+        this.context.frames.unshift(mediaNode.rules[0]);
+    },
+    visitMediaOut: function (mediaNode) {
+        this.context.frames.shift();
+    }
+};
+module.exports = ImportVisitor;
+
+},{"../contexts":10,"./import-sequencer":84,"./visitor":89}],86:[function(require,module,exports){
+var visitors = {
+    Visitor: require("./visitor"),
+    ImportVisitor: require('./import-visitor'),
+    ExtendVisitor: require('./extend-visitor'),
+    JoinSelectorVisitor: require('./join-selector-visitor'),
+    ToCSSVisitor: require('./to-css-visitor')
+};
+
+module.exports = visitors;
+
+},{"./extend-visitor":83,"./import-visitor":85,"./join-selector-visitor":87,"./to-css-visitor":88,"./visitor":89}],87:[function(require,module,exports){
+var Visitor = require("./visitor");
+
+var JoinSelectorVisitor = function() {
+    this.contexts = [[]];
+    this._visitor = new Visitor(this);
+};
+
+JoinSelectorVisitor.prototype = {
+    run: function (root) {
+        return this._visitor.visit(root);
+    },
+    visitRule: function (ruleNode, visitArgs) {
+        visitArgs.visitDeeper = false;
+    },
+    visitMixinDefinition: function (mixinDefinitionNode, visitArgs) {
+        visitArgs.visitDeeper = false;
+    },
+
+    visitRuleset: function (rulesetNode, visitArgs) {
+        var context = this.contexts[this.contexts.length - 1],
+            paths = [], selectors;
+
+        this.contexts.push(paths);
+
+        if (! rulesetNode.root) {
+            selectors = rulesetNode.selectors;
+            if (selectors) {
+                selectors = selectors.filter(function(selector) { return selector.getIsOutput(); });
+                rulesetNode.selectors = selectors.length ? selectors : (selectors = null);
+                if (selectors) { rulesetNode.joinSelectors(paths, context, selectors); }
+            }
+            if (!selectors) { rulesetNode.rules = null; }
+            rulesetNode.paths = paths;
+        }
+    },
+    visitRulesetOut: function (rulesetNode) {
+        this.contexts.length = this.contexts.length - 1;
+    },
+    visitMedia: function (mediaNode, visitArgs) {
+        var context = this.contexts[this.contexts.length - 1];
+        mediaNode.rules[0].root = (context.length === 0 || context[0].multiMedia);
+    },
+    visitDirective: function (directiveNode, visitArgs) {
+        var context = this.contexts[this.contexts.length - 1];
+        if (directiveNode.rules && directiveNode.rules.length) {
+            directiveNode.rules[0].root = (directiveNode.isRooted || context.length === 0 || null);
+        }
+    }
+};
+
+module.exports = JoinSelectorVisitor;
+
+},{"./visitor":89}],88:[function(require,module,exports){
+var tree = require("../tree"),
+    Visitor = require("./visitor");
+
+var ToCSSVisitor = function(context) {
+    this._visitor = new Visitor(this);
+    this._context = context;
+};
+
+ToCSSVisitor.prototype = {
+    isReplacing: true,
+    run: function (root) {
+        return this._visitor.visit(root);
+    },
+
+    visitRule: function (ruleNode, visitArgs) {
+        if (ruleNode.variable) {
+            return;
+        }
+        return ruleNode;
+    },
+
+    visitMixinDefinition: function (mixinNode, visitArgs) {
+        // mixin definitions do not get eval'd - this means they keep state
+        // so we have to clear that state here so it isn't used if toCSS is called twice
+        mixinNode.frames = [];
+    },
+
+    visitExtend: function (extendNode, visitArgs) {
+    },
+
+    visitComment: function (commentNode, visitArgs) {
+        if (commentNode.isSilent(this._context)) {
+            return;
+        }
+        return commentNode;
+    },
+
+    visitMedia: function(mediaNode, visitArgs) {
+        mediaNode.accept(this._visitor);
+        visitArgs.visitDeeper = false;
+
+        if (!mediaNode.rules.length) {
+            return;
+        }
+        return mediaNode;
+    },
+
+    visitImport: function (importNode, visitArgs) {
+        if (importNode.path.currentFileInfo.reference !== undefined && importNode.css) {
+            return;
+        }
+        return importNode;
+    },
+
+    visitDirective: function(directiveNode, visitArgs) {
+        if (directiveNode.name === "@charset") {
+            if (!directiveNode.getIsReferenced()) {
+                return;
+            }
+            // Only output the debug info together with subsequent @charset definitions
+            // a comment (or @media statement) before the actual @charset directive would
+            // be considered illegal css as it has to be on the first line
+            if (this.charset) {
+                if (directiveNode.debugInfo) {
+                    var comment = new tree.Comment("/* " + directiveNode.toCSS(this._context).replace(/\n/g, "") + " */\n");
+                    comment.debugInfo = directiveNode.debugInfo;
+                    return this._visitor.visit(comment);
+                }
+                return;
+            }
+            this.charset = true;
+        }
+        function hasVisibleChild(directiveNode) {
+            //prepare list of childs
+            var rule, bodyRules = directiveNode.rules;
+            //if there is only one nested ruleset and that one has no path, then it is
+            //just fake ruleset that got not replaced and we need to look inside it to
+            //get real childs
+            if (bodyRules.length === 1 && (!bodyRules[0].paths || bodyRules[0].paths.length === 0)) {
+                bodyRules = bodyRules[0].rules;
+            }
+            for (var r = 0; r < bodyRules.length; r++) {
+                rule = bodyRules[r];
+                if (rule.getIsReferenced && rule.getIsReferenced()) {
+                    //the directive contains something that was referenced (likely by extend)
+                    //therefore it needs to be shown in output too
+                    return true;
+                }
+            }
+            return false;
+        }
+
+        if (directiveNode.rules && directiveNode.rules.length) {
+            //it is still true that it is only one ruleset in array
+            //this is last such moment
+            this._mergeRules(directiveNode.rules[0].rules);
+            //process childs
+            directiveNode.accept(this._visitor);
+            visitArgs.visitDeeper = false;
+
+            // the directive was directly referenced and therefore needs to be shown in the output
+            if (directiveNode.getIsReferenced()) {
+                return directiveNode;
+            }
+
+            if (!directiveNode.rules || !directiveNode.rules.length) {
+                return ;
+            }
+
+            //the directive was not directly referenced - we need to check whether some of its childs
+            //was referenced
+            if (hasVisibleChild(directiveNode)) {
+                //marking as referenced in case the directive is stored inside another directive
+                directiveNode.markReferenced();
+                return directiveNode;
+            }
+
+            //The directive was not directly referenced and does not contain anything that
+            //was referenced. Therefore it must not be shown in output.
+            return ;
+        } else {
+            if (!directiveNode.getIsReferenced()) {
+                return;
+            }
+        }
+        return directiveNode;
+    },
+
+    checkPropertiesInRoot: function(rules) {
+        var ruleNode;
+        for (var i = 0; i < rules.length; i++) {
+            ruleNode = rules[i];
+            if (ruleNode instanceof tree.Rule && !ruleNode.variable) {
+                throw { message: "properties must be inside selector blocks, they cannot be in the root.",
+                    index: ruleNode.index, filename: ruleNode.currentFileInfo ? ruleNode.currentFileInfo.filename : null};
+            }
+        }
+    },
+
+    visitRuleset: function (rulesetNode, visitArgs) {
+        var rule, rulesets = [];
+        if (rulesetNode.firstRoot) {
+            this.checkPropertiesInRoot(rulesetNode.rules);
+        }
+        if (! rulesetNode.root) {
+            if (rulesetNode.paths) {
+                rulesetNode.paths = rulesetNode.paths
+                    .filter(function(p) {
+                        var i;
+                        if (p[0].elements[0].combinator.value === ' ') {
+                            p[0].elements[0].combinator = new(tree.Combinator)('');
+                        }
+                        for (i = 0; i < p.length; i++) {
+                            if (p[i].getIsReferenced() && p[i].getIsOutput()) {
+                                return true;
+                            }
+                        }
+                        return false;
+                    });
+            }
+
+            // Compile rules and rulesets
+            var nodeRules = rulesetNode.rules, nodeRuleCnt = nodeRules ? nodeRules.length : 0;
+            for (var i = 0; i < nodeRuleCnt; ) {
+                rule = nodeRules[i];
+                if (rule && rule.rules) {
+                    // visit because we are moving them out from being a child
+                    rulesets.push(this._visitor.visit(rule));
+                    nodeRules.splice(i, 1);
+                    nodeRuleCnt--;
+                    continue;
+                }
+                i++;
+            }
+            // accept the visitor to remove rules and refactor itself
+            // then we can decide now whether we want it or not
+            if (nodeRuleCnt > 0) {
+                rulesetNode.accept(this._visitor);
+            } else {
+                rulesetNode.rules = null;
+            }
+            visitArgs.visitDeeper = false;
+
+            nodeRules = rulesetNode.rules;
+            if (nodeRules) {
+                this._mergeRules(nodeRules);
+                nodeRules = rulesetNode.rules;
+            }
+            if (nodeRules) {
+                this._removeDuplicateRules(nodeRules);
+                nodeRules = rulesetNode.rules;
+            }
+
+            // now decide whether we keep the ruleset
+            if (nodeRules && nodeRules.length > 0 && rulesetNode.paths.length > 0) {
+                rulesets.splice(0, 0, rulesetNode);
+            }
+        } else {
+            rulesetNode.accept(this._visitor);
+            visitArgs.visitDeeper = false;
+            if (rulesetNode.firstRoot || (rulesetNode.rules && rulesetNode.rules.length > 0)) {
+                rulesets.splice(0, 0, rulesetNode);
+            }
+        }
+        if (rulesets.length === 1) {
+            return rulesets[0];
+        }
+        return rulesets;
+    },
+
+    _removeDuplicateRules: function(rules) {
+        if (!rules) { return; }
+
+        // remove duplicates
+        var ruleCache = {},
+            ruleList, rule, i;
+
+        for (i = rules.length - 1; i >= 0 ; i--) {
+            rule = rules[i];
+            if (rule instanceof tree.Rule) {
+                if (!ruleCache[rule.name]) {
+                    ruleCache[rule.name] = rule;
+                } else {
+                    ruleList = ruleCache[rule.name];
+                    if (ruleList instanceof tree.Rule) {
+                        ruleList = ruleCache[rule.name] = [ruleCache[rule.name].toCSS(this._context)];
+                    }
+                    var ruleCSS = rule.toCSS(this._context);
+                    if (ruleList.indexOf(ruleCSS) !== -1) {
+                        rules.splice(i, 1);
+                    } else {
+                        ruleList.push(ruleCSS);
+                    }
+                }
+            }
+        }
+    },
+
+    _mergeRules: function (rules) {
+        if (!rules) { return; }
+
+        var groups = {},
+            parts,
+            rule,
+            key;
+
+        for (var i = 0; i < rules.length; i++) {
+            rule = rules[i];
+
+            if ((rule instanceof tree.Rule) && rule.merge) {
+                key = [rule.name,
+                    rule.important ? "!" : ""].join(",");
+
+                if (!groups[key]) {
+                    groups[key] = [];
+                } else {
+                    rules.splice(i--, 1);
+                }
+
+                groups[key].push(rule);
+            }
+        }
+
+        Object.keys(groups).map(function (k) {
+
+            function toExpression(values) {
+                return new (tree.Expression)(values.map(function (p) {
+                    return p.value;
+                }));
+            }
+
+            function toValue(values) {
+                return new (tree.Value)(values.map(function (p) {
+                    return p;
+                }));
+            }
+
+            parts = groups[k];
+
+            if (parts.length > 1) {
+                rule = parts[0];
+                var spacedGroups = [];
+                var lastSpacedGroup = [];
+                parts.map(function (p) {
+                    if (p.merge === "+") {
+                        if (lastSpacedGroup.length > 0) {
+                            spacedGroups.push(toExpression(lastSpacedGroup));
+                        }
+                        lastSpacedGroup = [];
+                    }
+                    lastSpacedGroup.push(p);
+                });
+                spacedGroups.push(toExpression(lastSpacedGroup));
+                rule.value = toValue(spacedGroups);
+            }
+        });
+    },
+
+    visitAnonymous: function(anonymousNode, visitArgs) {
+        if (!anonymousNode.getIsReferenced()) {
+            return ;
+        }
+
+        anonymousNode.accept(this._visitor);
+        return anonymousNode;
+    }
+};
+
+module.exports = ToCSSVisitor;
+
+},{"../tree":61,"./visitor":89}],89:[function(require,module,exports){
+var tree = require("../tree");
+
+var _visitArgs = { visitDeeper: true },
+    _hasIndexed = false;
+
+function _noop(node) {
+    return node;
+}
+
+function indexNodeTypes(parent, ticker) {
+    // add .typeIndex to tree node types for lookup table
+    var key, child;
+    for (key in parent) {
+        if (parent.hasOwnProperty(key)) {
+            child = parent[key];
+            switch (typeof child) {
+                case "function":
+                    // ignore bound functions directly on tree which do not have a prototype
+                    // or aren't nodes
+                    if (child.prototype && child.prototype.type) {
+                        child.prototype.typeIndex = ticker++;
+                    }
+                    break;
+                case "object":
+                    ticker = indexNodeTypes(child, ticker);
+                    break;
+            }
+        }
+    }
+    return ticker;
+}
+
+var Visitor = function(implementation) {
+    this._implementation = implementation;
+    this._visitFnCache = [];
+
+    if (!_hasIndexed) {
+        indexNodeTypes(tree, 1);
+        _hasIndexed = true;
+    }
+};
+
+Visitor.prototype = {
+    visit: function(node) {
+        if (!node) {
+            return node;
+        }
+
+        var nodeTypeIndex = node.typeIndex;
+        if (!nodeTypeIndex) {
+            return node;
+        }
+
+        var visitFnCache = this._visitFnCache,
+            impl = this._implementation,
+            aryIndx = nodeTypeIndex << 1,
+            outAryIndex = aryIndx | 1,
+            func = visitFnCache[aryIndx],
+            funcOut = visitFnCache[outAryIndex],
+            visitArgs = _visitArgs,
+            fnName;
+
+        visitArgs.visitDeeper = true;
+
+        if (!func) {
+            fnName = "visit" + node.type;
+            func = impl[fnName] || _noop;
+            funcOut = impl[fnName + "Out"] || _noop;
+            visitFnCache[aryIndx] = func;
+            visitFnCache[outAryIndex] = funcOut;
+        }
+
+        if (func !== _noop) {
+            var newNode = func.call(impl, node, visitArgs);
+            if (impl.isReplacing) {
+                node = newNode;
+            }
+        }
+
+        if (visitArgs.visitDeeper && node && node.accept) {
+            node.accept(this);
+        }
+
+        if (funcOut != _noop) {
+            funcOut.call(impl, node);
+        }
+
+        return node;
+    },
+    visitArray: function(nodes, nonReplacing) {
+        if (!nodes) {
+            return nodes;
+        }
+
+        var cnt = nodes.length, i;
+
+        // Non-replacing
+        if (nonReplacing || !this._implementation.isReplacing) {
+            for (i = 0; i < cnt; i++) {
+                this.visit(nodes[i]);
+            }
+            return nodes;
+        }
+
+        // Replacing
+        var out = [];
+        for (i = 0; i < cnt; i++) {
+            var evald = this.visit(nodes[i]);
+            if (evald === undefined) { continue; }
+            if (!evald.splice) {
+                out.push(evald);
+            } else if (evald.length) {
+                this.flatten(evald, out);
+            }
+        }
+        return out;
+    },
+    flatten: function(arr, out) {
+        if (!out) {
+            out = [];
+        }
+
+        var cnt, i, item,
+            nestedCnt, j, nestedItem;
+
+        for (i = 0, cnt = arr.length; i < cnt; i++) {
+            item = arr[i];
+            if (item === undefined) {
+                continue;
+            }
+            if (!item.splice) {
+                out.push(item);
+                continue;
+            }
+
+            for (j = 0, nestedCnt = item.length; j < nestedCnt; j++) {
+                nestedItem = item[j];
+                if (nestedItem === undefined) {
+                    continue;
+                }
+                if (!nestedItem.splice) {
+                    out.push(nestedItem);
+                } else if (nestedItem.length) {
+                    this.flatten(nestedItem, out);
+                }
+            }
+        }
+
+        return out;
+    }
+};
+module.exports = Visitor;
+
+},{"../tree":61}],90:[function(require,module,exports){
+// shim for using process in browser
+
+var process = module.exports = {};
+var queue = [];
+var draining = false;
+
+function drainQueue() {
+    if (draining) {
+        return;
+    }
+    draining = true;
+    var currentQueue;
+    var len = queue.length;
+    while(len) {
+        currentQueue = queue;
+        queue = [];
+        var i = -1;
+        while (++i < len) {
+            currentQueue[i]();
+        }
+        len = queue.length;
+    }
+    draining = false;
+}
+process.nextTick = function (fun) {
+    queue.push(fun);
+    if (!draining) {
+        setTimeout(drainQueue, 0);
+    }
+};
+
+process.title = 'browser';
+process.browser = true;
+process.env = {};
+process.argv = [];
+process.version = ''; // empty string to avoid regexp issues
+process.versions = {};
+
+function noop() {}
+
+process.on = noop;
+process.addListener = noop;
+process.once = noop;
+process.off = noop;
+process.removeListener = noop;
+process.removeAllListeners = noop;
+process.emit = noop;
+
+process.binding = function (name) {
+    throw new Error('process.binding is not supported');
+};
+
+// TODO(shtylman)
+process.cwd = function () { return '/' };
+process.chdir = function (dir) {
+    throw new Error('process.chdir is not supported');
+};
+process.umask = function() { return 0; };
+
+},{}],91:[function(require,module,exports){
+'use strict';
+
+var asap = require('asap')
+
+module.exports = Promise;
+function Promise(fn) {
+  if (typeof this !== 'object') throw new TypeError('Promises must be constructed via new')
+  if (typeof fn !== 'function') throw new TypeError('not a function')
+  var state = null
+  var value = null
+  var deferreds = []
+  var self = this
+
+  this.then = function(onFulfilled, onRejected) {
+    return new self.constructor(function(resolve, reject) {
+      handle(new Handler(onFulfilled, onRejected, resolve, reject))
+    })
+  }
+
+  function handle(deferred) {
+    if (state === null) {
+      deferreds.push(deferred)
+      return
+    }
+    asap(function() {
+      var cb = state ? deferred.onFulfilled : deferred.onRejected
+      if (cb === null) {
+        (state ? deferred.resolve : deferred.reject)(value)
+        return
+      }
+      var ret
+      try {
+        ret = cb(value)
+      }
+      catch (e) {
+        deferred.reject(e)
+        return
+      }
+      deferred.resolve(ret)
+    })
+  }
+
+  function resolve(newValue) {
+    try { //Promise Resolution Procedure: https://github.com/promises-aplus/promises-spec#the-promise-resolution-procedure
+      if (newValue === self) throw new TypeError('A promise cannot be resolved with itself.')
+      if (newValue && (typeof newValue === 'object' || typeof newValue === 'function')) {
+        var then = newValue.then
+        if (typeof then === 'function') {
+          doResolve(then.bind(newValue), resolve, reject)
+          return
+        }
+      }
+      state = true
+      value = newValue
+      finale()
+    } catch (e) { reject(e) }
+  }
+
+  function reject(newValue) {
+    state = false
+    value = newValue
+    finale()
+  }
+
+  function finale() {
+    for (var i = 0, len = deferreds.length; i < len; i++)
+      handle(deferreds[i])
+    deferreds = null
+  }
+
+  doResolve(fn, resolve, reject)
+}
+
+
+function Handler(onFulfilled, onRejected, resolve, reject){
+  this.onFulfilled = typeof onFulfilled === 'function' ? onFulfilled : null
+  this.onRejected = typeof onRejected === 'function' ? onRejected : null
+  this.resolve = resolve
+  this.reject = reject
+}
+
+/**
+ * Take a potentially misbehaving resolver function and make sure
+ * onFulfilled and onRejected are only called once.
+ *
+ * Makes no guarantees about asynchrony.
+ */
+function doResolve(fn, onFulfilled, onRejected) {
+  var done = false;
+  try {
+    fn(function (value) {
+      if (done) return
+      done = true
+      onFulfilled(value)
+    }, function (reason) {
+      if (done) return
+      done = true
+      onRejected(reason)
+    })
+  } catch (ex) {
+    if (done) return
+    done = true
+    onRejected(ex)
+  }
+}
+
+},{"asap":93}],92:[function(require,module,exports){
+'use strict';
+
+//This file contains the ES6 extensions to the core Promises/A+ API
+
+var Promise = require('./core.js')
+var asap = require('asap')
+
+module.exports = Promise
+
+/* Static Functions */
+
+function ValuePromise(value) {
+  this.then = function (onFulfilled) {
+    if (typeof onFulfilled !== 'function') return this
+    return new Promise(function (resolve, reject) {
+      asap(function () {
+        try {
+          resolve(onFulfilled(value))
+        } catch (ex) {
+          reject(ex);
+        }
+      })
+    })
+  }
+}
+ValuePromise.prototype = Promise.prototype
+
+var TRUE = new ValuePromise(true)
+var FALSE = new ValuePromise(false)
+var NULL = new ValuePromise(null)
+var UNDEFINED = new ValuePromise(undefined)
+var ZERO = new ValuePromise(0)
+var EMPTYSTRING = new ValuePromise('')
+
+Promise.resolve = function (value) {
+  if (value instanceof Promise) return value
+
+  if (value === null) return NULL
+  if (value === undefined) return UNDEFINED
+  if (value === true) return TRUE
+  if (value === false) return FALSE
+  if (value === 0) return ZERO
+  if (value === '') return EMPTYSTRING
+
+  if (typeof value === 'object' || typeof value === 'function') {
+    try {
+      var then = value.then
+      if (typeof then === 'function') {
+        return new Promise(then.bind(value))
+      }
+    } catch (ex) {
+      return new Promise(function (resolve, reject) {
+        reject(ex)
+      })
+    }
+  }
+
+  return new ValuePromise(value)
+}
+
+Promise.all = function (arr) {
+  var args = Array.prototype.slice.call(arr)
+
+  return new Promise(function (resolve, reject) {
+    if (args.length === 0) return resolve([])
+    var remaining = args.length
+    function res(i, val) {
+      try {
+        if (val && (typeof val === 'object' || typeof val === 'function')) {
+          var then = val.then
+          if (typeof then === 'function') {
+            then.call(val, function (val) { res(i, val) }, reject)
+            return
+          }
+        }
+        args[i] = val
+        if (--remaining === 0) {
+          resolve(args);
+        }
+      } catch (ex) {
+        reject(ex)
+      }
+    }
+    for (var i = 0; i < args.length; i++) {
+      res(i, args[i])
+    }
+  })
+}
+
+Promise.reject = function (value) {
+  return new Promise(function (resolve, reject) { 
+    reject(value);
+  });
+}
+
+Promise.race = function (values) {
+  return new Promise(function (resolve, reject) { 
+    values.forEach(function(value){
+      Promise.resolve(value).then(resolve, reject);
+    })
+  });
+}
+
+/* Prototype Methods */
+
+Promise.prototype['catch'] = function (onRejected) {
+  return this.then(null, onRejected);
+}
+
+},{"./core.js":91,"asap":93}],93:[function(require,module,exports){
+(function (process){
+
+// Use the fastest possible means to execute a task in a future turn
+// of the event loop.
+
+// linked list of tasks (single, with head node)
+var head = {task: void 0, next: null};
+var tail = head;
+var flushing = false;
+var requestFlush = void 0;
+var isNodeJS = false;
+
+function flush() {
+    /* jshint loopfunc: true */
+
+    while (head.next) {
+        head = head.next;
+        var task = head.task;
+        head.task = void 0;
+        var domain = head.domain;
+
+        if (domain) {
+            head.domain = void 0;
+            domain.enter();
+        }
+
+        try {
+            task();
+
+        } catch (e) {
+            if (isNodeJS) {
+                // In node, uncaught exceptions are considered fatal errors.
+                // Re-throw them synchronously to interrupt flushing!
+
+                // Ensure continuation if the uncaught exception is suppressed
+                // listening "uncaughtException" events (as domains does).
+                // Continue in next event to avoid tick recursion.
+                if (domain) {
+                    domain.exit();
+                }
+                setTimeout(flush, 0);
+                if (domain) {
+                    domain.enter();
+                }
+
+                throw e;
+
+            } else {
+                // In browsers, uncaught exceptions are not fatal.
+                // Re-throw them asynchronously to avoid slow-downs.
+                setTimeout(function() {
+                   throw e;
+                }, 0);
+            }
+        }
+
+        if (domain) {
+            domain.exit();
+        }
+    }
+
+    flushing = false;
+}
+
+if (typeof process !== "undefined" && process.nextTick) {
+    // Node.js before 0.9. Note that some fake-Node environments, like the
+    // Mocha test runner, introduce a `process` global without a `nextTick`.
+    isNodeJS = true;
+
+    requestFlush = function () {
+        process.nextTick(flush);
+    };
+
+} else if (typeof setImmediate === "function") {
+    // In IE10, Node.js 0.9+, or https://github.com/NobleJS/setImmediate
+    if (typeof window !== "undefined") {
+        requestFlush = setImmediate.bind(window, flush);
+    } else {
+        requestFlush = function () {
+            setImmediate(flush);
+        };
+    }
+
+} else if (typeof MessageChannel !== "undefined") {
+    // modern browsers
+    // http://www.nonblocking.io/2011/06/windownexttick.html
+    var channel = new MessageChannel();
+    channel.port1.onmessage = flush;
+    requestFlush = function () {
+        channel.port2.postMessage(0);
+    };
+
+} else {
+    // old browsers
+    requestFlush = function () {
+        setTimeout(flush, 0);
+    };
+}
+
+function asap(task) {
+    tail = tail.next = {
+        task: task,
+        domain: isNodeJS && process.domain,
+        next: null
+    };
+
+    if (!flushing) {
+        flushing = true;
+        requestFlush();
+    }
+};
+
+module.exports = asap;
+
+
+}).call(this,require('_process'))
+},{"_process":90}],94:[function(require,module,exports){
+// should work in any browser without browserify
+
+if (typeof Promise.prototype.done !== 'function') {
+  Promise.prototype.done = function (onFulfilled, onRejected) {
+    var self = arguments.length ? this.then.apply(this, arguments) : this
+    self.then(null, function (err) {
+      setTimeout(function () {
+        throw err
+      }, 0)
+    })
+  }
+}
+},{}],95:[function(require,module,exports){
+// not "use strict" so we can declare global "Promise"
+
+var asap = require('asap');
+
+if (typeof Promise === 'undefined') {
+  Promise = require('./lib/core.js')
+  require('./lib/es6-extensions.js')
+}
+
+require('./polyfill-done.js');
+
+},{"./lib/core.js":91,"./lib/es6-extensions.js":92,"./polyfill-done.js":94,"asap":93}]},{},[2])(2)
+});

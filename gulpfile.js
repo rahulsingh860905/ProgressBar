@@ -1,6 +1,7 @@
 var gulp = require('gulp');
 var clean = require('gulp-clean');
 var g_less = require('gulp-less');
+var g_cssmin = require('gulp-cssmin');
 var g_uglify = require('gulp-uglify');
 var g_concat = require('gulp-concat');
 var runSequence = require('run-sequence');
@@ -19,10 +20,8 @@ var bases = {
  dist:'dist',
  css:'css',
  js:'js',
- distLibName:'jscomponents.js',
- distMinLibName:'jscomponents.min.js',
- distCssName:'jscomponents.css',
- distMinCSSName:'jscomponents.min.css',
+ distLibName:'components.js',
+ distMinLibName:'components.min.js',
  docsOut:'docs',
  docSource:'app/**/*'
 };
@@ -30,9 +29,10 @@ var bases = {
 var paths = {
     source: ['**/*'],
     scripts_source:['components/**/*.js'],
-    css_source:['**/*.css'],
+    css_source:['./dist/css/*.css'],
+    css_dest:['./dist/css'],
     mincss_source:['**/*.min.css'],
-    less_source:['**/*.less'],
+    less_source:['./app/styles/styles.less'],
     validateAppScripts: ['app/components/**/*.js'],
     index: './app/index.prod.html',
     compSrc: './app/components/**/*.html',
@@ -67,38 +67,17 @@ gulp.task('minifyJS', function() {
 });
 
 gulp.task('less',function () {
-   var cssPath = bases.source+'/';
-   gulp.src(paths.less_source,{cwd: bases.source})
-    .pipe(gulp.dest(function(file) {
-
-      var relative = file.relative;
-      var relpaths = relative.split('/');
-      if(relpaths.length > 1)
-      {
-        for (var i = 0 ; i < relpaths.length-1 ; i++)
-        {
-          cssPath += relpaths[i]+'/';
-        }
-      }
-
-      cssPath = bases.source+'/';
-      return file.base;
-    }))
+   var cssPath = bases.dist+'/css';
+   gulp.src(paths.less_source)
     .pipe(g_less())
-
     .pipe(gulp.dest(cssPath));
 });
 
-gulp.task('concatCss', function() {
-  return gulp.src(paths.css_source,{cwd: bases.source})
-    .pipe(g_concat(bases.distCssName))
-    .pipe(gulp.dest(bases.dist+'/css'));
-});
-
 gulp.task('minifyCSS', function() {
-  return gulp.src(paths.css_source,{cwd: bases.source})
-    .pipe(g_concat(bases.distMinCSSName))
-    .pipe(gulp.dest(bases.dist+'/'+bases.css));
+  return gulp.src(paths.css_source)
+    .pipe(g_cssmin())
+    .pipe(rename({suffix: '.min'}))
+    .pipe(gulp.dest('./dist'));
 });
 
 gulp.task('jsdoc', shell.task( [
@@ -113,7 +92,7 @@ gulp.task('cleanDocs', function() {
 
 gulp.task('bower-prod', function() { 
     return gulp.src(bowerFiles(), {base: 'app/bower_components'})
-        .pipe(g_uglify())
+        //.pipe(g_uglify())
         .pipe(gulp.dest(paths.distProd + '/bower_components'));
 });
 
@@ -145,22 +124,10 @@ gulp.task('build-dist', function() {
     'concatJS',
     'minifyJS',
     'less',
-    'concatCss',
     'minifyCSS',
-    //cleanDocs,
-    //jsdoc
     'bower-prod',
     'comp-prod',
     'validate-app-scripts-prod',
     'validate-index-prod'
   );
 });
-
-
-
-// run following commond as per require or run
-// 0.gulp
-// 1. gulp clean
-// 2. gulp less
-// 3. gulp concat
-// 4. gulp minify

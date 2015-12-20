@@ -6,9 +6,11 @@
     * ProgressBarDemo Value Object.
     * Used for constructing data to ProgressBarDemo
     */
-    var ProgressBarDemoVO = function(max,bars) {
-        return { max : max,
-                 bars : bars
+    var ProgressBarDemoVO = function(bars,buttons,animateSpeed,max) {
+        return { max : max || 100,
+                 bars : bars,
+                 buttons : buttons,
+                 animateSpeed : animateSpeed || 200
                };
     };
     

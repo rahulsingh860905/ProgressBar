@@ -1,18 +1,3 @@
-@backgroundColor : #ffffff;
-@barNormalColor : #00aaff;
-@barOverflowColor : #ff1100;
-@border : 2px solid #888888;
-@fontFamily : 'Helvetica';
-@fontSizeMobile : 17px;
-@fontSizeTablet : 19px;
-@fontSizeDesktop : 20px;
-@widthMobile : 100%;
-@widthTablet : 80%;
-@widthDesktop : 50%;
-@heightMobile : 7%;
-@heightTablet : 5%;
-@heighteDesktop : 40px;
-
 .pb-baseDiv{
     align-self: center;
 }
@@ -21,8 +6,6 @@
     position: relative;
     width: 100%;
     height: 100%;
-    background-color: @backgroundColor;
-    border: @border;
 }
 
 .pb-baseDiv .pb-progressBar{
@@ -48,14 +31,18 @@
 
 .pb-baseDiv .pb-text{
     font-family: @fontFamily;
+    color: @fontColor;
     align-self: center;
     z-index: 10;
 }
 
+.pb-col-width{
+    width: 100%;
+}
+
 /* For mobile phones: */
-.pb-col{
-    width: @widthMobile;
-    height: @heightMobile;
+.pb-col-height{
+    height: @heightMobile * 1px;
 }
 
 .pb-baseDiv .pb-textSize{
@@ -63,29 +50,40 @@
 }
 
 /* For Tablet: */
-@media only screen and (min-width: 600px) {
+@media only screen and (min-width: @screen-sm-min) {
     
-    .pb-col {
-        width: @widthTablet;
-        height: @heightTablet;
+    .pb-col-height{
+        height: @heightMobile + @heightFactor * 1px;
     }
     
     .pb-baseDiv .pb-textSize{
-        font-size: @fontSizeTablet;
+        font-size: @fontSizeMobile*((@heightMobile + @heightFactor * 1)/@heightMobile)*.90em;
     }
 
 }
 
 /* For desktop: */
-@media only screen and (min-width: 768px) {
+@media only screen and (min-width: @screen-md-min) {
     
-    .pb-col {
-        width: @widthDesktop;
-        height: @heighteDesktop;
+    .pb-col-height {
+        height: @heightMobile + @heightFactor * 2px;
     }
     
     .pb-baseDiv .pb-textSize{
-        font-size: @fontSizeDesktop;
+        font-size: @fontSizeMobile*((@heightMobile + @heightFactor * 2)/@heightMobile)*.90em;
+    }
+
+}
+
+/* For Large desktop: */
+@media only screen and (min-width: @screen-lg-min) {
+    
+    .pb-col-height {
+        height: @heightMobile + @heightFactor * 3px;
+    }
+    
+    .pb-baseDiv .pb-textSize{
+        font-size: @fontSizeMobile*((@heightMobile + @heightFactor * 3)/@heightMobile)*.90em;
     }
 
 }

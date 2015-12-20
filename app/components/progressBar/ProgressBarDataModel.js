@@ -15,9 +15,10 @@
     * ProgressBar Value Object.
     * Used for constructing data to ProgressBar component
     */
-    var ProgressBarVO = function(max,progress) {
-        return { max : max,
-                 bar : new BarVO(progress)
+    var ProgressBarVO = function(progress,animateSpeed,max) {
+        return { max : max || 100,
+                 bar : new BarVO(progress),
+                 animateSpeed : animateSpeed || 200
                };
     };
     

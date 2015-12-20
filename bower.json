@@ -12,7 +12,8 @@
   "dependencies": {
     "less": "~2.5.3",
     "ractive": "~0.7.3",
-    "ractive-load": "~0.5.2"
+    "ractive-load": "~0.5.2",
+    "bootstrap": "~3.3.6"
   },
   "overrides": {
     "ractive-load": {
@@ -20,4 +21,3 @@
     }
   }
 }
-

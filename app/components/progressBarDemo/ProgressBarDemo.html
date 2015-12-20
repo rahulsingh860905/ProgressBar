@@ -1,65 +1,67 @@
     <!--Progress Bar Demo.
-        Dependencies Ractive.js,ProgressBar.html-->
+        Dependencies Ractive.js,ProgressBar.html,Bootstrap.less-->
     <link rel="ractive" href="../progressBar/ProgressBar.html" name="ProgressBar">
 
     <div class="pbd-compContainer">
         {{#each bars:i}}
-            <ProgressBar max="{{max}}" bar="{{bars[i]}}"/>
+            <ProgressBar max="{{max}}" bar="{{bars[i]}}" animateSpeed="{{animateSpeed}}"/>
             <br>
         {{/each}}
         
-        <div class="controls">
-            <select class="selct" value="{{selectedIndex}}">
-                {{#each bars:i}}
-                    <option value="{{i}}">Progress Bar {{i+1}}</option>
-                {{/each}}
-            </select>
-
-            <button class="btn" type="button" on-click="callDecrease:25">-25</button>
-            <button class="btn" type="button" on-click="callDecrease:10">-10</button> 
-            <button class="btn" type="button" on-click="callIncrease:10">+10</button> 
-            <button class="btn" type="button" on-click="callIncrease:25">+25</button>
+        <div class="row">
+            <div class="col-xs-12 col-sm-12 col-md-4">
+                <select class="form-control" value="{{selectedIndex}}" on-change="switchProgressBar:{{selectedIndex}}">
+                    {{#each bars:i}}
+                        <option value="{{i}}">Progress Bar {{i+1}}</option>
+                    {{/each}}
+                </select>
+            </div>
+             
+            {{#each buttons:i}}
+                <div class="col-xs-12 col-sm-3 col-md-2">
+                    <button class="btn btn-primary btnSpacing" type="button" on-click="runProgress:{{buttons[i]}}">{{buttons[i]}}</button> 
+                </div>
+            {{/each}}
+            
         </div>
     </div>
     
 <script>
     ;(function(window){
-    if(typeof component == "undefined"){
-        return;
-    }
-            
-    component.exports = {
-
-        /**
-         * called upon initialisation.
-         * set initial values to component properties
-         */
-        oninit: function (){
-
-            this.selectedProgressBar = this.findAllComponents()[0];
-            this.addEventListeners();
-        },
-
-        /**
-         * Add Event Listeners
-         */
-        addEventListeners:function(){
-
-            this.on({
-
-                callIncrease: function (event, value) { 
-                    this.selectedProgressBar.increase(value);
-                },
-
-                callDecrease: function (event, value) {
-                    this.selectedProgressBar.decrease(value);
-                }
-            });
-
-            this.observe( 'selectedIndex', function ( index ) {
-                this.selectedProgressBar = this.findAllComponents()[index];
-            });
+        
+        if(typeof component == "undefined"){
+            return;
         }
-    };
+
+        component.exports = {
+
+            /**
+             * called upon initialisation.
+             * set initial values to component properties
+             */
+            oninit: function (){
+                this.selectedProgressBar = this.findComponent("ProgressBar");
+                this.addEventListeners();
+            },
+
+            /**
+             * Add Event Listeners
+             */
+            addEventListeners:function(){
+
+                this.on({
+
+                    runProgress: function (event, value) { 
+                        this.selectedProgressBar.runProgress(value);
+                    },
+
+                    switchProgressBar: function (event, value) {
+                        this.selectedProgressBar = this.findAllComponents("ProgressBar")[value];
+                    }
+                });
+
+            }
+        };
+        
     })( window );
 </script>

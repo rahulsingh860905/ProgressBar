@@ -32,5 +32,6 @@ NOTE:
 	4. Examples Directory - app/examples
     5. one can also directly run app/index.html OR dist/index.html file in web browser to view the progress bar demo
     NOTE: For step 4 & 5 to be run pls run browser with allow-files	option like for Chrome run it with -allow-file-access-from-files
-	6. Also one can just see the running demo at http://embed.plnkr.co/jkVeYlFwYpK131YRlmL6/
+	6. Also one can just see the running demo at 
+	   http://run.plnkr.co/plunks/jkVeYlFwYpK131YRlmL6/
 	  	 
